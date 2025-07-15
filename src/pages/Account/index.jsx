@@ -1,60 +1,34 @@
-
 import React, { useState } from "react";
 import {
   Box,
-  Avatar,
-  TextField,
-  Button,
-  InputAdornment,
-  IconButton,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  FormHelperText,
   Typography,
   Paper,
   CircularProgress,
   Backdrop,
-  Grid,
+  Divider,
 } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import {
-  LockOutlined as LockOutlinedIcon,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
-import { red } from "@mui/material/colors";
-import { Link, useNavigate } from "react-router-dom";
-import { Container, createTheme } from "@mui/system";
 import PrivateLayout from "../../layouts/privateLayout";
-import myImage from './../../assets/images/coming-soon.jpg'; // adjust the path
-import ButtonComponent from "components/button";
 import UserForm from "./form";
-import BasicBreadcrumbs from "components/breadcrumb";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { useApiClient } from "context/ApiClientContext";
 import Header from "components/header";
+import DeleteSection from "./deleteSection";
+import ChangePasswordSection from "./changePasswordSection";
 
 export default function Account() {
   const userId = localStorage.getItem("loggedInID");
-  const apiClient = useApiClient();
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState();
 
   const [inputForm, setInputForm] = useState({
-      userName: "",
-      email: "",
-      roleid: "",
-      lastcompany: "",
-      oldPassword: "",
-      password: "",
-      confirmPassword: "",
-      isActive: false,
-    });
+    userName: "Naja",
+    email: "najanadhirah@gosumgroup.com",
+    company: "Gosum Group Sdn Bhd",
+    country: "Malaysia",
+  });
 
- const handleInputChange = (property, value) => {
+  const handleInputChange = (property, value) => {
     setInputForm((prevState) => ({
       ...prevState,
       [property]: value,
@@ -74,16 +48,12 @@ export default function Account() {
       setLoading(true);
       inputForm.password = currentPassword;
 
-      response = await axios.put(
-        `${apiClient}/user/${userId}`,
-        inputForm,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            Accept: "application/json",
-          },
-        }
-      );
+      // response = await axios.put(`${apiClient}/user/${userId}`, inputForm, {
+      //   headers: {
+      //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //     Accept: "application/json",
+      //   },
+      // });
 
       toast.update(toastId, {
         render: "Successfully updated.",
@@ -108,38 +78,32 @@ export default function Account() {
     }
   };
 
-
   return (
-  <PrivateLayout>
-    {/* <Typography variant="h2" textTransform={"uppercase"} fontWeight={700}  >
-      Account Details
-    </Typography>
-    <Typography variant="body1" fontWeight='light'  >
-      Stay tuned for more updates and details.
-    </Typography> */}
-
-    <Box sx={{ padding:5, width: "100%", marginTop: "10px" }}>
-        {/* <BasicBreadcrumbs first="User" second="Details" /> */}
+    <PrivateLayout>
+      <Box sx={{ padding: 5, width: "100%" }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Header title="Account Details" />
         </Box>
-        <Paper>
-          <Grid container spacing={2} p={3} mt={1}>
-            <Grid item xs={12} >
-              <UserForm
-                id={userId}
-                inputForm={inputForm}
-                handleInputChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} display="flex" justifyContent="end">
-              {/* <ButtonComponent value="contained" text="Save" callback={handleSubmit} /> */}
-              {loading && (
-                <CircularProgress color="inherit" />
-              )}
-            </Grid>
-          </Grid>
+        <Paper
+          sx={{
+            borderRadius: 4,
+            bgcolor: "background.paper",
+            border: "1px solid tertiary.main",
+            boxShadow: 10,
+          }}
+        >
+          <UserForm
+            id={userId}
+            inputForm={inputForm}
+            handleInputChange={handleInputChange}
+            submit={handleSubmit}
+          />
+          {loading && <CircularProgress color="inherit" />}
         </Paper>
+        <Divider sx={{ my: 1, borderColor: "transparent" }} />
+        <ChangePasswordSection />
+        <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+        <DeleteSection handleSubmit={handleSubmit} />
       </Box>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

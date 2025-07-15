@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
-import { AccountTreeSharp, Home, PlayCircleOutlineOutlined } from "@mui/icons-material";
+import { AccountBoxOutlined, AccountTreeSharp, Home, HomeMaxOutlined, HomeOutlined, PlayCircleOutlineOutlined } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -88,7 +88,7 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
             <ListItemIcon
               sx={{ color: (theme) => theme.palette.primary.contrastText }}
             >
-              <Home />
+              <HomeOutlined />
             </ListItemIcon>
             <ListItemText primary="Homepage" />
           </ListItemButton>
@@ -98,9 +98,9 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
             <ListItemIcon
               sx={{ color: (theme) => theme.palette.primary.contrastText }}
             >
-              <AccountTreeSharp />
+              <AccountBoxOutlined />
             </ListItemIcon>
-            <ListItemText primary="Account Detail" />
+            <ListItemText primary="Account Setting" />
           </ListItemButton>
 
           {/* Plan and Billing */}
