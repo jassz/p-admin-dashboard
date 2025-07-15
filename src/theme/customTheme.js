@@ -7,7 +7,7 @@ const CustomTheme = () => createTheme({
   },
   palette: {
     secondary: {
-      light: "#a8f0c3",
+      light: "#edfcf3",
       main: "#39493F",
       dark: "#023b17",
       contrastText: "#fff",
@@ -22,18 +22,15 @@ const CustomTheme = () => createTheme({
       light: "#EAEBDC",
       main: "#CBCEA7",
       dark: "#46472c",
-      contrastText: "#fff",
+      contrastText: "#1A1A1A",
     },
     grey: {
       light: "#e6e3e3",
       main: "#bfbfbf",
       dark: "#8c8b8b",
-      contrastText: "#fff",
+      contrastText: "1A1A1A",
     },
   },
-  // typography: {
-  //   fontFamily: "Roboto, sans-serif",
-  // },
 });
 
 export default CustomTheme;

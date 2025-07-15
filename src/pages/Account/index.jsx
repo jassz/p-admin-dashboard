@@ -89,7 +89,7 @@ export default function Account() {
             borderRadius: 4,
             bgcolor: "background.paper",
             border: "1px solid tertiary.main",
-            boxShadow: 10,
+            boxShadow: 5,
           }}
         >
           <UserForm

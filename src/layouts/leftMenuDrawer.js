@@ -3,6 +3,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import logo from "../assets/images/logo192.png";
 import fulllogo from "../assets/images/full-logo-192.png";
+import { motion } from "framer-motion";
 
 import {
   Box,
@@ -27,6 +28,7 @@ import {
   HomeOutlined,
   PlayCircleOutlineOutlined,
 } from "@mui/icons-material";
+import ButtonEncrypt from "components/encryptButton";
 
 const drawerWidth = 240;
 
@@ -175,6 +177,7 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
               textTransform: "none",
               px: 3,
               py: 1,
+              boxShadow:5,
               backgroundColor: "#1a73e8", // blue button
               "&:hover": {
                 backgroundColor: "#1765cc",
@@ -183,51 +186,8 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
           >
             Upgrade Now
           </Button>
+          {/* <ButtonEncrypt /> */}
         </Box>
-        {/* <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          gap={1}
-          sx={{ pb: 2 }} // padding below
-        >
-          <Button
-            variant="contained"
-            color="secondary"
-            size="small"
-            sx={{
-              borderRadius: "999px",
-              textTransform: "none",
-              px: 2,
-              py: 0.5,
-              fontSize: "0.75rem",
-            }}
-          >
-            Upgrade
-          </Button>
-
-          <Typography variant="caption" color="tertiary.dark">
-            v1.1.3
-          </Typography>
-        </Box> */}
-        {/* <List>
-          <ListItemButton component={Link} to="/" sx={{ py: 3 }}>
-            <ListItemIcon sx={{ color: "inherit" }}>
-              <CreateNewFolder />
-            </ListItemIcon>
-            <ListItemText primary="Upgrade Now" />
-          </ListItemButton>
-        </List> */}
-        {/* <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      py={2}
-    >
-      <Typography variant="caption" color="tertiary.dark">
-        v1.1.3
-      </Typography>
-    </Box> */}
       </Box>
     </Drawer>
   );

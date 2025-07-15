@@ -8,7 +8,7 @@ export default function DeleteSection(handleSubmit) {
           sx={{
             borderRadius: 4,
             border: "1px solid tertiary.main",
-            boxShadow: 10,
+            boxShadow: 5,
             padding: 1,
           }}
         >

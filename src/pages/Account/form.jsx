@@ -61,7 +61,7 @@ export default function UserForm({
     <Box padding={3} sx={{ borderRadius: 4 }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item size={12}>
-          <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="flex" justifyContent="space-between" alignItems="center" >
             <Typography
               variant="body2"
               fontWeight="bold"
