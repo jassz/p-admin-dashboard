@@ -1,6 +1,9 @@
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import logo from "../assets/images/logo192.png";
+import fulllogo from "../assets/images/full-logo-192.png";
+
 import {
   Box,
   List,
@@ -11,9 +14,19 @@ import {
   styled,
   Toolbar,
   Typography,
+  Divider,
+  Button,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
-import { AccountBoxOutlined, AccountTreeSharp, Home, HomeMaxOutlined, HomeOutlined, PlayCircleOutlineOutlined } from "@mui/icons-material";
+import {
+  AccountBoxOutlined,
+  AccountTreeSharp,
+  CreateNewFolder,
+  Home,
+  HomeMaxOutlined,
+  HomeOutlined,
+  PlayCircleOutlineOutlined,
+} from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -53,83 +66,169 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
       sx={{
         "& .MuiDrawer-paper": {
           borderRight: "none",
+          backgroundColor: "primary.main",
+          color: "white",
+          width: 240, // optional: set drawer width
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         },
       }}
     >
+      {/* Top Content */}
       <Box>
         <Toolbar
           sx={{
             display: "flex",
+            justifyItems: "start",
             alignItems: "center",
-            justifyContent: "flex-end",
-            px: [1],
+            justifyContent: "space-between", // changed from flex-end
+            // gap: 1.5,
+            // px: 2,
+            pt: 2,
           }}
         >
+          <Box
+            component="img"
+            src={logo} // replace with your image path
+            alt="Logo"
+            sx={{ width: 50, height: 50 }}
+          />
           <Typography
-            component="h1"
-            variant="h6"
+            variant="h4"
             color="inherit"
-            noWrap
             sx={{
-              flexGrow: 1,
-              ml: 1,
-              mt: 2,
-              fontWeight: 700,
+              fontWeight: "bold",
               textTransform: "uppercase",
             }}
           >
-            Admin Dashboard
+            POISUM
           </Typography>
         </Toolbar>
-        <List component="nav">
 
-          {/* Homepage */}
-          <ListItemButton component={Link} to="/homepage">
-            <ListItemIcon
-              sx={{ color: (theme) => theme.palette.primary.contrastText }}
-            >
+        <List component="nav">
+          <ListItemButton component={Link} to="/homepage" sx={{ py: 2 }}>
+            <ListItemIcon sx={{ color: "inherit" }}>
               <HomeOutlined />
             </ListItemIcon>
             <ListItemText primary="Homepage" />
           </ListItemButton>
 
-          {/* Account Detail */}
-          <ListItemButton component={Link} to="/accountDetail">
-            <ListItemIcon
-              sx={{ color: (theme) => theme.palette.primary.contrastText }}
-            >
+          <ListItemButton component={Link} to="/accountDetail" sx={{ py: 2 }}>
+            <ListItemIcon sx={{ color: "inherit" }}>
               <AccountBoxOutlined />
             </ListItemIcon>
             <ListItemText primary="Account Setting" />
           </ListItemButton>
 
-          {/* Plan and Billing */}
-          <ListItemButton component={Link} to="/plan">
-            <ListItemIcon
-              sx={{ color: (theme) => theme.palette.primary.contrastText }}
-            >
+          <ListItemButton component={Link} to="/plan" sx={{ py: 2 }}>
+            <ListItemIcon sx={{ color: "inherit" }}>
               <PlayCircleOutlineOutlined />
             </ListItemIcon>
             <ListItemText primary="Plan & Billing" />
           </ListItemButton>
-
-          {/* <Divider /> */}
-
-          <ListItemButton component={Link} to="/signin">
-            <ListItemIcon
-              sx={{
-                color: (theme) => theme.palette.primary.contrastText,
-              }}
-            >
+          <ListItemButton component={Link} to="/signin" sx={{ py: 2 }}>
+            <ListItemIcon sx={{ color: "inherit" }}>
               <ExitToAppIcon />
             </ListItemIcon>
             <ListItemText primary="Logout" />
           </ListItemButton>
         </List>
       </Box>
-      {/* <Box style={{ flex: 1 }}>
-      <Typography variant="small">v1.1.3</Typography>
-      </Box> */}
+
+      {/* Bottom Section */}
+      <Box my={3}>
+        {/* <Divider sx={{ borderColor: "tertiary.main", my:3 }} /> */}
+        <Box
+          sx={{
+            backgroundColor: "tertiary.light",
+            borderRadius: 3,
+            p: 2,
+            textAlign: "center",
+            boxShadow: 1,
+            mx: 2,
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            color="secondary.main"
+            fontWeight="bold"
+          >
+            Get Premium Version!
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            mb={2}
+            sx={{}}
+            noWrap="false"
+          >
+            You're currently using <br/>the free version
+
+          </Typography>
+
+          <Button
+            variant="contained"
+            sx={{
+              borderRadius: "999px",
+              textTransform: "none",
+              px: 3,
+              py: 1,
+              backgroundColor: "#1a73e8", // blue button
+              "&:hover": {
+                backgroundColor: "#1765cc",
+              },
+            }}
+          >
+            Upgrade Now
+          </Button>
+        </Box>
+        {/* <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          gap={1}
+          sx={{ pb: 2 }} // padding below
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            sx={{
+              borderRadius: "999px",
+              textTransform: "none",
+              px: 2,
+              py: 0.5,
+              fontSize: "0.75rem",
+            }}
+          >
+            Upgrade
+          </Button>
+
+          <Typography variant="caption" color="tertiary.dark">
+            v1.1.3
+          </Typography>
+        </Box> */}
+        {/* <List>
+          <ListItemButton component={Link} to="/" sx={{ py: 3 }}>
+            <ListItemIcon sx={{ color: "inherit" }}>
+              <CreateNewFolder />
+            </ListItemIcon>
+            <ListItemText primary="Upgrade Now" />
+          </ListItemButton>
+        </List> */}
+        {/* <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      py={2}
+    >
+      <Typography variant="caption" color="tertiary.dark">
+        v1.1.3
+      </Typography>
+    </Box> */}
+      </Box>
     </Drawer>
   );
 };

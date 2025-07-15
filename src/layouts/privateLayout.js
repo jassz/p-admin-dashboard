@@ -60,7 +60,7 @@ const PrivateLayout = ({ children }) => {
           logoutCallback={logout}
         />
         <Box
-          component="main"
+          // component="main"
           sx={{
             backgroundColor: (theme) =>
               theme.palette.mode === "light"
@@ -68,11 +68,12 @@ const PrivateLayout = ({ children }) => {
                 : theme.palette.grey[900],
             flexGrow: 1,
             height: "100vh",
-            overflowY: "scroll",
+            overflowY: "hidden",
           }}
         >
           <Toolbar />
-          <Box>{children}</Box>
+          <Box
+          sx={{ height: "100vh", }}>{children}</Box>
         </Box>
       </Box>
     </ThemeProvider>

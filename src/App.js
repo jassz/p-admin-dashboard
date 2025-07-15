@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Signin from "./pages/Auth/signin";
 import Signup from "./pages/Auth/signup";
 import Homepage from './pages/Homepage/index'
+import Homepage1 from './pages/Homepage/index2'
 import Account from './pages/Account/index'
 import Plan from './pages/Plan/index'
 // import { LicenseInfo } from '@mui/x-license-pro'
@@ -19,7 +20,7 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Homepage />} />
-        <Route path="/homepage" element={<Homepage />} />
+        <Route path="/homepage" element={<Homepage1 />} />
         <Route path="/accountDetail" element={<Account />} />
         <Route path="/plan" element={<Plan />} />
       </Routes>
