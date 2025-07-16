@@ -2,7 +2,7 @@ import { Box, Button, Chip, Divider, Grid, Paper, Typography } from "@mui/materi
 import React from "react";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import ButtonComponent from "components/button";
-export default function Listing() {
+export default function Listing2() {
   const plans = [
     {
       title: "Starter Plan",
@@ -78,7 +78,6 @@ export default function Listing() {
                 <Typography variant="caption" fontWeight="semibold">
                   {plan.description}
                 </Typography>
-                <Divider sx={{ my: 2, borderColor: "tertiary.main" }} />
                 <Box
                   display={"flex"}
                   justifyContent={"start"}

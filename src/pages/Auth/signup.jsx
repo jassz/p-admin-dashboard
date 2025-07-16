@@ -23,6 +23,7 @@ import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, createTheme } from "@mui/system";
 import PublicLayout from "../../layouts/signupLayout";
+import logo from "./../../assets/images/logo192.png";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -98,9 +99,13 @@ export default function Signup() {
         <Typography variant="h4" fontWeight="bold">
             Welcome to Poisum
         </Typography>
-        <Typography variant="body1" color="textSecondary" mb={2}>
-            Sign up now with no credit card required        
+        <Typography variant="body2" color="textSecondary" mb={3}>
+             {"Sign up now with no credit card required. Already have an account? "}{" "}
+                <Link color="inherit" to="/signin">
+                  Sign in here
+                </Link>    
         </Typography>
+    
         <Container
           component={Paper}
           elevation={6}
@@ -114,8 +119,15 @@ export default function Signup() {
             backgroundColor: "rgba(255, 255, 255, 0.85)",
           }}
         >
+          
           <Avatar sx={{ bgcolor: "primary.main", mb: 2 }}>
-            <LockOutlinedIcon />
+            {/* <LockOutlinedIcon /> */}
+            <Box
+                      component="img"
+                      src={logo} // replace with your image path
+                      alt="Logo"
+                      sx={{ width: 50, height: 50 }}
+                    />
           </Avatar>
           {/* <Typography component="h1" variant="h5" mb={2}>
             Sign Up
@@ -228,21 +240,29 @@ export default function Signup() {
               </FormHelperText>
             )}
 
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
               Sign Up
             </Button>
-            <Typography
-                variant="body2"
-                color="text.secondary"
-                display="flex"
-                justifyContent="center"
-                sx={{ mt: 2 }}
-              >
-                {" Already have an account? "}
-                <Link color="inherit" to="/signin">
-                  Sign in here
-                </Link>
-              </Typography>
+            <Typography variant="caption" pt={1}>
+                          By signing up, you agree to Poisum's{" "}
+                          <Link
+                            href="/terms-and-conditions.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            underline="hover"
+                          >
+                            Terms & Conditions
+                          </Link>{" "}
+                          and{" "}
+                          <Link
+                            href="/privacy-policy.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            underline="hover"
+                          >
+                            Privacy Policy
+                          </Link>.
+                        </Typography>
           </Box>
         </Container>
       </Container>

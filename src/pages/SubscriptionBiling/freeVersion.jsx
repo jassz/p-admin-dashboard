@@ -39,7 +39,7 @@ export default function FreeVersion() {
         <ButtonComponent
           value={"contained"}
           text={"View Plans"}
-          color={"secondary"}
+          color={"primary"}
           callback={handleClick}
         />
       </Box>

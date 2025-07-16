@@ -65,12 +65,12 @@ const PrivateLayout = ({ children }) => {
             backgroundColor: (theme) => theme.palette.tertiary.main,
             flexGrow: 1,
             height: "100vh",
-            overflowY: "hidden",
+            overflowY: "scroll",
           }}
         >
           <Toolbar />
           <Box
-          sx={{ height: "100vh", }}>{children}</Box>
+          sx={{ height: "80vh", }}>{children}</Box>
         </Box>
       </Box>
     </ThemeProvider>

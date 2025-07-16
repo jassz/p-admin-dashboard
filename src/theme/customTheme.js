@@ -28,7 +28,7 @@ const CustomTheme = () => createTheme({
       light: "#e6e3e3",
       main: "#bfbfbf",
       dark: "#8c8b8b",
-      contrastText: "1A1A1A",
+      contrastText: "#1A1A1A",
     },
   },
 });
