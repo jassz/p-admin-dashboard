@@ -240,13 +240,13 @@ export default function Signup() {
               </FormHelperText>
             )}
 
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2, mb:1 }}>
               Sign Up
             </Button>
             <Typography variant="caption" pt={1}>
                           By signing up, you agree to Poisum's{" "}
                           <Link
-                            href="/terms-and-conditions.pdf"
+                                    to="/tnc"
                             target="_blank"
                             rel="noopener noreferrer"
                             underline="hover"
@@ -255,7 +255,7 @@ export default function Signup() {
                           </Link>{" "}
                           and{" "}
                           <Link
-                            href="/privacy-policy.pdf"
+                                   to="/privacyPolicy"
                             target="_blank"
                             rel="noopener noreferrer"
                             underline="hover"

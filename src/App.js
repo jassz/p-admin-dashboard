@@ -10,6 +10,8 @@ import Plan from './pages/Plan/index'
 // import { LicenseInfo } from '@mui/x-license-pro'
 import { ThemeProvider } from '@mui/material/styles';
 import CustomTheme from "theme/customTheme";
+import Privacy from "pages/Policy/index";
+import Terms from "pages/Terms/index";
 // LicenseInfo.setLicenseKey(process.env.REACT_APP_MUI_LICENSE_KEY);
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
         <Route path="/accountDetail" element={<Account />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/plan" element={<Plan />} />
+        <Route path="/privacyPolicy" element={<Privacy />} />
+        <Route path="/tnc" element={<Terms />} />
       </Routes>
     </Router>
   );

@@ -200,14 +200,14 @@ export default function Signin() {
               </FormHelperText>
             )}
            
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2, mb:1 }}>
               Sign In
             </Button>
-             <Typography variant="caption" pt={2}>
+             <Typography variant="caption">
               By signing in, you agree to Poisum's{" "}
               <Link
-                href="/terms-and-conditions.pdf"
-                target="_blank"
+                to="/tnc"
+                 target="_blank"
                 rel="noopener noreferrer"
                 underline="hover"
               >
@@ -215,7 +215,7 @@ export default function Signin() {
               </Link>{" "}
               and{" "}
               <Link
-                href="/privacy-policy.pdf"
+                to="/privacyPolicy"
                 target="_blank"
                 rel="noopener noreferrer"
                 underline="hover"
