@@ -96,22 +96,16 @@ export default function Signin() {
           mx: "auto",
         }}
       >
-        <Typography variant="h5">
-            Sign In Now
-          </Typography>
+        <Typography variant="h5">Sign In Now</Typography>
         {/* <Typography variant="body1" color="textSecondary" mb={2}>
           Please enter your details
         </Typography> */}
-        <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ mb: 2 }}
-              >
-                {" Don't have an account? "}
-                <Link color="inherit" to="/signup">
-                  Sign up here
-                </Link>
-              </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {" Don't have an account? "}
+          <Link color="inherit" to="/signup">
+            Sign up here
+          </Link>
+        </Typography>
         <Container
           component={Paper}
           elevation={6}
@@ -128,13 +122,12 @@ export default function Signin() {
           <Avatar sx={{ bgcolor: "primary.main", mb: 2 }}>
             {/* <LockOutlinedIcon /> */}
             <Box
-                      component="img"
-                      src={logo} // replace with your image path
-                      alt="Logo"
-                      sx={{ width: 50, height: 50 }}
-                    />
+              component="img"
+              src={logo} // replace with your image path
+              alt="Logo"
+              sx={{ width: 50, height: 50 }}
+            />
           </Avatar>
-          
 
           <Box
             component="form"
@@ -199,30 +192,38 @@ export default function Signin() {
                 {errors.form}
               </FormHelperText>
             )}
-           
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2, mb:1 }}>
+            <Box mt={2}>
+              <Typography variant="caption">
+                By signing in, you agree to Poisum's{" "}
+                <Link
+                  to="/tnc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="hover"
+                >
+                  Terms & Conditions
+                </Link>{" "}
+                and{" "}
+                <Link
+                  to="/privacyPolicy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="hover"
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </Typography>
+            </Box>
+
+            <Button type="submit" variant="contained" fullWidth>
               Sign In
             </Button>
-             <Typography variant="caption">
-              By signing in, you agree to Poisum's{" "}
-              <Link
-                to="/tnc"
-                 target="_blank"
-                rel="noopener noreferrer"
-                underline="hover"
-              >
-                Terms & Conditions
-              </Link>{" "}
-              and{" "}
-              <Link
-                to="/privacyPolicy"
-                target="_blank"
-                rel="noopener noreferrer"
-                underline="hover"
-              >
-                Privacy Policy
-              </Link>.
-            </Typography>
+            <Box display={"flex"} justifyContent={"center"}>
+              <Typography variant="overline" fullWidth>
+                V1.0.0
+              </Typography>
+            </Box>
           </Box>
         </Container>
       </Container>

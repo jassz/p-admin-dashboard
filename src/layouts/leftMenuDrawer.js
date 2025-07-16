@@ -193,7 +193,7 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
               borderRadius: "999px",
               textTransform: "none",
               px: 3,
-              pb: 1,
+            
               boxShadow:5,
               backgroundColor: "primary.main", // blue button
               "&:hover": {
@@ -206,6 +206,11 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
           </Button>
           {/* <ButtonEncrypt /> */}
         </Box>
+          <Box display={"flex"} justifyContent={"center"}>
+                      <Typography variant="overline" fullWidth>
+                        V1.0.0
+                      </Typography>
+                    </Box>
       </Box>
     </Drawer>
   );
