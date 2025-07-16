@@ -1,34 +1,18 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Divider, Typography } from '@mui/material'
+import PrivateLayout from 'layouts/privateLayout'
+import React from 'react'
+import Listing from './listing'
 
-import PrivateLayout from "../../layouts/privateLayout";
-import myImage from './../../assets/images/coming-soon.jpg'; // adjust the path
-
-export default function Plan() {
-
+export default function Index() {
   return (
-  <PrivateLayout>
-  <Box
-    display="flex"
-    flexDirection="column"
-    alignItems="end"
-    justifyContent="center"
-    height="90vh"
-    gap={2}
-     sx={{
-    // backgroundColor: 'tertiary.main', 
-    backgroundImage: `url(${myImage})`,
-    backgroundSize: 'cover',        // Optional: covers entire box
-    backgroundRepeat: 'no-repeat',  // Optional: prevents tiling
-    backgroundPosition: 'center',   // Optional: centers image
-  }}
-  >
-    <Typography variant="h2" textTransform={"uppercase"} fontWeight={700}  >
-      Plan and Billing
-    </Typography>
-    <Typography variant="body1" fontWeight='light'  >
-      Stay tuned for more updates and details.
-    </Typography>
-  </Box>
+     <PrivateLayout>
+          <Box sx={{ padding: 5, width: "100%" }}>
+            <Typography variant="h4" fontWeight={"bold"}>
+            Plan and Pricing
+          </Typography>
+           <Divider sx={{ my: 1, borderColor: "transparent" }} />
+            <Listing />
+            </Box>
 </PrivateLayout>
-  );
+  )
 }

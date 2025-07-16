@@ -5,6 +5,7 @@ import Signup from "./pages/Auth/signup";
 import Homepage from './pages/Homepage/index'
 import Homepage1 from './pages/Homepage/index2'
 import Account from './pages/Account/index'
+import Subscription from './pages/SubscriptionBiling/index'
 import Plan from './pages/Plan/index'
 // import { LicenseInfo } from '@mui/x-license-pro'
 import { ThemeProvider } from '@mui/material/styles';
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/homepage" element={<Homepage1 />} />
         <Route path="/accountDetail" element={<Account />} />
+        <Route path="/subscription" element={<Subscription />} />
         <Route path="/plan" element={<Plan />} />
       </Routes>
     </Router>

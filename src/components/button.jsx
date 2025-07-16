@@ -13,6 +13,7 @@ export default function ButtonComponent({ value, text, callback, color }) {
                 // borderColor: theme.palette[color]?.main, 
                 // border:1
             },
+            borderRadius: 2
          })}
         size="normal"
         variant={value}

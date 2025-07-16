@@ -111,7 +111,7 @@ export default function Signin() {
             backgroundColor: "rgba(255, 255, 255, 0.85)",
           }}
         >
-          <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
+          <Avatar sx={{ bgcolor: "primary.main", mb: 2 }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5" mb={2}>

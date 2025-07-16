@@ -210,15 +210,13 @@ export default function ChangePasswordSection() {
         borderRadius: 4,
         border: "1px solid tertiary.main",
         boxShadow: 5,
-        padding: 1,
+        padding: 3,
       }}
     >
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        gap={1}
-        sx={{ p: 2, borderRadius: 2 }}
       >
         <Box>
           <Typography
@@ -240,7 +238,7 @@ export default function ChangePasswordSection() {
         <ButtonComponent
           value="contained"
           callback={handleOpen}
-          color="secondary"
+          color="primary"
           text="Change Password"
         />
 
@@ -412,7 +410,7 @@ export default function ChangePasswordSection() {
                           value="contained"
                           text="Update Password"
                           callback={handleSubmit}
-                          color="secondary"
+                          color="primary"
                         />
                       </Box>
                     </Box>

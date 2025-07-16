@@ -48,7 +48,7 @@ const PrivateLayout = ({ children }) => {
     <ThemeProvider theme={CustomTheme}>
       <Box sx={{ display: "flex", overflow: "hidden" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open} sx={{ boxShadow: "none" }}>
+        <AppBar position="absolute" open={open} sx={{ boxShadow: "none", backgroundColor:"secondary.main" }}>
           <Toolbar>
             <Box sx={{ flexGrow: 1 }} />
             <Avatar sx={{ bgcolor: yellow[100], color: "black" }}>N</Avatar>
@@ -62,10 +62,7 @@ const PrivateLayout = ({ children }) => {
         <Box
           // component="main"
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
+            backgroundColor: (theme) => theme.palette.tertiary.main,
             flexGrow: 1,
             height: "100vh",
             overflowY: "hidden",

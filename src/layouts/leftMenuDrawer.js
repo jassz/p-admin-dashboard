@@ -36,8 +36,8 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    background: theme.palette.secondary.main,
+    color: theme.palette.tertiary.main,
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -68,12 +68,13 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
       sx={{
         "& .MuiDrawer-paper": {
           borderRight: "none",
-          backgroundColor: "primary.main",
-          color: "white",
+          backgroundColor: "secondary .main",
+          color: "tertiary.main",
           width: 240, // optional: set drawer width
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          boxShadow:2
         },
       }}
     >
@@ -109,27 +110,43 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
         </Toolbar>
 
         <List component="nav">
-          <ListItemButton component={Link} to="/homepage" sx={{ py: 2 }}>
+          <ListItemButton component={Link} to="/homepage" 
+          sx={{ 
+            py: 2,  
+          "&:hover": {backgroundColor: 'primary.main'}, 
+          }}>
             <ListItemIcon sx={{ color: "inherit" }}>
               <HomeOutlined />
             </ListItemIcon>
             <ListItemText primary="Homepage" />
           </ListItemButton>
 
-          <ListItemButton component={Link} to="/accountDetail" sx={{ py: 2 }}>
+          <ListItemButton component={Link} to="/accountDetail" 
+           sx={{ 
+            py: 2,  
+          "&:hover": {backgroundColor: 'primary.main'}, 
+          }}>
             <ListItemIcon sx={{ color: "inherit" }}>
               <AccountBoxOutlined />
             </ListItemIcon>
             <ListItemText primary="Account Setting" />
           </ListItemButton>
 
-          <ListItemButton component={Link} to="/plan" sx={{ py: 2 }}>
+          <ListItemButton component={Link} to="/subscription"  sx={{ 
+            py: 2,  
+          "&:hover": {backgroundColor: 'primary.main'}, 
+          "&:active": {backgroundColor: 'primary.main'} 
+          }}>
             <ListItemIcon sx={{ color: "inherit" }}>
               <PlayCircleOutlineOutlined />
             </ListItemIcon>
             <ListItemText primary="Plan & Billing" />
           </ListItemButton>
-          <ListItemButton component={Link} to="/signin" sx={{ py: 2 }}>
+          <ListItemButton component={Link} to="/signin"  sx={{ 
+            py: 2,  
+          "&:hover": {backgroundColor: 'primary.main'},
+          "&:active": {backgroundColor: 'primary.main'} 
+          }}>
             <ListItemIcon sx={{ color: "inherit" }}>
               <ExitToAppIcon />
             </ListItemIcon>
@@ -139,7 +156,7 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
       </Box>
 
       {/* Bottom Section */}
-      <Box my={3}>
+      <Box my={7}>
         {/* <Divider sx={{ borderColor: "tertiary.main", my:3 }} /> */}
         <Box
           sx={{
@@ -176,11 +193,12 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
               borderRadius: "999px",
               textTransform: "none",
               px: 3,
-              py: 1,
+              pb: 1,
               boxShadow:5,
-              backgroundColor: "#1a73e8", // blue button
+              backgroundColor: "primary.main", // blue button
               "&:hover": {
-                backgroundColor: "#1765cc",
+                backgroundColor: "primary.dark",
+                // color: "secondary.main"
               },
             }}
           >

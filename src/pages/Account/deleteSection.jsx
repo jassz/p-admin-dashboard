@@ -9,15 +9,13 @@ export default function DeleteSection(handleSubmit) {
             borderRadius: 4,
             border: "1px solid tertiary.main",
             boxShadow: 5,
-            padding: 1,
+            padding: 3,
           }}
         >
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            gap={1}
-            sx={{ p: 2, borderRadius: 2 }}
           >
             <Box>
               <Typography

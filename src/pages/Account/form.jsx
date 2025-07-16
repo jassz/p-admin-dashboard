@@ -73,7 +73,7 @@ export default function UserForm({
               value="contained"
               text="Save"
               callback={submit}
-              color="secondary"
+              color="primary"
             />
           </Box>
         <Divider sx={{ my: 2, borderColor: "tertiary.main" }} />

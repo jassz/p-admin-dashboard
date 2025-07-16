@@ -102,7 +102,7 @@ export default function Account() {
         </Paper>
         <Divider sx={{ my: 1, borderColor: "transparent" }} />
         <ChangePasswordSection />
-        <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+        <Divider sx={{ my: 3, borderColor: "secondary.main" }} />
         <DeleteSection handleSubmit={handleSubmit} />
       </Box>
       <Backdrop
