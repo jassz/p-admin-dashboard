@@ -12,6 +12,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CustomTheme from "theme/customTheme";
 import Privacy from "pages/Policy/index";
 import Terms from "pages/Terms/index";
+import Onboarding from "pages/Onboarding/index";
 // LicenseInfo.setLicenseKey(process.env.REACT_APP_MUI_LICENSE_KEY);
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/plan" element={<Plan />} />
         <Route path="/privacyPolicy" element={<Privacy />} />
         <Route path="/tnc" element={<Terms />} />
+        <Route path="/onboarding" element={<Onboarding />} />
       </Routes>
     </Router>
   );

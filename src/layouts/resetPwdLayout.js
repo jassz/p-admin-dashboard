@@ -1,12 +1,10 @@
 import Grid from "@mui/material/Grid";
-import logo from "../assets/images/full_logo-transparent.png";
+import logo from "../assets/images/resetBg-preview.png";
 import { CssBaseline, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
-const PublicLayout = ({ children }) => {
+const ResetPwdLayout = ({ children }) => {
   return (
- 
-
     <Grid
       container
       component="main"
@@ -21,7 +19,6 @@ const PublicLayout = ({ children }) => {
       <CssBaseline />
 
       <Grid
-        item
         size={6}
         sx={{
           height: "100vh",
@@ -53,7 +50,6 @@ const PublicLayout = ({ children }) => {
       />
       {/* Green foreground layer */}
       <Grid
-        item
         size={6}
         sx={{
           position: "relative",
@@ -70,19 +66,19 @@ const PublicLayout = ({ children }) => {
         }}
       >
         <Box px={3} textAlign="center">
-          {/* <Box
+          <Box
             component="img"
             src={logo} // replace with your image path
             alt="Logo"
-            // sx={{ width: 50, height: 50 }}
-          /> */}
-          <Typography variant="h1" fontWeight="bold" color="tertiary.light">
+            // sx={{ width: 550 }}
+          />
+          {/* <Typography variant="h1" fontWeight="bold" color="tertiary.light">
             POI'SUM
-          </Typography>
+          </Typography> */}
         </Box>
       </Grid>
     </Grid>
   );
 };
 
-export default PublicLayout;
+export default ResetPwdLayout;

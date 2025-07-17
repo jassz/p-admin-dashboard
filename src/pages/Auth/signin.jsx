@@ -27,6 +27,7 @@ import PublicLayout from "../../layouts/loginLayout";
 import logo from "./../../assets/images/logo192.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ComponentBackdrop from "components/backdrop";
 
 export default function Signin() {
   const passwordRules = [
@@ -51,12 +52,12 @@ export default function Signin() {
       test: (pwd) => /[^A-Za-z0-9]/.test(pwd),
     },
   ];
-
+  const [openBackdrop, setOpenBackdrop] = useState(false);
   const navigate = useNavigate();
   const [data, setData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-
+  const isVerified = false;
   const handleChange = (field, event) => {
     const value = event.target.value;
 
@@ -72,14 +73,6 @@ export default function Signin() {
     }
   };
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -93,19 +86,29 @@ export default function Signin() {
     if (Object.keys(newErrors).length > 0) return;
 
     try {
+      setOpenBackdrop(true);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       const result = true;
       // const result = await axios.post(`${apiClient}/user/login`, data);
       console.log("Login response:", result);
 
       if (result) {
         // localStorage.setItem("loggedInID", result.data.id);
-        navigate("/homepage");
+
+        if(!isVerified){
+          navigate("/onboarding");
+        } else {
+          navigate("/homepage");
+        }
       } else {
         setErrors({ form: "Invalid email or password" });
       }
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({ form: "Unexpected error occurred. Please try again." });
+    } finally {
+      setOpenBackdrop(false);
     }
   };
 
@@ -324,6 +327,7 @@ export default function Signin() {
           </Box>
         </Container>
       </Container>
+      <ComponentBackdrop openBackdrop={openBackdrop} />
     </PublicLayout>
   );
 }

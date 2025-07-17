@@ -5,6 +5,7 @@ import {
   TextField,
   Grid,
   Divider,
+  MenuItem,
 } from "@mui/material";
 import { useApiClient } from "context/ApiClientContext";
 import ButtonComponent from "components/button";
@@ -16,6 +17,7 @@ export default function UserForm({
   submit,
 }) {
   const labelWidth = 170;
+  const countries = ["Malaysia", "Singapore"];
 
   const [data, setData] = useState({});
 
@@ -154,18 +156,25 @@ export default function UserForm({
             >
               Country
             </Typography>
-            <TextField
+               <TextField
+              select
+              id="country"
+              name="country"
+              value={data.country}
+              onChange={(e) => handleChange("country", e)}
               error={!!errors.country}
               helperText={errors.country}
-              type="text"
-              onChange={(e) => handleChange("country", e)}
-              value={inputForm.country}
-              required
               margin="dense"
-              id="country"
-              fullWidth
               size="small"
-            />
+              fullWidth
+              autoFocus
+            >
+              {countries.map((country) => (
+                <MenuItem key={country} value={country}>
+                  {country}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
         </Grid>
       </Grid>
