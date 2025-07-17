@@ -35,10 +35,6 @@ export default function Signin() {
       test: (pwd) => pwd.length >= 8,
     },
     {
-      label: "Minimum 8 characters",
-      test: (pwd) => pwd.length >= 8,
-    },
-    {
       label: "At least 1 uppercase letter",
       test: (pwd) => /[A-Z]/.test(pwd),
     },
@@ -272,6 +268,7 @@ export default function Signin() {
                           sx={{ color: "green" }}
                         />
                       ) : (
+                        <CancelIcon fontSize="small" sx={{ color: "red" }} />
                       )}
                       <Typography
                         variant="caption"
