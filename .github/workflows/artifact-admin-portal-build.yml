@@ -40,7 +40,7 @@ jobs:
 
     # 4. Build React Web and output to './build' directory
     - name: Build React Web
-      run: npm run build
+      run: CI=false npm run build
 
     # 5. Build Docker Image
     - name: Build Docker Image
