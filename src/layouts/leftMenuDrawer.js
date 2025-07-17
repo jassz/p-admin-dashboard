@@ -68,7 +68,7 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
       sx={{
         "& .MuiDrawer-paper": {
           borderRight: "none",
-          backgroundColor: "secondary .main",
+          backgroundColor: "secondary.main",
           color: "tertiary.main",
           width: 240, // optional: set drawer width
           display: "flex",

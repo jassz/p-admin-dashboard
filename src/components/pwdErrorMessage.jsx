@@ -3,15 +3,19 @@ import React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-export default function PwdErrorMessage({field, error, newPwd}) {
+export default function PwdErrorMessage({field, error, comparePwd}) {
      const passwordRules = [
     {
       label: "Minimum 8 characters",
       test: (pwd) => pwd.length >= 8,
     },
      {
+      label: "New password cannot be same with old password",
+      test: (pwd) => pwd !== comparePwd,
+    },
+     {
       label: "Confirm password must be same with new password",
-      test: (pwd) =>pwd == newPwd,
+      test: (pwd) =>!!comparePwd && pwd === comparePwd,
     },
     {
       label: "At least 1 uppercase letter",

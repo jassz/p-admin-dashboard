@@ -304,6 +304,7 @@ export default function ChangePwd() {
         <PwdErrorMessage
           field={inputForm.newPassword}
           error={errors.newPassword}
+          comparePwd={inputForm.tempPassword}
         />
       </Grid>
       <Box display="flex">
@@ -351,7 +352,7 @@ export default function ChangePwd() {
         <PwdErrorMessage
           field={inputForm.confirmPassword}
           error={errors.confirmPassword}
-          newPwd={inputForm.newPassword}
+          comparePwd={inputForm.newPassword}
         />
       </Grid>
       <Box display="flex" justifyContent="center" style={{ marginTop: "30px" }}>
