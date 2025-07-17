@@ -1,4 +1,4 @@
-name: Release Portal Web Build
+name: Release Admin Portal Web Build
 
 on:
   workflow_dispatch: # Manual trigger

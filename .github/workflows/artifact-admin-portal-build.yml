@@ -1,4 +1,4 @@
-name: Artifact Portal Web Build
+name: Artifact Admin Portal Web Build
 
 on:
   workflow_dispatch: # Manual trigger
