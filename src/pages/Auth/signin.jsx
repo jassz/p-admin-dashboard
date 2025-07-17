@@ -12,6 +12,7 @@ import {
   FormHelperText,
   Typography,
   Paper,
+  Stack,
 } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
@@ -24,15 +25,55 @@ import { Link, useNavigate } from "react-router-dom";
 import { Container, createTheme } from "@mui/system";
 import PublicLayout from "../../layouts/loginLayout";
 import logo from "./../../assets/images/logo192.png";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function Signin() {
+  const passwordRules = [
+    {
+      label: "Minimum 8 characters",
+      test: (pwd) => pwd.length >= 8,
+    },
+    {
+      label: "Minimum 8 characters",
+      test: (pwd) => pwd.length >= 8,
+    },
+    {
+      label: "At least 1 uppercase letter",
+      test: (pwd) => /[A-Z]/.test(pwd),
+    },
+    {
+      label: "At least 1 lowercase letter",
+      test: (pwd) => /[a-z]/.test(pwd),
+    },
+    {
+      label: "At least 1 number",
+      test: (pwd) => /\d/.test(pwd),
+    },
+    {
+      label: "At least 1 special character (!@#$...)",
+      test: (pwd) => /[^A-Za-z0-9]/.test(pwd),
+    },
+  ];
+
   const navigate = useNavigate();
   const [data, setData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (field, event) => {
-    setData({ ...data, [field]: event.target.value });
+    const value = event.target.value;
+
+    setData({ ...data, [field]: value });
+    if (field === "email") {
+      const error = validateEmail(value);
+      setErrors((data) => ({ ...data, email: error }));
+    }
+
+    if (field === "password") {
+      const error = validatePassword(value);
+      setErrors((data) => ({ ...data, password: error }));
+    }
   };
 
   const handleClickShowPassword = () => {
@@ -76,13 +117,47 @@ export default function Signin() {
     switch (name) {
       case "email":
         if (!value.trim()) return "Email is required";
+        if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+          return "Email must be a @gosumgroup.com address.";
+        }
         return "";
       case "password":
         if (!value) return "Password is required";
+        if (value.length < 8) return "Password must be at least 8 characters";
+        if (!/[A-Z]/.test(value))
+          return "Password must contain at least one uppercase letter";
+        if (!/[a-z]/.test(value))
+          return "Password must contain at least one lowercase letter";
+        if (!/[0-9]/.test(value))
+          return "Password must contain at least one number";
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
+          return "Password must contain at least one special character";
         return "";
       default:
         return "";
     }
+  };
+
+  const validateEmail = (email) => {
+    if (!email) return "Email is required.";
+    if (!/^[\w-.]+@gosumgroup\.com$/.test(email)) {
+      return "Email must be a @gosumgroup.com address.";
+    }
+    return "";
+  };
+
+  const validatePassword = (password) => {
+    if (!password) return "Password is required.";
+    if (password.length < 8) return "Password must be at least 8 characters";
+    if (!/[A-Z]/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/[0-9]/.test(password))
+      return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+      return "Password must contain at least one special character";
+    return "";
   };
 
   return (
@@ -97,9 +172,6 @@ export default function Signin() {
         }}
       >
         <Typography variant="h5">Sign In Now</Typography>
-        {/* <Typography variant="body1" color="textSecondary" mb={2}>
-          Please enter your details
-        </Typography> */}
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {" Don't have an account? "}
           <Link color="inherit" to="/signup">
@@ -150,40 +222,68 @@ export default function Signin() {
               autoFocus
             />
 
-            <FormControl
-              variant="outlined"
-              fullWidth
+            <TextField
+              label="Password"
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={data.password}
+              onChange={(e) => handleChange("password", e)}
+              error={errors.password}
+              helperText={
+                errors.password == "Password is required." ||
+                data.password == ""
+                  ? errors.password
+                  : ""
+              }
               margin="dense"
               size="small"
-              error={!!errors.password}
-            >
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <OutlinedInput
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={data.password}
-                onChange={(e) => handleChange("password", e)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      aria-label="toggle password visibility"
+              fullWidth
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        edge="end"
+                      >
+                        {!showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+
+            {data.password && errors.password && (
+              <Stack spacing={0.5} pl={2}>
+                {passwordRules.map((rule, idx) => {
+                  const passed = rule.test(data.password);
+                  return (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      key={idx}
                     >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
-              {errors.password && (
-                <FormHelperText sx={{ color: red[700] }}>
-                  {errors.password}
-                </FormHelperText>
-              )}
-            </FormControl>
+                      {passed ? (
+                        <CheckCircleIcon
+                          fontSize="small"
+                          sx={{ color: "green" }}
+                        />
+                      ) : (
+                      )}
+                      <Typography
+                        variant="caption"
+                        sx={{ color: passed ? "green" : "red" }}
+                      >
+                        {rule.label}
+                      </Typography>
+                    </Stack>
+                  );
+                })}
+              </Stack>
+            )}
 
             {errors.form && (
               <FormHelperText

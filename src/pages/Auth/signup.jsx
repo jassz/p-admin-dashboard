@@ -6,15 +6,11 @@ import {
   Button,
   InputAdornment,
   IconButton,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
   FormHelperText,
   Typography,
   Paper,
-  Divider,
+  MenuItem,
 } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
@@ -22,26 +18,74 @@ import {
 } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, createTheme } from "@mui/system";
+import { Container, createTheme, Stack } from "@mui/system";
 import PublicLayout from "../../layouts/signupLayout";
 import logo from "./../../assets/images/logo192.png";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function Signup() {
+  const countries = ["Malaysia", "Singapore"];
+  const passwordRules = [
+    {
+      label: "Minimum 8 characters",
+      test: (pwd) => pwd.length >= 8,
+    },
+    {
+      label: "At least 1 uppercase letter",
+      test: (pwd) => /[A-Z]/.test(pwd),
+    },
+    {
+      label: "At least 1 lowercase letter",
+      test: (pwd) => /[a-z]/.test(pwd),
+    },
+    {
+      label: "At least 1 number",
+      test: (pwd) => /\d/.test(pwd),
+    },
+    {
+      label: "At least 1 special character (!@#$...)",
+      test: (pwd) => /[^A-Za-z0-9]/.test(pwd),
+    },
+  ];
+
   const navigate = useNavigate();
-  const [data, setData] = useState({ email: "", password: "" });
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+    fullname: "",
+    company: "",
+    country: "",
+  });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (field, event) => {
-    setData({ ...data, [field]: event.target.value });
-  };
+    const value = event.target.value;
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    setData({ ...data, [field]: value });
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+    if (field === "email") {
+      const error = validateEmail(value);
+      setErrors((data) => ({ ...data, email: error }));
+    }
+
+    if (field === "password") {
+      const error = validatePassword(value);
+      setErrors((data) => ({ ...data, password: error }));
+    }
+    if (field === "fullname") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, fullname: error }));
+    }
+    if (field === "company") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, company: error }));
+    }
+    if (field === "country") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, country: error }));
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -77,13 +121,57 @@ export default function Signup() {
     switch (name) {
       case "email":
         if (!value.trim()) return "Email is required";
+        if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+          return "Email must be a @gosumgroup.com address.";
+        }
         return "";
       case "password":
         if (!value) return "Password is required";
+        if (value.length < 8) return "Password must be at least 8 characters";
+        if (!/[A-Z]/.test(value))
+          return "Password must contain at least one uppercase letter";
+        if (!/[a-z]/.test(value))
+          return "Password must contain at least one lowercase letter";
+        if (!/[0-9]/.test(value))
+          return "Password must contain at least one number";
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
+          return "Password must contain at least one special character";
+        return "";
+
+      case "fullname":
+        if (!value) return "Full name is required";
+        return "";
+      case "company":
+        if (!value) return "Company name is required";
+        return "";
+      case "country":
+        if (!value) return "Country is required";
         return "";
       default:
         return "";
     }
+  };
+
+  const validateEmail = (email) => {
+    if (!email) return "Email is required.";
+    if (!/^[\w-.]+@gosumgroup\.com$/.test(email)) {
+      return "Email must be a @gosumgroup.com address.";
+    }
+    return "";
+  };
+
+  const validatePassword = (password) => {
+    if (!password) return "Password is required.";
+    if (password.length < 8) return "Password must be at least 8 characters";
+    if (!/[A-Z]/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/[0-9]/.test(password))
+      return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+      return "Password must contain at least one special character";
+    return "";
   };
 
   return (
@@ -156,41 +244,69 @@ export default function Signup() {
               autoFocus
             />
 
-            <FormControl
-              variant="outlined"
-              fullWidth
+            <TextField
+              label="Password"
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={data.password}
+              onChange={(e) => handleChange("password", e)}
+              error={!!errors.password}
+              helperText={
+                errors.password == "Password is required." ||
+                data.password == ""
+                  ? errors.password
+                  : ""
+              }
               margin="dense"
               size="small"
-              error={!!errors.password}
-            >
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <OutlinedInput
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={data.password}
-                onChange={(e) => handleChange("password", e)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      aria-label="toggle password visibility"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
-              {errors.password && (
-                <FormHelperText sx={{ color: red[700] }}>
-                  {errors.password}
-                </FormHelperText>
-              )}
-            </FormControl>
+              fullWidth
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        edge="end"
+                      >
+                        {!showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
 
+            {data.password && errors.password && (
+              <Stack spacing={0.5} pl={2}>
+                {passwordRules.map((rule, idx) => {
+                  const passed = rule.test(data.password);
+                  return (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      key={idx}
+                    >
+                      {passed ? (
+                        <CheckCircleIcon
+                          fontSize="small"
+                          sx={{ color: "green" }}
+                        />
+                      ) : (
+                        <CancelIcon fontSize="small" sx={{ color: "red" }} />
+                      )}
+                      <Typography
+                        variant="caption"
+                        sx={{ color: passed ? "green" : "red" }}
+                      >
+                        {rule.label}
+                      </Typography>
+                    </Stack>
+                  );
+                })}
+              </Stack>
+            )}
             <TextField
               label="Full Name"
               id="fullname"
@@ -220,19 +336,25 @@ export default function Signup() {
               autoFocus
             />
             <TextField
+              select
               label="Country"
               id="country"
               name="country"
-              type="text"
-              value={data.email}
-              onChange={(e) => handleChange("email", e)}
-              error={!!errors.email}
-              helperText={errors.email}
+              value={data.country}
+              onChange={(e) => handleChange("country", e)}
+              error={!!errors.country}
+              helperText={errors.country}
               margin="dense"
               size="small"
               fullWidth
               autoFocus
-            />
+            >
+              {countries.map((country) => (
+                <MenuItem key={country} value={country}>
+                  {country}
+                </MenuItem>
+              ))}
+            </TextField>
 
             {errors.form && (
               <FormHelperText
