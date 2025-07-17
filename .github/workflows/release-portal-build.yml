@@ -1,0 +1,90 @@
+name: Release Portal Web Build
+
+on:
+  workflow_dispatch: # Manual trigger
+    inputs:
+      version:
+          required: true
+          description: "Enter the version to deploy"
+          default: "v1.0.0"
+          type: string
+
+jobs:
+  build:
+    name: Build React Web and Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+    # Log user input and other variables
+    - name: Log user input and context
+      run: |
+        echo "Version: ${{ github.event.inputs.version }}"
+        echo "GitHub Run Number: ${{ github.run_number }}"
+        echo "Branch/Ref: ${{ github.ref }}"
+        echo "Triggered by: ${{ github.actor }}"
+        
+    # Check if version tag already exists
+    - name: Check if version tag exists
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+      run: |
+        TAG_EXISTS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ github.repository }}/tags | \
+          jq -r ".[].name" | grep -w "${{ github.event.inputs.version }}" || true)
+        if [ ! -z "$TAG_EXISTS" ]; then
+          echo "Error: Version tag ${{ github.event.inputs.version }} already exists."
+          exit 1
+        fi
+        
+    # 1. Check out the code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Setting up the Node.js environment
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    # 3. Get Dependencies
+    - name: Install Dependencies
+      run: npm ci
+
+    # 4. Build React Web and output to './build' directory
+    - name: Build React Web
+      run: npm run build
+
+    # 5. Build Docker Image
+    - name: Build Docker Image
+      run: |
+        docker build -t poisum-admin-portal-image:${{ github.event.inputs.version }} .
+    
+    # 6. Save Docker Image
+    - name: Save Docker Image as Archive
+      run: |
+        docker save poisum-admin-portal-image:${{ github.event.inputs.version }} | gzip > poisum-admin-portal-image-${{ github.event.inputs.version }}.tar.gz
+
+    # 7. Create GitHub Release and upload asset for production
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+      with:
+        tag_name: "${{ github.event.inputs.version }}"
+        release_name: "${{ github.event.inputs.version }}"
+        body: "Poisum Admin Portal Web and Docker Image built for production."
+        draft: false
+        prerelease: false
+
+    # 8. Upload asset to release
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./poisum-admin-portal-image-${{ github.event.inputs.version }}.tar.gz
+        asset_name: "poisum-admin-portal-image-${{ github.event.inputs.version }}.tar.gz"
+        asset_content_type: application/gzip
