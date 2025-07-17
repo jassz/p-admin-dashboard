@@ -81,9 +81,11 @@ export default function Account() {
   return (
     <PrivateLayout>
       <Box sx={{ padding: 5, width: "100%" }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Header title="Account Details" />
-        </Box>
+        <Typography variant="h4" fontWeight={"bold"}>
+          Account Setting
+        </Typography>
+        <Divider sx={{ my: 1, borderColor: "transparent" }} />
+
         <Paper
           sx={{
             borderRadius: 4,

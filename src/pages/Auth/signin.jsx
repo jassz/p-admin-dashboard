@@ -221,7 +221,7 @@ export default function Signin() {
             </Button>
             <Box display={"flex"} justifyContent={"center"}>
               <Typography variant="overline" fullWidth>
-                V1.0.0
+                V1.0.1
               </Typography>
             </Box>
           </Box>
