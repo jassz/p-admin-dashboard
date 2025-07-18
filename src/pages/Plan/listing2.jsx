@@ -77,7 +77,7 @@ const Listing2 = () => {
 
         <Grid container spacing={1} justifyContent="center">
           {plans.map((plan, index) => (
-            <Grid item size={4} key={index}>
+            <Grid item size={{ xs: 12, md: 6, xl:4 }} key={index}>
               <Box
                 sx={{
                   borderRadius: 4,

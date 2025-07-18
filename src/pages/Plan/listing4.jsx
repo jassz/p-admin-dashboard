@@ -11,7 +11,6 @@ import {
   TableRow,
   Paper,
   Button,
-  Grid,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/HighlightOff";
@@ -37,7 +36,6 @@ const plans = [
     title: "Business Plan",
     price: "$29",
     recomended: true,
-
     frequency: "Per Month",
     description:
       "Designed for growing organizations that want deeper engagement.",
@@ -54,9 +52,9 @@ const plans = [
     title: "Enterprise Plan",
     price: "$99",
     recomended: false,
-
     frequency: "Per Month",
-    description: "Built for large organizations with complex engagement needs.",
+    description:
+      "Built for large organizations with complex engagement needs.",
     features: [
       "Unlimited users",
       "Custom mission templates and automations",
@@ -68,7 +66,8 @@ const plans = [
   },
 ];
 
-const features = [
+// Feature list titles
+const featureLabels = [
   "User Limit",
   "Mission Tracking",
   "Announcement Tools",
@@ -77,10 +76,23 @@ const features = [
   "Support Level",
 ];
 
+// Render table cell with icon or text
+const renderFeatureCell = (value, highlighted) => {
+  if (typeof value === "boolean") {
+    return value ? (
+      <CheckIcon color={highlighted ? "inherit" : "success"} />
+    ) : (
+      <CloseIcon color={highlighted ? "inherit" : "error"} />
+    );
+  }
+  return value;
+};
+
 const Listing4 = () => {
   return (
     <Box py={10} bgcolor="#fff">
       <Container maxWidth="lg">
+        {/* Header Section */}
         <Box textAlign="center" mb={6}>
           <Typography variant="overline" color="primary.main">
             Our Pricing Plans
@@ -93,67 +105,52 @@ const Listing4 = () => {
           </Typography>
         </Box>
 
-        {/* <Grid container spacing={4} justifyContent="center">
-          {plans.map((plan, index) => (
-            <Grid item size={4} key={index} textAlign="center">
-              <Box p={4} border={"1px solid #e0e0e0"} borderRadius={2}>
-                <Typography variant="h6" fontWeight="bold">{plan.title}</Typography>
-                <Typography variant="h4" fontWeight="bold" mt={1}>{plan.price}</Typography>
-                <Typography color="text.secondary">{plan.frequency}</Typography>
-                <Typography mt={2} mb={3} color="text.secondary">{plan.description}</Typography>
-                <Button variant="contained" color={plan.title === "Business Plan" ? "success" : "primary"}>Purchase Now</Button>
-              </Box>
-            </Grid>
-          ))}
-        </Grid> */}
-
-        <TableContainer component={Paper} sx={{ mt: 6 }}>
+        {/* Comparison Table */}
+        <TableContainer component={Paper}>
           <Table>
+            {/* Table Header */}
             <TableHead>
               <TableRow>
                 <TableCell>
                   <strong>Key Features</strong>
                 </TableCell>
-                {plans.map((plan, idx) => (
+                {plans.map((plan, index) => (
                   <TableCell
+                    key={index}
                     align="center"
-                    key={idx}
                     sx={{
                       bgcolor: plan.recomended ? "secondary.main" : "transparent",
                       color: plan.recomended ? "white" : "text.primary",
                     }}
                   >
-                    {/* <Box p={4} border={"1px solid #e0e0e0"} borderRadius={2}> */}
                     <Typography variant="h6" fontWeight="bold">
                       {plan.title}
                     </Typography>
                     <Typography variant="h4" fontWeight="bold" mt={1}>
                       {plan.price}
                     </Typography>
-                    <Typography sx={{ color: plan.recomended ? "white" : "" }}>
-                      {plan.frequency}
-                    </Typography>
+                    <Typography>{plan.frequency}</Typography>
                     <Typography
-                      mt={2}
-                      mb={3}
                       variant="body2"
-                      sx={{ color: plan.recomended ? "white" : "" }}
+                      mt={2}
+                      color={plan.recomended ? "white" : "text.secondary"}
                     >
                       {plan.description}
                     </Typography>
-                    {/* </Box> */}
                   </TableCell>
                 ))}
               </TableRow>
             </TableHead>
+
+            {/* Table Body */}
             <TableBody>
-              {features.map((feature, rowIndex) => (
-                <TableRow key={rowIndex}>
-                  <TableCell>{feature}</TableCell>
-                  {plans.map((plan, colIndex) => (
+              {featureLabels.map((label, i) => (
+                <TableRow key={i}>
+                  <TableCell>{label}</TableCell>
+                  {plans.map((plan, index) => (
                     <TableCell
+                      key={index}
                       align="center"
-                      key={colIndex}
                       sx={{
                         bgcolor: plan.recomended
                           ? "secondary.main"
@@ -161,19 +158,13 @@ const Listing4 = () => {
                         color: plan.recomended ? "white" : "text.primary",
                       }}
                     >
-                      {typeof plan.features[rowIndex] === "boolean" ? (
-                        plan.features[rowIndex] ? (
-                          <CheckIcon color="success" />
-                        ) : (
-                          <CloseIcon color="error" />
-                        )
-                      ) : (
-                        plan.features[rowIndex]
-                      )}
+                      {renderFeatureCell(plan.features[i], plan.recomended)}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
+
+              {/* Action Row */}
               <TableRow>
                 <TableCell />
                 {plans.map((plan, index) => (
@@ -190,8 +181,8 @@ const Listing4 = () => {
                       sx={{
                         backgroundColor: plan.recomended
                           ? "primary.main"
-                          : "grey.200",
-                        color: plan.recomended ? "white" : "grey.800",
+                          : "primary.light",
+                        color: plan.recomended ? "white" : "grey.900",
                       }}
                     >
                       Purchase Now

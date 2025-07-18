@@ -8,7 +8,7 @@ export default function Listing() {
       title: "Starter Plan",
       recomended: false,
       price: "$9/month",
-      description: "Great for small teams starting their culture journey within organization.",
+      description: "Great for small teams starting their culture journey.",
       features: [
         "Up to 20 users",
         "Mission creation & completion tracking",
@@ -56,7 +56,7 @@ export default function Listing() {
     <Box>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {plans.map((plan, index) => (
-          <Grid size={4}>
+          <Grid item size={{ xs: 12, md: 6, xl:4 }} key={index}>
             <Paper
               sx={{
                 borderRadius: 4,
@@ -74,8 +74,8 @@ export default function Listing() {
                   },
               }}
             >
-              <Box alignItems="center">
-                <Box display={'flex'} justifyContent={'space-between'}>
+              <Box>
+                <Box display={'flex'} justifyContent={'space-between'} alignItems="center">
                     <Typography variant="h6" fontWeight="semibold">
                   {plan.title}
                 </Typography>
@@ -84,15 +84,14 @@ export default function Listing() {
                 </Box>
                 
 
-                <Typography variant="caption" fontWeight="semibold">
+                 <Typography variant="caption" fontWeight="light" mt={1}>
                   {plan.description}
                 </Typography>
+
                 <Divider sx={{ my: 2, borderColor: "tertiary.main" }} />
+
                 <Box
-                  display={"flex"}
-                  justifyContent={"start"}
-                  alignItems={"end"}
-                  my={3}
+                  display="flex" alignItems="flex-end" my={2}
                 >
                   <Typography variant="h4" fontWeight="bold">
                     {plan.price}
@@ -100,11 +99,11 @@ export default function Listing() {
                   {/* <Typography variant="overline">/month</Typography> */}
                 </Box>
 
-                <Box>
+                <Box mb={2}>
                   {plan.features.map((feature, index) => (
-                    <Box key={index} display={"flex"} justifyContent={"start"}>
-                      <TaskAltIcon sx={{ color: "secondary.main" }} />
-                      <Typography variant="body2" pb={1} pl={2}>
+                    <Box key={index} display={"flex"} alignItems="start" mb={1}>
+                      <TaskAltIcon sx={{ color: "secondary.main", fontSize: 18  }} />
+                      <Typography variant="body2" pl={1}>
                         {feature}
                       </Typography>
                     </Box>
@@ -114,7 +113,7 @@ export default function Listing() {
                   type="submit"
                   variant="contained"
                   fullWidth
-                  sx={{ mt: 2, backgroundColor: plan.recomended ? 'secondary.main' : 'grey.200', color: plan.recomended ? 'white' : 'black' }}
+                  sx={{ mt: 1, backgroundColor: plan.recomended ? 'secondary.main' : 'grey.200', color: plan.recomended ? 'white' : 'black' }}
                 >
                   Get Started
                 </Button>
