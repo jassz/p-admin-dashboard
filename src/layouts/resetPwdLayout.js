@@ -1,9 +1,11 @@
 import Grid from "@mui/material/Grid";
 import logo from "../assets/images/resetBg-preview.png";
-import { CssBaseline, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { CssBaseline, Typography, useMediaQuery } from "@mui/material";
+import { Box, useTheme } from "@mui/system";
 
 const ResetPwdLayout = ({ children }) => {
+   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Grid
       container
@@ -19,7 +21,8 @@ const ResetPwdLayout = ({ children }) => {
       <CssBaseline />
 
       <Grid
-        size={6}
+            size={{xs:12, md:6}}
+
         sx={{
           height: "100vh",
           display: "flex",
@@ -35,6 +38,7 @@ const ResetPwdLayout = ({ children }) => {
 
 
  {/* Orange background layer */}
+  {!isMobile && (
       <Box
         sx={{
           position: "absolute",
@@ -48,9 +52,11 @@ const ResetPwdLayout = ({ children }) => {
           zIndex: 0,
         }}
       />
+  )}
       {/* Green foreground layer */}
       <Grid
-        size={6}
+      size={{xs:12, md:6}}
+        // xs={12} md={6}
           sx={(theme) =>({
           position: "relative",
     backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
