@@ -7,6 +7,8 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 import ButtonComponent from "components/button";
@@ -22,7 +24,8 @@ import { useNavigate } from "react-router-dom";
 import ComponentBackdrop from "components/backdrop";
 
 export default function ChangePwd() {
-
+const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const apiClient = useApiClient();
   //   const [data, setData] = useState({});
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -201,22 +204,23 @@ export default function ChangePwd() {
         boxShadow: 10,
         p: 3,
         borderRadius: 4,
+         height: "55vh", // or maxHeight: 600
+    overflowY: "auto"
       }}
     >
       <Box display="flex" justifyContent="space-between">
         <Typography variant="body1" fontWeight="bold">
           Reset New Password
         </Typography>
-        <CloseIcon onClick={handleClose} style={{ cursor: "pointer" }} />
+        {/* <CloseIcon onClick={handleClose} style={{ cursor: "pointer" }} /> */}
       </Box>
-      <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+      <Divider sx={{ my: 1, borderColor: "tertiary.main" }} />
 
-      <Box display="flex">
+      <Box display="flex" flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "flex-start" : "center"} >
         <Typography
-          display="flex"
-          alignItems="center"
-          pr={4}
-          sx={{ minWidth: labelWidth }}
+          pr={isMobile ? 0 : 4}
+            pb={isMobile ? 1 : 0}
+            sx={{ minWidth: isMobile ? "auto" : labelWidth }}
         >
           Temporary Password
         </Typography>
@@ -252,19 +256,20 @@ export default function ChangePwd() {
           }}
         />
       </Box>
-      <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 3 }}>
-        <PwdErrorMessage
+      <Grid size={{ xs: "grow", md: 6 }} offset={{ md:4 }}>
+        <Box mb={1}>
+
+<PwdErrorMessage
           field={inputForm.tempPassword}
           error={errors.tempPassword}
         />
+        </Box>
       </Grid>
-
-      <Box display="flex">
+      <Box display="flex" flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "flex-start" : "center"}>
         <Typography
-          display="flex"
-          alignItems="center"
-          pr={4}
-          sx={{ minWidth: labelWidth }}
+          pr={isMobile ? 0 : 4}
+    pb={isMobile ? 1 : 0}
+    sx={{ minWidth: isMobile ? "auto" : labelWidth }}
         >
           New Password
         </Typography>
@@ -300,19 +305,20 @@ export default function ChangePwd() {
           }}
         />
       </Box>
-     <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 3 }}>
-        <PwdErrorMessage
+     <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 4 }}>
+        <Box mb={1}>
+<PwdErrorMessage
           field={inputForm.newPassword}
           error={errors.newPassword}
           comparePwd={inputForm.tempPassword}
         />
+        </Box>
       </Grid>
-      <Box display="flex">
+      <Box display="flex" flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "flex-start" : "center"} >
         <Typography
-          display="flex"
-          alignItems="center"
-          pr={4}
-          sx={{ minWidth: labelWidth }}
+           pr={isMobile ? 0 : 4}
+    pb={isMobile ? 1 : 0}
+    sx={{ minWidth: isMobile ? "auto" : labelWidth }}
         >
           Confirm Password
         </Typography>
@@ -348,12 +354,14 @@ export default function ChangePwd() {
           }}
         />
       </Box>
-      <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 3 }}>
-        <PwdErrorMessage
+      <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 4 }}>
+        <Box mb={1}>
+<PwdErrorMessage
           field={inputForm.confirmPassword}
           error={errors.confirmPassword}
           comparePwd={inputForm.newPassword}
         />
+        </Box>
       </Grid>
       <Box display="flex" justifyContent="center" sx={{ marginTop: "30px" }}>
         <ButtonComponent
