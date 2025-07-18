@@ -83,9 +83,9 @@ const Listing2 = () => {
                   borderRadius: 4,
                   p: plan.recomended ? "3px" : 0,
                   background: plan.recomended
-                    ? "linear-gradient(270deg, #1c4f4a, #fc6719)"
+                    ? "linear-gradient(200deg, #1c4f4a, #fc6719)"
                     : "transparent",
-                  backgroundSize: "400% 400%",
+                  // backgroundSize: "400% 400%",
                   animation: plan.recomended
                     ? "borderGradient 6s ease infinite"
                     : "none",
@@ -142,8 +142,9 @@ const Listing2 = () => {
                       sx={{
                         mt: 4,
                         backgroundColor: plan.recomended
-                          ? "primary.main"
+                          ? "secondary.main"
                           : "grey.200",
+                          "&hover": {backgroundColor: 'secondary.dark'} ,
                         color: plan.recomended ? "white" : "text.primary",
                       }}
                     >

@@ -6,6 +6,8 @@ import {
   CircularProgress,
   Backdrop,
   Divider,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import PrivateLayout from "../../layouts/privateLayout";
 import UserForm from "./form";
@@ -16,6 +18,9 @@ import DeleteSection from "./deleteSection";
 import ChangePasswordSection from "./changePasswordSection";
 
 export default function Account() {
+  
+const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const userId = localStorage.getItem("loggedInID");
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -80,8 +85,8 @@ export default function Account() {
 
   return (
     <PrivateLayout>
-      <Box sx={{ padding: 5, width: "100%" }}>
-        <Typography variant="h4" fontWeight={"bold"}>
+      <Box sx={{ paddingX: isMobile ? 2 : 5, py: isMobile ? 4 : 5, width: "100%" }}>
+        <Typography variant="h5" textTransform={'uppercase'} fontWeight={"bold"}>
           Account Setting
         </Typography>
         <Divider sx={{ my: 1, borderColor: "transparent" }} />

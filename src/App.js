@@ -23,7 +23,7 @@ function App() {
         {/* <Route path="/login" element={<Navigate to="/login" />} /> */}
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<Signin />} />
         <Route path="/homepage" element={<Homepage1 />} />
         <Route path="/accountDetail" element={<Account />} />
         <Route path="/subscription" element={<Subscription />} />

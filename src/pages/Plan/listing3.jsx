@@ -71,7 +71,7 @@ const Listing3 = () => {
   const renderFeatureValue = (feature, featuresList, isHighlighted = false) => {
     const hasFeature = featuresList.includes(feature);
     return hasFeature ? (
-      <CheckIcon sx={{ color: isHighlighted ? "white" : "primary.main" }} />
+      <CheckIcon sx={{ color: isHighlighted ? "white" : "secondary.main" }} />
     ) : (
       <CloseIcon sx={{ color: isHighlighted ? "white" : "text.disabled" }} />
     );
@@ -99,7 +99,7 @@ const Listing3 = () => {
                     key={index}
                     align="center"
                     sx={{
-                      bgcolor: plan.recomended ? "primary.main" : "transparent",
+                      bgcolor: plan.recomended ? "secondary.main" : "transparent",
                       color: plan.recomended ? "white" : "text.primary",
                     }}
                   >
@@ -109,7 +109,7 @@ const Listing3 = () => {
                           variant="button"
                           color="white"
                           sx={{
-                            bgcolor: "secondary.main",
+                            bgcolor: "primary.main",
                             borderRadius: "999px",
                             px: 2,
                             py: 0.5,
@@ -121,7 +121,9 @@ const Listing3 = () => {
                     )}
                     <Typography
                       variant="h6"
-                      color={plan.recomended ? "white" : "primary.main"}
+                      fontWeight={'bold'}
+                      textTransform={'uppercase'}
+                      color={plan.recomended ? "white" : "secondary.main"}
                     >
                       {plan.title}
                     </Typography>
@@ -154,7 +156,7 @@ const Listing3 = () => {
                       align="center"
                       sx={{
                         bgcolor: plan.recomended
-                          ? "primary.main"
+                          ? "secondary.main"
                           : "transparent",
                         color: plan.recomended ? "white" : "text.primary",
                       }}
@@ -175,8 +177,7 @@ const Listing3 = () => {
                     key={index}
                     align="center"
                     sx={{
-                      bgcolor: plan.recomended ? "yellow.700" : "transparent",
-                      borderBottom: "none",
+                      bgcolor: plan.recomended ? "secondary.main" : "transparent",
                     }}
                   >
                     <Button
@@ -185,7 +186,8 @@ const Listing3 = () => {
                         bgcolor: plan.recomended ? "primary.main" : "grey.200",
                         color: plan.recomended ? "white" : "grey.900",
                       }}
-                      size="small"
+                      fullWidth
+                      size="normal"
                     >
                       Get Started
                     </Button>

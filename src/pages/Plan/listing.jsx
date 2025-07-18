@@ -60,9 +60,18 @@ export default function Listing() {
             <Paper
               sx={{
                 borderRadius: 4,
-                border: "1px solid tertiary.main",
+                border: "1px solid secondary.main",
+                borderColor: "secondary.main",
                 boxShadow: 5,
                 padding: 3,
+                 animation: plan.recomended
+                    ? "borderGradient 6s ease infinite"
+                    : "none",
+                  transition: "transform 0.3s ease, filter 0.3s ease",
+                  "&:hover": {
+                    transform: plan.recomended ? "scale(1.02)" : "none",
+                    filter: plan.recomended ? "brightness(1.1)" : "none",
+                  },
               }}
             >
               <Box alignItems="center">
@@ -70,7 +79,7 @@ export default function Listing() {
                     <Typography variant="h6" fontWeight="semibold">
                   {plan.title}
                 </Typography>
-                {plan.recomended && ( <Chip label="Recommended" color="primary" size="small" /> ) }
+                {plan.recomended && ( <Chip label="Recommended" color="secondary" size="small" /> ) }
 
                 </Box>
                 
@@ -94,7 +103,7 @@ export default function Listing() {
                 <Box>
                   {plan.features.map((feature, index) => (
                     <Box key={index} display={"flex"} justifyContent={"start"}>
-                      <TaskAltIcon sx={{ color: "primary.main" }} />
+                      <TaskAltIcon sx={{ color: "secondary.main" }} />
                       <Typography variant="body2" pb={1} pl={2}>
                         {feature}
                       </Typography>
@@ -105,11 +114,10 @@ export default function Listing() {
                   type="submit"
                   variant="contained"
                   fullWidth
-                  sx={{ mt: 2 }}
+                  sx={{ mt: 2, backgroundColor: plan.recomended ? 'secondary.main' : 'grey.200', color: plan.recomended ? 'white' : 'black' }}
                 >
                   Get Started
                 </Button>
-                {/* </Box> */}
               </Box>
             </Paper>
           </Grid>

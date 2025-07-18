@@ -119,7 +119,7 @@ const Listing4 = () => {
                     align="center"
                     key={idx}
                     sx={{
-                      bgcolor: plan.recomended ? "primary.main" : "transparent",
+                      bgcolor: plan.recomended ? "secondary.main" : "transparent",
                       color: plan.recomended ? "white" : "text.primary",
                     }}
                   >
@@ -156,7 +156,7 @@ const Listing4 = () => {
                       key={colIndex}
                       sx={{
                         bgcolor: plan.recomended
-                          ? "primary.main"
+                          ? "secondary.main"
                           : "transparent",
                         color: plan.recomended ? "white" : "text.primary",
                       }}
@@ -181,7 +181,7 @@ const Listing4 = () => {
                     key={index}
                     align="center"
                     sx={{
-                      bgcolor: plan.recomended ? "primary.main" : "transparent",
+                      bgcolor: plan.recomended ? "secondary.main" : "transparent",
                       borderBottom: "none",
                     }}
                   >
@@ -189,7 +189,7 @@ const Listing4 = () => {
                       variant="contained"
                       sx={{
                         backgroundColor: plan.recomended
-                          ? "secondary.main"
+                          ? "primary.main"
                           : "grey.200",
                         color: plan.recomended ? "white" : "grey.800",
                       }}

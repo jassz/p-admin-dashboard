@@ -10,6 +10,8 @@ import {
   OutlinedInput,
   Paper,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import ButtonComponent from "components/button";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,6 +22,10 @@ import axios from "axios";
 import { useApiClient } from "context/ApiClientContext";
 
 export default function ChangePasswordSection() {
+  
+const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [changePassword, setChangePassword] = useState();
   const [data, setData] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -192,31 +198,25 @@ export default function ChangePasswordSection() {
   
 
   const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 600,
-    bgcolor: "background.paper",
-    border: "1px solid tertiary.dark",
-    boxShadow: 10,
-    p: 3,
-    borderRadius: 4, // You can adjust this number or use '8px' etc.
+     // You can adjust this number or use '8px' etc.
     };
 
   return (
     <Paper
       sx={{
-        borderRadius: 4,
-        border: "1px solid tertiary.main",
-        boxShadow: 5,
-        padding: 3,
+          borderRadius: 4,
+          border: "1px solid",
+          borderColor: "tertiary.main",
+          boxShadow: 5,
+          padding: 3,
       }}
     >
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
+          display="flex"
+          flexDirection={isMobile ? "column" : "row"}
+          justifyContent="space-between"
+          alignItems={isMobile ? "flex-start" : "center"}
+          gap={2}
       >
         <Box>
           <Typography
@@ -228,7 +228,6 @@ export default function ChangePasswordSection() {
           </Typography>
           <Typography
             variant="caption"
-            color="secondary.main"
             fontWeight="light"
           >
             You may change your new password here
@@ -238,14 +237,28 @@ export default function ChangePasswordSection() {
         <ButtonComponent
           value="contained"
           callback={handleOpen}
-          color="primary"
+          color="secondary"
           text="Change Password"
         />
 
         {changePassword && (
                   <Modal open={changePassword}>
-                    <Box sx={style}>
-                      <Box display="flex" justifyContent="space-between">
+                    <Box sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: { xs: '90%', sm: 500 },
+                       bgcolor: "background.paper",
+                      border: "1px solid tertiary.dark",
+                      boxShadow: 10,
+                      p: 3,
+                      borderRadius: 4,
+                    }}>
+                      <Box display="flex" justifyContent="space-between"
+                       alignItems="center"
+                      flexDirection="row"
+                      >
                         <Typography variant="body1" fontWeight="bold">
                           Reset New Password
                         </Typography>
@@ -255,167 +268,74 @@ export default function ChangePasswordSection() {
                         />
                       </Box>
                       <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
-        
-                      <Box display="flex">
-                        <Typography
-                          display="flex"
-                          alignItems="center"
-                          pr={4}
-                          sx={{ minWidth: labelWidth }}
-                        >
-                          Old Password
-                        </Typography>
-                        <FormControl
-                          fullWidth
-                          variant="outlined"
-                          helperText={errors.oldPassword}
-                          error={!!errors.oldPassword}
-                          value={inputForm.oldPassword}
-                          required
-                          margin="dense"
-                          type="password"
-                          size="small"
-                        
-                        >
-                          <OutlinedInput
-                            id="oldPassword"
-                            type={showoldPassword ? "text" : "password"}
-                            onChange={(e) => handleChange("oldPassword", e)}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton
-                                  onClick={handleClickShowoldPassword}
-                                  onMouseDown={handleMouseDownPassword}
-                                  edge="end"
-                                >
-                                  {!showoldPassword ? (
-                                    <VisibilityOff />
-                                  ) : (
-                                    <Visibility />
-                                  )}
-                                </IconButton>
-                              </InputAdornment>
-                            }
-                          />
-                          {errors.oldPassword && (
-                            <FormHelperText
-                              style={{ color: 'error', fontSize: "0.75rem" }}
-                            >
-                              {errors.oldPassword}
-                            </FormHelperText>
-                          )}
-                        </FormControl>
-                      </Box>
-                      <Box display="flex">
-                        <Typography
-                          display="flex"
-                          alignItems="center"
-                          pr={4}
-                          sx={{ minWidth: labelWidth }}
-                        >
-                          New Password
-                        </Typography>
-                        <FormControl
-                          fullWidth
-                          variant="outlined"
-                          helperText={errors.password}
-                          error={!!errors.password}
-                          value={inputForm.password}
-                          required
-                          margin="dense"
-                          type="password"
-                          size="small"
-                        >
-                          <OutlinedInput
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            onChange={(e) => handleChange("password", e)}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton
-                                  onClick={handleClickShowPassword}
-                                  onMouseDown={handleMouseDownPassword}
-                                  edge="end"
-                                >
-                                  {!showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                              </InputAdornment>
-                            }
-                          />
-                          {errors.password && (
-                            <FormHelperText
-                              style={{ color: 'error', fontSize: "0.75rem" }}
-                            >
-                              {errors.password}
-                            </FormHelperText>
-                          )}
-                        </FormControl>
-                      </Box>
-                      <Box display="flex">
-                        <Typography
-                          display="flex"
-                          alignItems="center"
-                          pr={2}
-                          sx={{ minWidth: labelWidth }}
-                        >
-                          Confirm Password
-                        </Typography>
-                        <FormControl
-                          fullWidth
-                          variant="outlined"
-                          helperText={errors.confirmPassword}
-                          error={!!errors.confirmPassword}
-                          value={inputForm.confirmPassword}
-                          required
-                          margin="dense"
-                          type="password"
-                          size="small"
-                         
-                        >
-                          <OutlinedInput
-                            id="confirmPassword"
-                            type={showconfirmPassword ? "text" : "password"}
-                            onChange={(e) => handleChange("confirmPassword", e)}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton
-                                  onClick={handleClickShowconfPassword}
-                                  onMouseDown={handleMouseDownPassword}
-                                  edge="end"
-                                >
-                                  {!showconfirmPassword ? (
-                                    <VisibilityOff />
-                                  ) : (
-                                    <Visibility />
-                                  )}
-                                </IconButton>
-                              </InputAdornment>
-                            }
-                          />
-                          {errors.confirmPassword && (
-                            <FormHelperText
-                              style={{ color: 'error', fontSize: "0.75rem" }}
-                            >
-                              {errors.confirmPassword}
-                            </FormHelperText>
-                          )}
-                        </FormControl>
-                      </Box>
+                    
+                    {/* Each Field Row */}
+                    {[
+                      { label: "Old Password", id: "oldPassword", show: showoldPassword, toggle: handleClickShowoldPassword, error: errors.oldPassword },
+                      { label: "New Password", id: "password", show: showPassword, toggle: handleClickShowPassword, error: errors.password },
+                      { label: "Confirm Password", id: "confirmPassword", show: showconfirmPassword, toggle: handleClickShowconfPassword, error: errors.confirmPassword },
+                    ].map(({ label, id, show, toggle, error }) => (
                       <Box
+                        key={id}
                         display="flex"
-                        justifyContent="center"
-                        style={{ marginTop: "30px" }}
+                        flexDirection={isMobile ? "column" : "row"}
+                        alignItems={isMobile ? "flex-start" : "center"}
+                        gap={1}
+                        mb={2}
                       >
-                        <ButtonComponent
-                          value="contained"
-                          text="Update Password"
-                          callback={handleSubmit}
-                          color="primary"
-                        />
+                        <Typography sx={{ minWidth: isMobile ? 0 : labelWidth }}>
+                          {label}
+                        </Typography>
+                        <FormControl
+                          fullWidth
+                          variant="outlined"
+                          error={!!error}
+                          required
+                          margin="dense"
+                          size="small"
+                        >
+                          <OutlinedInput
+                            id={id}
+                            type={show ? "text" : "password"}
+                            onChange={(e) => handleChange(id, e)}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  onClick={toggle}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {!show ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                          />
+                          {error && (
+                            <FormHelperText
+                              style={{ color: "error", fontSize: "0.75rem" }}
+                            >
+                              {error}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
                       </Box>
+                    ))}
+
+                    <Box
+          display="flex"
+          justifyContent="center"
+          mt={4}
+        >
+          <ButtonComponent
+            value="contained"
+            text="Update Password"
+            callback={handleSubmit}
+            color="secondary"
+          />
+                    </Box>
                     </Box>
                   </Modal>
-                )}
+        )}
       </Box>
     </Paper>
   );
