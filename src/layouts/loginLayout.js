@@ -1,14 +1,18 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 // import logo from "../assets/images/Logo-250/3.png";
-import { CssBaseline, Typography } from "@mui/material";
+import { CssBaseline, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 // import bg from "../assets/images/bg4.png";
 import { Box, textAlign } from "@mui/system";
 import logo from "../assets/images/full_logo-transparent.png";
 
 const PublicLayout = ({ children }) => {
+    const theme = useTheme();
+
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Grid
+ <Grid
       container
       component="main"
       sx={{
@@ -21,28 +25,30 @@ const PublicLayout = ({ children }) => {
     >
       <CssBaseline />
 
-      {/* Orange background layer */}
-      <Box
+            {!isMobile && (
+ <Box
         sx={{
           position: "absolute",
           top: 0,
           bottom: 0,
           left: 0,
           width: { xs: "0%", md: "51%" }, // Responsive
-          backgroundColor: "primary.main", // Or your theme color
+          backgroundColor: "secondary.main", // Or your theme color
           borderTopRightRadius: 50,
           borderBottomRightRadius: 50,
           zIndex: 0,
+          boxShadow: 12,  
         }}
       />
+            )}
 
-      {/* Green foreground layer */}
       <Grid
         item
         size={6}
-        sx={{
+        sx={(theme) =>({
           position: "relative",
-          backgroundColor: "secondary.main",
+          // backgroundColor: "primary.main",
+          backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
           color: "#fff",
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
@@ -50,9 +56,9 @@ const PublicLayout = ({ children }) => {
           alignItems: "center",
           borderTopRightRadius: 50,
           borderBottomRightRadius: 50,
-          // p: 4,
+          boxShadow: 12,   
           zIndex: 1,
-        }}
+        })}
       >
         <Box px={3} textAlign="center">
         {/* <Box
@@ -69,7 +75,8 @@ const PublicLayout = ({ children }) => {
 
       <Grid
         item
-        size={6}
+        xs={12}
+        md={6}
         sx={{
           height: "100vh",
           display: "flex",
@@ -78,11 +85,16 @@ const PublicLayout = ({ children }) => {
           alignItems: "center",
           p: 4,
           backgroundColor: "tertiary.main",
+          ...(isMobile && {
+            backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+          }),        
         }}
       >
         {children}
       </Grid>
-    </Grid>
+    </Grid>   
   );
 };
 

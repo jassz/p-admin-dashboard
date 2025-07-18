@@ -42,7 +42,7 @@ const ResetPwdLayout = ({ children }) => {
           bottom: 0,
           right: 0,
           width: { xs: "0%", md: "51%" }, // Responsive
-          backgroundColor: "primary.main", // Or your theme color
+          backgroundColor: "secondary.main", // Or your theme color
           borderTopLeftRadius: 50,
           borderBottomLeftRadius: 50,
           zIndex: 0,
@@ -51,9 +51,9 @@ const ResetPwdLayout = ({ children }) => {
       {/* Green foreground layer */}
       <Grid
         size={6}
-        sx={{
+          sx={(theme) =>({
           position: "relative",
-          backgroundColor: "secondary.main",
+    backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
           color: "#fff",
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
@@ -63,7 +63,7 @@ const ResetPwdLayout = ({ children }) => {
           borderBottomLeftRadius: 50,
           // p: 4,
           zIndex: 1,
-        }}
+        })}
       >
         <Box px={3} textAlign="center">
           <Box

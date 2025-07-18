@@ -210,7 +210,7 @@ export default function Signup() {
             backgroundColor: "rgba(255, 255, 255, 0.85)",
           }}
         >
-          <Avatar sx={{ bgcolor: "primary.main", mb: 2 }}>
+          <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
             {/* <LockOutlinedIcon /> */}
             <Box
               component="img"
@@ -387,7 +387,7 @@ export default function Signup() {
               </Typography>
             </Box>
 
-            <Button type="submit" variant="contained" fullWidth>
+            <Button type="submit" variant="contained" fullWidth sx={{backgroundColor: "secondary.main"}}>
               Sign Up
             </Button>
             <Box display={"flex"} justifyContent={"center"}>

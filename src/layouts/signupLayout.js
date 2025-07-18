@@ -1,9 +1,13 @@
 import Grid from "@mui/material/Grid";
 import logo from "../assets/images/full_logo-transparent.png";
-import { CssBaseline, Typography } from "@mui/material";
+import { CssBaseline, Typography, useMediaQuery, useTheme  } from "@mui/material";
 import { Box } from "@mui/system";
 
 const PublicLayout = ({ children }) => {
+      const theme = useTheme();
+  
+      const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
  
 
@@ -36,8 +40,7 @@ const PublicLayout = ({ children }) => {
         {children}
       </Grid>
 
-
- {/* Orange background layer */}
+  {!isMobile && (
       <Box
         sx={{
           position: "absolute",
@@ -45,19 +48,20 @@ const PublicLayout = ({ children }) => {
           bottom: 0,
           right: 0,
           width: { xs: "0%", md: "51%" }, // Responsive
-          backgroundColor: "primary.main", // Or your theme color
+          backgroundColor: "secondary.main", // Or your theme color
           borderTopLeftRadius: 50,
           borderBottomLeftRadius: 50,
           zIndex: 0,
         }}
       />
+  )}
       {/* Green foreground layer */}
       <Grid
         item
         size={6}
-        sx={{
+       sx={(theme) =>({
           position: "relative",
-          backgroundColor: "secondary.main",
+    backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
           color: "#fff",
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
@@ -67,7 +71,7 @@ const PublicLayout = ({ children }) => {
           borderBottomLeftRadius: 50,
           // p: 4,
           zIndex: 1,
-        }}
+        })}
       >
         <Box px={3} textAlign="center">
           {/* <Box

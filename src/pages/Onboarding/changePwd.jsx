@@ -355,12 +355,12 @@ export default function ChangePwd() {
           comparePwd={inputForm.newPassword}
         />
       </Grid>
-      <Box display="flex" justifyContent="center" style={{ marginTop: "30px" }}>
+      <Box display="flex" justifyContent="center" sx={{ marginTop: "30px" }}>
         <ButtonComponent
           value="contained"
           text="Update Password"
           callback={handleSubmit}
-          color="primary"
+          color="secondary"
         />
       </Box>
     <ComponentBackdrop openBackdrop={openBackdrop} />
