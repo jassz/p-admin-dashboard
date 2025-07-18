@@ -1,9 +1,4 @@
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import logo from "../assets/images/logo192.png";
-import fulllogo from "../assets/images/full-logo-192.png";
-import { motion } from "framer-motion";
 
 import {
   Box,
@@ -15,28 +10,27 @@ import {
   styled,
   Toolbar,
   Typography,
-  Divider,
   Button,
+  IconButton,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import {
   AccountBoxOutlined,
-  AccountTreeSharp,
-  CreateNewFolder,
-  Home,
-  HomeMaxOutlined,
   HomeOutlined,
   PlayCircleOutlineOutlined,
 } from "@mui/icons-material";
-import ButtonEncrypt from "components/encryptButton";
-
+import MenuIcon from "@mui/icons-material/Menu";
+import AppsIcon from "@mui/icons-material/Apps";
+import UpgradeIcon from "@mui/icons-material/WorkspacePremium"; // or use a crown/star icon
+import Tooltip from "@mui/material/Tooltip";
+import WhatshotIcon from "@mui/icons-material/Whatshot"
 const drawerWidth = 240;
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    background: theme.palette.secondary.main,
+    background: theme.palette.primary.main,
     color: theme.palette.tertiary.main,
     position: "relative",
     whiteSpace: "nowrap",
@@ -60,7 +54,7 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const LeftMenuDrawer = ({ open, logoutCallback }) => {
+const LeftMenuDrawer = ({ open, toggleDrawerCallback, logoutCallback }) => {
   return (
     <Drawer
       variant="permanent"
@@ -68,41 +62,31 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
       sx={{
         "& .MuiDrawer-paper": {
           borderRight: "none",
-          backgroundColor: "secondary.main",
-          color: "tertiary.main",
-          width: 240, // optional: set drawer width
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          boxShadow:2
         },
       }}
     >
-      {/* Top Content */}
       <Box>
         <Toolbar
           sx={{
-            display: "flex",
-            justifyItems: "start",
+           display: "flex",
             alignItems: "center",
-            justifyContent: "space-between", // changed from flex-end
-            // gap: 1.5,
-            // px: 2,
-            pt: 2,
-          }}
+            justifyContent: "flex-start",
+            px: [1],
+            paddingTop:'20px'
+            }}
         >
-          <Box
-            component="img"
-            src={logo} // replace with your image path
-            alt="Logo"
-            sx={{ width: 50, height: 50 }}
-          />
+          <IconButton onClick={toggleDrawerCallback}  color="inherit">
+            <MenuIcon sx={{ color: "tertiary.main" }} />
+          </IconButton>
+
           <Typography
             variant="h4"
             color="inherit"
+            pl={3}
             sx={{
               fontWeight: "bold",
               textTransform: "uppercase",
+              
             }}
           >
             POISUM
@@ -110,43 +94,57 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
         </Toolbar>
 
         <List component="nav">
-          <ListItemButton component={Link} to="/homepage" 
-          sx={{ 
-            py: 2,  
-          "&:hover": {backgroundColor: 'primary.main'}, 
-          }}>
+          <ListItemButton
+            component={Link}
+            to="/homepage"
+            sx={{
+              py: 2,
+              "&:hover": { backgroundColor: "primary.main" },
+            }}
+          >
             <ListItemIcon sx={{ color: "inherit" }}>
               <HomeOutlined />
             </ListItemIcon>
-            <ListItemText primary="Homepage" />
+            <ListItemText primary="Dashboard" />
           </ListItemButton>
 
-          <ListItemButton component={Link} to="/accountDetail" 
-           sx={{ 
-            py: 2,  
-          "&:hover": {backgroundColor: 'primary.main'}, 
-          }}>
+          <ListItemButton
+            component={Link}
+            to="/accountDetail"
+            sx={{
+              py: 2,
+              "&:hover": { backgroundColor: "primary.main" },
+            }}
+          >
             <ListItemIcon sx={{ color: "inherit" }}>
               <AccountBoxOutlined />
             </ListItemIcon>
             <ListItemText primary="Account Setting" />
           </ListItemButton>
 
-          <ListItemButton component={Link} to="/subscription"  sx={{ 
-            py: 2,  
-          "&:hover": {backgroundColor: 'primary.main'}, 
-          "&:active": {backgroundColor: 'primary.main'} 
-          }}>
+          <ListItemButton
+            component={Link}
+            to="/subscription"
+            sx={{
+              py: 2,
+              "&:hover": { backgroundColor: "primary.main" },
+              "&:active": { backgroundColor: "primary.main" },
+            }}
+          >
             <ListItemIcon sx={{ color: "inherit" }}>
               <PlayCircleOutlineOutlined />
             </ListItemIcon>
             <ListItemText primary="Plan & Billing" />
           </ListItemButton>
-          <ListItemButton component={Link} to="/signin"  sx={{ 
-            py: 2,  
-          "&:hover": {backgroundColor: 'primary.main'},
-          "&:active": {backgroundColor: 'primary.main'} 
-          }}>
+          <ListItemButton
+            component={Link}
+            to="/signin"
+            sx={{
+              py: 2,
+              "&:hover": { backgroundColor: "primary.main" },
+              "&:active": { backgroundColor: "primary.main" },
+            }}
+          >
             <ListItemIcon sx={{ color: "inherit" }}>
               <ExitToAppIcon />
             </ListItemIcon>
@@ -157,7 +155,7 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
 
       {/* Bottom Section */}
       <Box my={7}>
-        {/* <Divider sx={{ borderColor: "tertiary.main", my:3 }} /> */}
+         {open ? (
         <Box
           sx={{
             backgroundColor: "tertiary.light",
@@ -166,6 +164,8 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
             textAlign: "center",
             boxShadow: 1,
             mx: 2,
+            border: "1px solid",
+            borderColor: "secondary.main"
           }}
         >
           <Typography
@@ -183,8 +183,8 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
             sx={{}}
             noWrap="false"
           >
-            You're currently using <br/>the free version
-
+            You're currently using <br />
+            the free version
           </Typography>
 
           <Button
@@ -193,11 +193,11 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
               borderRadius: "999px",
               textTransform: "none",
               px: 3,
-            
-              boxShadow:5,
-              backgroundColor: "primary.main", // blue button
+
+              boxShadow: 5,
+              backgroundColor: "secondary.main", // blue button
               "&:hover": {
-                backgroundColor: "primary.dark",
+                backgroundColor: "secondary.dark",
                 // color: "secondary.main"
               },
             }}
@@ -206,12 +206,31 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
           </Button>
           {/* <ButtonEncrypt /> */}
         </Box>
-          <Box display={"flex"} justifyContent={"center"}>
-                      <Typography variant="overline" fullWidth>
-                        V1.0.1
-                      </Typography>
-                    </Box>
+         ): (
+    <Box display="flex" justifyContent="start" alignItems="end" ml={1}>
+        <Tooltip title="Upgrade to Premium" placement="right">
+          <Box
+            sx={{
+              // p: 1.5,
+              borderRadius: 5,
+              border: "1px solid",
+              borderColor: "secondary.main",
+              backgroundColor: "tertiary.main",
+              boxShadow: 5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <IconButton>
+              <WhatshotIcon sx={{ color: "secondary.main" }} />
+            </IconButton>
+          </Box>
+        </Tooltip>
       </Box>
+  )}
+      
+       </Box>
     </Drawer>
   );
 };
