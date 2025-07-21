@@ -9,6 +9,9 @@ import {
 import PrivateLayout from "../../layouts/privateLayout";
 import myImage from "./../../assets/images/coming-soon.jpg"; // adjust the path
 import FreeVersion from "./freeVersion";
+import CurrentVersion from "./currentVersion";
+import BillingOverview from "./billingOverview";
+import SubscriptionOverview from "./subscriptionOverview";
 
 export default function Plan() {
   const theme = useTheme();
@@ -26,8 +29,12 @@ export default function Plan() {
         >
           Subscription and Billing
         </Typography>
+         <Divider sx={{ my: 1, borderColor: "transparent" }} />
+         <SubscriptionOverview />
+        {/* <Divider sx={{ my: 1, borderColor: "transparent" }} />
+        <FreeVersion /> */}
         <Divider sx={{ my: 1, borderColor: "transparent" }} />
-        <FreeVersion />
+        <BillingOverview />
       </Box>
     </PrivateLayout>
   );

@@ -6,7 +6,7 @@ export default function ButtonComponent({ value, text, callback, color }) {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box sx={{ display: "flex", alignItems: "end" }}>
+    <Box>
       <Button
         sx={(theme) => ({
           minWidth: 120,

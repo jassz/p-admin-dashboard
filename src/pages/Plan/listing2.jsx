@@ -11,53 +11,7 @@ import {
   Divider,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-
-const plans = [
-  {
-    title: "Starter Plan",
-    recomended: false,
-    price: "$9/month",
-    description:
-      "Great for small teams starting their culture journey within organization.",
-    features: [
-      "Up to 20 users",
-      "Mission creation & completion tracking",
-      "Basic announcements and campaigns",
-      "Reward redemption system",
-      "Campaign creation",
-      "Email support",
-    ],
-  },
-  {
-    title: "Business Plan",
-    recomended: true,
-    price: "$29/month",
-    description:
-      "Designed for growing organizations that want deeper engagement.",
-    features: [
-      "Up to 100 users",
-      "Campaign analytics and reporting",
-      "Advanced announcement targeting",
-      "Tiered reward system",
-      "Manager dashboard",
-      "Priority email support",
-    ],
-  },
-  {
-    title: "Enterprise Plan",
-    recomended: false,
-    price: "$99/month",
-    description: "Built for large organizations with complex engagement needs.",
-    features: [
-      "Unlimited users",
-      "Custom mission templates and automations",
-      "Role-based access control",
-      "SSO & enterprise integrations",
-      "Dedicated account manager",
-      "SLA-backed support",
-    ],
-  },
-];
+import { plans } from "data/planData";
 
 const Listing2 = () => {
   return (
