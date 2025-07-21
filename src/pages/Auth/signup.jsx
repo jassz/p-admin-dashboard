@@ -75,7 +75,7 @@ export default function Signup() {
 
       if (result) {
         // localStorage.setItem("loggedInID", result.data.id);
-        navigate("/homepage");
+        navigate("/signin");
       } else {
         setErrors({ form: "Invalid email or password" });
       }
@@ -105,19 +105,22 @@ export default function Signup() {
     }
   };
 
-  function validateEmail(value) {
-    const domain = value.split("@")[1];
 
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-      return "Email must be a @gosumgroup.com address.";
-    }
+ const validateEmail = (value) => {
+  if (!value) return "Email is required.";
 
-    if (bannedDomains.includes(domain)) {
-      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
-    }
+  const domain = value.split("@")[1];
 
-    return "";
+  if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+    return "Email must be a @gosumgroup.com address.";
   }
+
+  if (bannedDomains.includes(domain)) {
+    return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+  }
+
+  return ""; // valid
+};
 
   const validatePassword = (password) => {
     if (!password) return "Password is required.";

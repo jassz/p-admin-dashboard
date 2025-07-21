@@ -99,19 +99,22 @@ export default function Signin() {
     }
   };
 
-  function validateEmail(value) {
-    const domain = value.split("@")[1];
+ const validateEmail = (value) => {
+  if (!value) return "Email is required.";
 
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-      return "Email must be a @gosumgroup.com address.";
-    }
+  const domain = value.split("@")[1];
 
-    if (bannedDomains.includes(domain)) {
-      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
-    }
-
-    return ""; // valid
+  if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+    return "Email must be a @gosumgroup.com address.";
   }
+
+  if (bannedDomains.includes(domain)) {
+    return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+  }
+
+  return ""; // valid
+};
+
 
   const validatePassword = (password) => {
     if (!password) return "Password is required.";
