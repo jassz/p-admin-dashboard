@@ -1,54 +1,22 @@
 import React, { useState } from "react";
+import {Box, Avatar, TextField, Button, InputAdornment, IconButton, FormHelperText, Typography, Paper, MenuItem } from "@mui/material";
 import {
-  Box,
-  Avatar,
-  TextField,
-  Button,
-  InputAdornment,
-  IconButton,
-  FormHelperText,
-  Typography,
-  Paper,
-  MenuItem,
-} from "@mui/material";
-import {
-  LockOutlined as LockOutlinedIcon,
+  LockOutlined,
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, createTheme, Stack } from "@mui/system";
+import { Container, Stack } from "@mui/system";
 import PublicLayout from "../../layouts/signupLayout";
 import logo from "./../../assets/images/logo192.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { bannedDomains } from "data/bannedDomains";
+import { passwordRules } from "data/passwordRules";
+import { countries } from "data/countries";
 
 export default function Signup() {
-  const countries = ["Malaysia", "Singapore"];
-  const passwordRules = [
-    {
-      label: "Minimum 8 characters",
-      test: (pwd) => pwd.length >= 8,
-    },
-    {
-      label: "At least 1 uppercase letter",
-      test: (pwd) => /[A-Z]/.test(pwd),
-    },
-    {
-      label: "At least 1 lowercase letter",
-      test: (pwd) => /[a-z]/.test(pwd),
-    },
-    {
-      label: "At least 1 number",
-      test: (pwd) => /\d/.test(pwd),
-    },
-    {
-      label: "At least 1 special character (!@#$...)",
-      test: (pwd) => /[^A-Za-z0-9]/.test(pwd),
-    },
-  ];
-
   const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
@@ -120,24 +88,9 @@ export default function Signup() {
   const validate = (name, value) => {
     switch (name) {
       case "email":
-        if (!value.trim()) return "Email is required";
-        if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-          return "Email must be a @gosumgroup.com address.";
-        }
-        return "";
+        validateEmail();
       case "password":
-        if (!value) return "Password is required";
-        if (value.length < 8) return "Password must be at least 8 characters";
-        if (!/[A-Z]/.test(value))
-          return "Password must contain at least one uppercase letter";
-        if (!/[a-z]/.test(value))
-          return "Password must contain at least one lowercase letter";
-        if (!/[0-9]/.test(value))
-          return "Password must contain at least one number";
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
-          return "Password must contain at least one special character";
-        return "";
-
+        validatePassword();
       case "fullname":
         if (!value) return "Full name is required";
         return "";
@@ -152,13 +105,19 @@ export default function Signup() {
     }
   };
 
-  const validateEmail = (email) => {
-    if (!email) return "Email is required.";
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(email)) {
+  function validateEmail(value) {
+    const domain = value.split("@")[1];
+
+    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
       return "Email must be a @gosumgroup.com address.";
     }
+
+    if (bannedDomains.includes(domain)) {
+      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+    }
+
     return "";
-  };
+  }
 
   const validatePassword = (password) => {
     if (!password) return "Password is required.";
@@ -387,7 +346,12 @@ export default function Signup() {
               </Typography>
             </Box>
 
-            <Button type="submit" variant="contained" fullWidth sx={{backgroundColor: "secondary.main"}}>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ backgroundColor: "secondary.main" }}
+            >
               Sign Up
             </Button>
             <Box display={"flex"} justifyContent={"center"}>
