@@ -9,9 +9,6 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { grey } from "@mui/material/colors";
-import { user } from "data/user";
-import InfoCard from "./../../components/infoCard"; // <-- import
 import logoVisa from "./../../assets/images/visa.png";
 import logoMaster from "./../../assets/images/mastercard.png";
 
@@ -53,9 +50,7 @@ export default function ContactDetails() {
           <strong>Credit card number:</strong> {data.card.cardNumber}
         </Typography>
 
-        <Typography variant="body2" gutterBottom>
-          <strong>Phone number:</strong> 0187729135
-        </Typography>
+   
         <Typography variant="body2" gutterBottom>
           <strong>Card expiry date:</strong> {data.card.cardExpiryDate}
         </Typography>
@@ -63,7 +58,7 @@ export default function ContactDetails() {
 
       <Grid size={{ xs: 12, md: 7 }}>
         <Typography variant="body2" gutterBottom>
-          <strong>Plan Expiry Date:</strong> {data.planExpiryDate}
+          <strong>Phone number:</strong> 0187729135
         </Typography>
         <Typography variant="body2" gutterBottom>
           <strong>Email:</strong> {data.email}
@@ -71,44 +66,7 @@ export default function ContactDetails() {
         <Typography variant="body2" gutterBottom>
           <strong>Address:</strong> {data.address}
         </Typography>
-        {/* <Box
-            component="img"
-            src={logo} // replace with your image path
-            alt="Logo"
-            sx={{ height: 50,}}
-        /> */}
       </Grid>
-
-      {/* <InfoCard>
-    <Box display="flex" alignItems="center" gap={1}>
-      <Avatar sx={{ bgcolor: "secondary.main", color: "black" }}>N</Avatar>
-      <Box>
-        <Typography variant="subtitle1" fontWeight={500}>
-          {user.userName}
-        </Typography>
-        <Typography variant="caption" sx={{ color: grey[500] }}>
-          {user.email}
-        </Typography>
-      </Box>
-    </Box>
-
-    {!isMobile && (
-      <Divider
-        orientation="vertical"
-        flexItem
-        sx={{ mx: 2, borderColor: "primary.main" }}
-      />
-    )}
-
-    <Box>
-      <Typography variant="subtitle1" fontWeight={500}>
-        {user.company}
-      </Typography>
-      <Typography variant="caption" sx={{ color: grey[500] }}>
-        {user.country}
-      </Typography>
-    </Box>
-  </InfoCard> */}
     </Grid>
   );
 }

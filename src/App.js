@@ -14,11 +14,13 @@ import Privacy from "pages/Policy/index";
 import Terms from "pages/Terms/index";
 import Onboarding from "pages/Onboarding/index";
 // LicenseInfo.setLicenseKey(process.env.REACT_APP_MUI_LICENSE_KEY);
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     
     <Router>
+      <Toaster />
       <Routes>
         {/* <Route path="/login" element={<Navigate to="/login" />} /> */}
         <Route path="/signin" element={<Signin />} />
