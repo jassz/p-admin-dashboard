@@ -15,6 +15,8 @@ import ButtonComponent from "components/button";
 import CloseIcon from "@mui/icons-material/Close";
 import toast from 'react-hot-toast';
 import ComponentBackdrop from "components/backdrop";
+import BillingHistory from "./billingHistory";
+import BillingHistoryDataGridPro from "./billingHistoryDataGridPro";
 
 export default function BillingOverview() {
   const [openBackdrop, setOpenBackdrop] = useState(false);
@@ -153,7 +155,9 @@ export default function BillingOverview() {
       <Divider sx={{ my: 2, borderColor: "primary.main" }} />
       <ContactDetails />
       <Divider sx={{ my: 2, borderColor: "primary.main" }} />
+      <BillingHistory />
 
+      <BillingHistoryDataGridPro />
        {updateBilling && (
         <Modal open={updateBilling}>
           <Box
