@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, IconButton, Paper, Tooltip, Typography } from '@mui/material';
 import ButtonComponent from 'components/button';
+import DownloadIcon from '@mui/icons-material/Download';
 
 export default function BillingHistory() {
 
@@ -11,29 +12,47 @@ const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'receiptNo',
-    headerName: 'First name',
+    headerName: 'Receipt Number',
     width: 150,
     editable: true,
   },
   {
     field: 'description',
-    headerName: 'Last name',
-    width: 150,
+    headerName: 'Description',
+    flex: 1 ,
     editable: true,
   },
   {
     field: 'status',
-    headerName: 'Age',
+    headerName: 'Status',
     type: 'number',
     width: 110,
     editable: true,
   },
   {
     field: 'dateTime',
-    headerName: 'Full name',
+    headerName: 'Date Time',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
   },
+  {
+  field: "Actions",
+  headerName: "Action",
+  type: "actions",
+  width: 80,
+  hideable: false,
+  getActions: (params) => [
+    <Tooltip title="Download CSV" placement="right" key={`download-${params.id}`}>
+      <IconButton
+        color="primary"
+        size="small"
+        onClick={() => handleDownload(params.row)} // Pass the row
+      >
+        <DownloadIcon />
+      </IconButton>
+    </Tooltip>
+  ],
+}
 ];
 
 const rows = [
@@ -53,6 +72,18 @@ const rows = [
 const showBilling = () => {
     setOpenBilling(!openBilling);
   };
+const handleDownload = (row) => {
+  const csvContent = `Receipt No,Description,Status,Date Time\n${row.receiptNo},${row.description},${row.status},${row.dateTime}`;
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.setAttribute('download', `receipt_${row.receiptNo}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 
   return (
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
@@ -78,8 +109,7 @@ const showBilling = () => {
           },
         }}
         pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
+        
       />
     </Box> )}
     </Box>

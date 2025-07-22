@@ -18,12 +18,14 @@ import {
 } from '@mui/x-data-grid-pro';
 import DownloadIcon from '@mui/icons-material/Download'; // Import the icon
 import jsPDF from 'jspdf';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 
 function DetailPanelContent({ row }) {
   const apiRef = useGridApiContext();
   const width = useGridSelector(apiRef, gridDimensionsSelector).viewportInnerSize.width;
-
+    const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const seller = {
   name: "Poisum Inc.",
   address: "123 Business Street, Metro City, ST 54321",
@@ -141,14 +143,18 @@ const handleDownloadPDF = () => {
   direction="column"
 >
   <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 4 }}>
-    <Stack direction="column" spacing={3}>
+    <Stack 
+        direction={ isMobile ? "column" : "row"}
+        justifyContent="space-between"
+        spacing={3}
+    >
       {/* Header */}
       <Typography variant="h4" align="center" gutterBottom>
         Receipt / Invoice
       </Typography>
 
       {/* Seller & Buyer Details */}
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction={ isMobile ? "column" : "row"} justifyContent={ isMobile ? "center" : "space-between"}>
         {/* Seller */}
         <Box>
           <Typography variant="subtitle1" fontWeight="bold">From (Seller)</Typography>
@@ -181,22 +187,26 @@ const handleDownloadPDF = () => {
       <Divider />
 
       {/* Actions */}
-      <ButtonGroup variant="text" sx={{ display: 'flex', justifyContent: 'end' }}>
-        <Button sx={{ px: 2 }} startIcon={<ReplyIcon />}>
-          Contact Support
-        </Button>
-        <Button sx={{ px: 2 }} startIcon={<ForwardIcon />}>
-          Resend Email
-        </Button>
-        <Button
-          sx={{ px: 2 }}
-          color="primary"
-          startIcon={<DownloadIcon />}
-          onClick={handleDownloadPDF}
-        >
-          Download
-        </Button>
-      </ButtonGroup>
+      <Stack
+  direction={ isMobile ? "column" : "row"}
+  spacing={2}
+  sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}
+>
+  <Button sx={{ px: 2 }} startIcon={<ReplyIcon />}>
+    Contact Support
+  </Button>
+  <Button sx={{ px: 2 }} startIcon={<ForwardIcon />}>
+    Resend Email
+  </Button>
+  <Button
+    sx={{ px: 2 }}
+    color="primary"
+    startIcon={<DownloadIcon />}
+    onClick={handleDownloadPDF}
+  >
+    Download
+  </Button>
+</Stack>
     </Stack>
   </Paper>
 </Stack>
@@ -230,7 +240,7 @@ export default function BillingHistoryDataGridPro() {
     [],
   );
 
-  const getDetailPanelHeight = React.useCallback(() => 300, []);
+  const getDetailPanelHeight = React.useCallback(() => 'auto', []);
 
   return (
     <Box sx={{ width: '100%', height:600 }}>

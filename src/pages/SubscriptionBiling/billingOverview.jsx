@@ -157,7 +157,7 @@ export default function BillingOverview() {
       <Divider sx={{ my: 2, borderColor: "primary.main" }} />
       <BillingHistory />
 
-      <BillingHistoryDataGridPro />
+      {/* <BillingHistoryDataGridPro /> */}
        {updateBilling && (
         <Modal open={updateBilling}>
           <Box
