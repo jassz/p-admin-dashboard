@@ -13,6 +13,11 @@ import CustomTheme from "theme/customTheme";
 import Privacy from "pages/Policy/index";
 import Terms from "pages/Terms/index";
 import Onboarding from "pages/Onboarding/index";
+import OnboardingWelcome from "pages/Onboarding/step1";
+import OnboardingValueTags from "pages/Onboarding/step2";
+import OnboardingPlatform from "pages/Onboarding/step3";
+import OnboardingName from "pages/Onboarding/step4";
+import OnboardingThankyou from "pages/Onboarding/step5";
 // LicenseInfo.setLicenseKey(process.env.REACT_APP_MUI_LICENSE_KEY);
 import { Toaster } from 'react-hot-toast';
 
@@ -33,6 +38,11 @@ function App() {
         <Route path="/privacyPolicy" element={<Privacy />} />
         <Route path="/tnc" element={<Terms />} />
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/step1" element={<OnboardingWelcome />} />
+        <Route path="/step2" element={<OnboardingValueTags />} />
+        <Route path="/step3" element={<OnboardingPlatform />} />
+        <Route path="/step4" element={<OnboardingName />} />
+        <Route path="/step5" element={<OnboardingThankyou />} />
       </Routes>
     </Router>
   );

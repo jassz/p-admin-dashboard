@@ -4,7 +4,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Stack,
   TextField,
   Typography,
   useMediaQuery,
@@ -12,22 +11,18 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import ButtonComponent from "components/button";
-import CloseIcon from "@mui/icons-material/Close";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useApiClient } from "context/ApiClientContext";
 import { toast } from "react-toastify";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
 import PwdErrorMessage from "components/pwdErrorMessage";
 import { useNavigate } from "react-router-dom";
 import ComponentBackdrop from "components/backdrop";
 
 export default function ChangePwd() {
-const theme = useTheme();
-const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const apiClient = useApiClient();
-  //   const [data, setData] = useState({});
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showTempPassword, setShowTempPassword] = useState(false);
@@ -48,17 +43,6 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     newPassword: "",
     confirmPassword: "",
   });
-
-  const handleClose = () => {
-    setInputForm({});
-    setErrors({});
-
-    setShowNewPassword(false);
-    setShowTempPassword(false);
-    setShowConfirmPassword(false);
-
-    setChangePassword(false);
-  };
 
   const handleChange = (property, event) => {
     const value = event.target.value;
@@ -83,7 +67,8 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     switch (name) {
       case "confirmPassword":
         if (!value) return "Confirm password is required";
-        if (value != inputForm.newPassword) return "Confirm password must be same with new password";
+        if (value != inputForm.newPassword)
+          return "Confirm password must be same with new password";
         if (value.length < 8)
           return "Confirm password must be at least 8 characters";
         if (!/[A-Z]/.test(value))
@@ -112,7 +97,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
       case "newPassword":
         if (!value) return "New password is required";
-        
+
         if (value.length < 8)
           return "New password must be at least 8 characters";
         if (!/[A-Z]/.test(value))
@@ -146,7 +131,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
       position: "top-right",
     });
     try {
-              setOpenBackdrop(true);
+      setOpenBackdrop(true);
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
@@ -178,10 +163,10 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
       });
 
       // Instead of window.location.reload(), update state or navigate
-    //   setTimeout(() => {
-        // window.location.reload();
-        navigate("/homepage");
-    //   }, 3000);
+      //   setTimeout(() => {
+      // window.location.reload();
+      navigate("/step1");
+      //   }, 3000);
     } catch (error) {
       // ErrorAlert(error, navigate);
       toast.update(toastId, {
@@ -191,7 +176,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
         autoClose: 3000,
       });
       //   }
-    }finally {
+    } finally {
       setOpenBackdrop(false);
     }
   };
@@ -204,7 +189,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
         boxShadow: 10,
         p: 3,
         borderRadius: 4,
-    overflowY: "auto"
+        overflowY: "auto",
       }}
     >
       <Box display="flex" justifyContent="space-between">
@@ -215,11 +200,15 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
       </Box>
       <Divider sx={{ my: 1, borderColor: "tertiary.main" }} />
 
-      <Box display="flex" flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "flex-start" : "center"} >
+      <Box
+        display="flex"
+        flexDirection={isMobile ? "column" : "row"}
+        alignItems={isMobile ? "flex-start" : "center"}
+      >
         <Typography
           pr={isMobile ? 0 : 4}
-            pb={isMobile ? 1 : 0}
-            sx={{ minWidth: isMobile ? "auto" : labelWidth }}
+          pb={isMobile ? 1 : 0}
+          sx={{ minWidth: isMobile ? "auto" : labelWidth }}
         >
           Temporary Password
         </Typography>
@@ -255,20 +244,23 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
           }}
         />
       </Box>
-      <Grid size={{ xs: "grow", md: 6 }} offset={{ md:4 }}>
+      <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 4 }}>
         <Box mb={1}>
-
-<PwdErrorMessage
-          field={inputForm.tempPassword}
-          error={errors.tempPassword}
-        />
+          <PwdErrorMessage
+            field={inputForm.tempPassword}
+            error={errors.tempPassword}
+          />
         </Box>
       </Grid>
-      <Box display="flex" flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "flex-start" : "center"}>
+      <Box
+        display="flex"
+        flexDirection={isMobile ? "column" : "row"}
+        alignItems={isMobile ? "flex-start" : "center"}
+      >
         <Typography
           pr={isMobile ? 0 : 4}
-    pb={isMobile ? 1 : 0}
-    sx={{ minWidth: isMobile ? "auto" : labelWidth }}
+          pb={isMobile ? 1 : 0}
+          sx={{ minWidth: isMobile ? "auto" : labelWidth }}
         >
           New Password
         </Typography>
@@ -304,20 +296,24 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
           }}
         />
       </Box>
-     <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 4 }}>
+      <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 4 }}>
         <Box mb={1}>
-<PwdErrorMessage
-          field={inputForm.newPassword}
-          error={errors.newPassword}
-          comparePwd={inputForm.tempPassword}
-        />
+          <PwdErrorMessage
+            field={inputForm.newPassword}
+            error={errors.newPassword}
+            comparePwd={inputForm.tempPassword}
+          />
         </Box>
       </Grid>
-      <Box display="flex" flexDirection={isMobile ? "column" : "row"} alignItems={isMobile ? "flex-start" : "center"} >
+      <Box
+        display="flex"
+        flexDirection={isMobile ? "column" : "row"}
+        alignItems={isMobile ? "flex-start" : "center"}
+      >
         <Typography
-           pr={isMobile ? 0 : 4}
-    pb={isMobile ? 1 : 0}
-    sx={{ minWidth: isMobile ? "auto" : labelWidth }}
+          pr={isMobile ? 0 : 4}
+          pb={isMobile ? 1 : 0}
+          sx={{ minWidth: isMobile ? "auto" : labelWidth }}
         >
           Confirm Password
         </Typography>
@@ -355,11 +351,11 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
       </Box>
       <Grid size={{ xs: "grow", md: 6 }} offset={{ md: 4 }}>
         <Box mb={1}>
-<PwdErrorMessage
-          field={inputForm.confirmPassword}
-          error={errors.confirmPassword}
-          comparePwd={inputForm.newPassword}
-        />
+          <PwdErrorMessage
+            field={inputForm.confirmPassword}
+            error={errors.confirmPassword}
+            comparePwd={inputForm.newPassword}
+          />
         </Box>
       </Grid>
       <Box display="flex" justifyContent="center" sx={{ marginTop: "30px" }}>
@@ -370,8 +366,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
           color="secondary"
         />
       </Box>
-    <ComponentBackdrop openBackdrop={openBackdrop} />
-      
+      <ComponentBackdrop openBackdrop={openBackdrop} />
     </Box>
   );
 }
