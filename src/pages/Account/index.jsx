@@ -109,8 +109,8 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
         </Paper>
         <Divider sx={{ my: 1, borderColor: "transparent" }} />
         <ChangePasswordSection />
-        <Divider sx={{ my: 3, borderColor: "secondary.main" }} />
-        <DeleteSection handleSubmit={handleSubmit} />
+        {/* <Divider sx={{ my: 3, borderColor: "secondary.main" }} />
+        <DeleteSection handleSubmit={handleSubmit} /> */}
       </Box>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

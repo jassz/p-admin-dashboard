@@ -67,8 +67,8 @@ export default function UserForm({
 
       var fieldList =[
             { label: "Email", key: "email", disabled: true },
-            { label: "Full Name", key: "userName" },
-            { label: "Company Name", key: "company" },
+            { label: "Full Name", key: "userName", disabled: true },
+            { label: "Company Name", key: "company", disabled: true },
           ];
           
   return (
@@ -83,12 +83,12 @@ export default function UserForm({
             >
               Personal Details
             </Typography>
-            <ButtonComponent
+            {/* <ButtonComponent
               value="contained"
               text="Save"
               callback={submit}
               color="secondary"
-            />
+            /> */}
           </Box>
         <Divider sx={{ my: 2, borderColor: "tertiary.main" }} />
 
@@ -116,6 +116,9 @@ export default function UserForm({
                 fullWidth
                 size="small"
                 disabled={disabled}
+                  slotProps={{
+       input: { readOnly: true,}
+      }}
               />
             </Box>
           ))}
@@ -133,13 +136,14 @@ export default function UserForm({
               select
               id="country"
               name="country"
-              value={data.country}
+              value={"Malaysia"}
               onChange={(e) => handleChange("country", e)}
               error={!!errors.country}
               helperText={errors.country}
               margin="dense"
               size="small"
               fullWidth
+              disabled="true"
             >
               {countries.map((country) => (
                 <MenuItem key={country} value={country}>

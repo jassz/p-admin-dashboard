@@ -9,13 +9,22 @@ import {
   Button,
   Stack,
   Divider,
+  Paper,
+  Chip,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import { plans } from "data/planData";
 
 const Listing2 = () => {
   return (
-    <Box py={10} bgcolor="#fff">
+     <Paper
+      sx={{
+        borderRadius: 6,
+        border: "1px solid tertiary.main",
+        boxShadow: 5,
+        padding: 3,
+      }}
+    >
       <Container maxWidth="lg">
         <Box textAlign="center" mb={6}>
           <Typography variant="overline" color="primary.main">
@@ -59,9 +68,16 @@ const Listing2 = () => {
                 >
                   <CardContent>
                     <Box mb={2}>
-                      <Typography variant="h6" fontWeight="bold">
+                      {/* <Typography variant="h6" fontWeight="bold">
                         {plan.title}
-                      </Typography>
+                      </Typography> */}
+                       <Box display={'flex'} justifyContent={'space-between'} alignItems="center" mb={3}>
+                                          <Typography variant="h6" fontWeight="bold">
+                                        {plan.title}
+                                      </Typography>
+                                      {plan.recomended && ( <Chip label="Recommended" color="secondary" size="small" /> ) }
+                      
+                                      </Box>
                       <Typography color="text.secondary" mt={1}>
                         {plan.description}
                       </Typography>
@@ -113,7 +129,7 @@ const Listing2 = () => {
           ))}
         </Grid>
       </Container>
-    </Box>
+    </Paper>
   );
 };
 

@@ -12,20 +12,20 @@ export default function Index() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <PrivateLayout>
-      <Box sx={{ paddingX: isMobile ? 2 : 5, py: isMobile ? 4 : 5, width: "100%" }}>
-        <Typography variant="h5" fontWeight={"bold"} textTransform={'uppercase'}>
+      <Box sx={{ paddingX: isMobile ? 2 : 5, py: isMobile ? 4 : 5, width: "100%", borderRadius: '30' }}>
+        {/* <Typography variant="h5" fontWeight={"bold"} textTransform={'uppercase'}>
           Plan and Pricing
-        </Typography>
-        <Divider sx={{ my: 1, borderColor: "transparent" }} />
-        <Listing />
-        <Divider sx={{ my: 10, borderColor: "secondary.main" }} />
+        </Typography> */}
+        {/* <Divider sx={{ my: 1, borderColor: "transparent" }} /> */}
+        {/* <Listing />
+        <Divider sx={{ my: 10, borderColor: "secondary.main" }} /> */}
 
         <Listing2 />
-        <Divider sx={{ my: 10, borderColor: "secondary.main" }} />
+        {/* <Divider sx={{ my: 10, borderColor: "secondary.main" }} />
 
         <Listing3 />
         <Divider sx={{ my: 10, borderColor: "secondary.main" }} />
-        <Listing4 />
+        <Listing4 /> */}
       </Box>
     </PrivateLayout>
   );
