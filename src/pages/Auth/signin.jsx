@@ -10,15 +10,19 @@ import {
   Typography,
   Paper,
   Stack,
+  Modal,
+  Divider,
 } from "@mui/material";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, createTheme } from "@mui/system";
+import { Container, createTheme, useMediaQuery, useTheme } from "@mui/system";
 import PublicLayout from "../../layouts/loginLayout";
 import logo from "./../../assets/images/logo192.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -26,14 +30,21 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import ComponentBackdrop from "components/backdrop";
 import { bannedDomains } from "data/bannedDomains";
 import { passwordRules } from "data/passwordRules";
+import Details from "pages/Terms/details";
+import PrivacyPolicyModal from "pages/Policy/details";
 
 export default function Signin() {
   const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [openTnc, setOpenTnc] = useState(false);
+  const [openPolicy, setOpenPolicy] = useState(false);
   const navigate = useNavigate();
   const [data, setData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const isVerified = false;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const handleChange = (field, event) => {
     const value = event.target.value;
 
@@ -99,22 +110,21 @@ export default function Signin() {
     }
   };
 
- const validateEmail = (value) => {
-  if (!value) return "Email is required.";
+  const validateEmail = (value) => {
+    if (!value) return "Email is required.";
 
-  const domain = value.split("@")[1];
+    const domain = value.split("@")[1];
 
-  if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-    return "Email must be a @gosumgroup.com address.";
-  }
+    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+      return "Email must be a @gosumgroup.com address.";
+    }
 
-  if (bannedDomains.includes(domain)) {
-    return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
-  }
+    if (bannedDomains.includes(domain)) {
+      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+    }
 
-  return ""; // valid
-};
-
+    return ""; // valid
+  };
 
   const validatePassword = (password) => {
     if (!password) return "Password is required.";
@@ -128,6 +138,22 @@ export default function Signin() {
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
       return "Password must contain at least one special character";
     return "";
+  };
+
+  const handleClose = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(false);
+    } else if (type === "privacy") {
+      setOpenPolicy(false);
+    }
+  };
+
+  const handleOpen = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(true);
+    } else if (type === "privacy") {
+      setOpenPolicy(true);
+    }
   };
 
   return (
@@ -263,7 +289,7 @@ export default function Signin() {
                 {errors.form}
               </FormHelperText>
             )}
-            <Box mt={2}>
+            {/* <Box mt={2}>
               <Typography variant="caption">
                 By signing in, you agree to Poisum's{" "}
                 <Link
@@ -285,6 +311,38 @@ export default function Signin() {
                 </Link>
                 .
               </Typography>
+            </Box> */}
+
+            <Box mt={2}>
+              <Typography variant="caption">
+                By signing in, you agree to Poisum's{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("tnc")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Terms & Conditions
+                </Typography>{" "}
+                and{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("privacy")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Privacy Policy
+                </Typography>
+                .
+              </Typography>
             </Box>
 
             <Button
@@ -295,15 +353,132 @@ export default function Signin() {
             >
               Sign In
             </Button>
-            <Box display={"flex"} justifyContent={"center"}>
+            {/* <Box display={"flex"} justifyContent={"center"}>
               <Typography variant="overline" fullWidth>
                 V1.0.1
               </Typography>
-            </Box>
+            </Box> */}
           </Box>
         </Container>
       </Container>
       <ComponentBackdrop openBackdrop={openBackdrop} />
+      {openTnc && (
+        <Modal open={openTnc} onClose={() => handleClose("tnc")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: "100%",
+                maxWidth: 900,
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Terms & Conditions
+                </Typography>
+                <CloseIcon onClick={() => handleClose("tnc")} />
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <Details />
+            </Box>
+          </Box>
+        </Modal>
+      )}
+
+      {openPolicy && (
+        <Modal open={openPolicy} onClose={()=> handleClose("privacy")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: { xs: "100%", sm: 900 },
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Privacy Policy
+                </Typography>
+                <CloseIcon onClick={() => handleClose("privacy")} />
+
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <PrivacyPolicyModal />
+            </Box>
+          </Box>
+        </Modal>
+      )}
     </PublicLayout>
   );
 }

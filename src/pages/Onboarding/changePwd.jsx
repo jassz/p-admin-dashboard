@@ -204,7 +204,6 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
         boxShadow: 10,
         p: 3,
         borderRadius: 4,
-         height: "55vh", // or maxHeight: 600
     overflowY: "auto"
       }}
     >

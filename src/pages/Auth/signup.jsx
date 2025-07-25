@@ -1,13 +1,22 @@
 import React, { useState } from "react";
-import {Box, Avatar, TextField, Button, InputAdornment, IconButton, FormHelperText, Typography, Paper, MenuItem } from "@mui/material";
 import {
-  LockOutlined,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
+  Modal,
+  Divider,
+  Box,
+  Avatar,
+  TextField,
+  Button,
+  InputAdornment,
+  IconButton,
+  FormHelperText,
+  Typography,
+  Paper,
+  MenuItem,
+} from "@mui/material";
+import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Stack } from "@mui/system";
+import { Container, Stack, useMediaQuery, useTheme } from "@mui/system";
 import PublicLayout from "../../layouts/signupLayout";
 import logo from "./../../assets/images/logo192.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -15,9 +24,18 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { bannedDomains } from "data/bannedDomains";
 import { passwordRules } from "data/passwordRules";
 import { countries } from "data/countries";
+import Details from "pages/Terms/details";
+import PrivacyPolicyModal from "pages/Policy/details";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [openTnc, setOpenTnc] = useState(false);
+  const [openPolicy, setOpenPolicy] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -105,22 +123,21 @@ export default function Signup() {
     }
   };
 
+  const validateEmail = (value) => {
+    if (!value) return "Email is required.";
 
- const validateEmail = (value) => {
-  if (!value) return "Email is required.";
+    const domain = value.split("@")[1];
 
-  const domain = value.split("@")[1];
+    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+      return "Email must be a @gosumgroup.com address.";
+    }
 
-  if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-    return "Email must be a @gosumgroup.com address.";
-  }
+    if (bannedDomains.includes(domain)) {
+      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+    }
 
-  if (bannedDomains.includes(domain)) {
-    return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
-  }
-
-  return ""; // valid
-};
+    return ""; // valid
+  };
 
   const validatePassword = (password) => {
     if (!password) return "Password is required.";
@@ -134,6 +151,22 @@ export default function Signup() {
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
       return "Password must contain at least one special character";
     return "";
+  };
+
+  const handleClose = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(false);
+    } else if (type === "privacy") {
+      setOpenPolicy(false);
+    }
+  };
+
+  const handleOpen = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(true);
+    } else if (type === "privacy") {
+      setOpenPolicy(true);
+    }
   };
 
   return (
@@ -325,7 +358,7 @@ export default function Signup() {
                 {errors.form}
               </FormHelperText>
             )}
-            <Box mt={2}>
+            {/* <Box mt={2}>
               <Typography variant="caption">
                 By signing up, you agree to Poisum's{" "}
                 <Link
@@ -347,6 +380,86 @@ export default function Signup() {
                 </Link>
                 .
               </Typography>
+            </Box> */}
+
+            <Box mt={2}>
+              {/* Always visible part */}
+              <Typography variant="caption">
+                By signing up to POISUM, I hereby consent to the collection,
+                processing, and use of my personal data by Gosum Consulting
+                Group Sdn. Bhd. in accordance with the{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("tnc")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Terms & Conditions
+                </Typography>{" "}
+                and{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("privacy")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Privacy Policy
+                </Typography>
+                .
+              </Typography>
+
+              {/* Conditionally shown content */}
+              {showMore && (
+                <>
+                  <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                  <Typography variant="caption">
+                    I understand that my data will be used for platform
+                    functionality, engagement tracking, and performance
+                    analytics within my organization.
+                  </Typography>
+                  <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                  <Typography variant="caption">
+                    I also acknowledge that I may withdraw my consent or request
+                    data access or correction at any time by contacting{" "}
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      onClick={() => handleOpen("privacy")}
+                      sx={{
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        color: "primary.main",
+                      }}
+                    >
+                      privacy@poisum.com
+                    </Typography>
+                    .
+                  </Typography>
+                </>
+              )}
+
+              {/* See more / See less button */}
+              <Box mt={1} display={"flex"} justifyContent={"center"}>
+                <Typography
+                  variant="caption"
+                  onClick={() => setShowMore(!showMore)}
+                  sx={{
+                    cursor: "pointer",
+                    color: "primary.main",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {showMore ? "See less" : "See more"}
+                </Typography>
+              </Box>
             </Box>
 
             <Button
@@ -357,15 +470,132 @@ export default function Signup() {
             >
               Sign Up
             </Button>
-            <Box display={"flex"} justifyContent={"center"}>
+            {/* <Box display={"flex"} justifyContent={"center"}>
               <Typography variant="overline" fullWidth>
                 V1.0.1
               </Typography>
-            </Box>
+            </Box> */}
             {/* <Divider sx={{ borderColor:'transparent'}} /> */}
           </Box>
         </Container>
       </Container>
+
+      {openTnc && (
+        <Modal open={openTnc} onClose={() => handleClose("tnc")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: "100%",
+                maxWidth: 900,
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Terms & Conditions
+                </Typography>
+                <CloseIcon onClick={() => handleClose("tnc")} />
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <Details />
+            </Box>
+          </Box>
+        </Modal>
+      )}
+
+      {openPolicy && (
+        <Modal open={openPolicy} onClose={() => handleClose("privacy")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: { xs: "100%", sm: 900 },
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Privacy Policy
+                </Typography>
+                <CloseIcon onClick={() => handleClose("privacy")} />
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <PrivacyPolicyModal />
+            </Box>
+          </Box>
+        </Modal>
+      )}
     </PublicLayout>
   );
 }
