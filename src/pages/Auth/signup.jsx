@@ -34,7 +34,7 @@ export default function Signup() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [openTnc, setOpenTnc] = useState(false);
   const [openPolicy, setOpenPolicy] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(true);
 
   const [data, setData] = useState({
     email: "",
@@ -443,7 +443,7 @@ export default function Signup() {
               )}
 
               {/* See more / See less button */}
-              <Box mt={1} display={"flex"} justifyContent={"center"}>
+              {/* <Box mt={1} display={"flex"} justifyContent={"center"}>
                 <Typography
                   variant="caption"
                   onClick={() => setShowMore(!showMore)}
@@ -455,7 +455,7 @@ export default function Signup() {
                 >
                   {showMore ? "See less" : "See more"}
                 </Typography>
-              </Box>
+              </Box> */}
             </Box>
 
             <Button
