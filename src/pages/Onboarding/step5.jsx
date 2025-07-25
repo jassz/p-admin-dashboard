@@ -12,6 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import ResetPwdLayout from "layouts/resetPwdLayout";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -28,11 +29,12 @@ export default function OnboardingThankyou() {
   const poisumName = "TeamHero";
   const handleSubmitFinal = () => {
     // Final API call or redirect
- navigate("/homepage")
+ navigate("/onboarding")
   };
 
   return (
-    <Box
+    <ResetPwdLayout>
+<Box
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -139,5 +141,6 @@ export default function OnboardingThankyou() {
         </Box>
       </motion.div>
     </Box>
+    </ResetPwdLayout>
   );
 }

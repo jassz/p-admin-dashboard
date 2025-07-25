@@ -1,5 +1,6 @@
 import { Box, Typography, Button, Chip, Stack, Alert, Grid, TextField } from "@mui/material";
 import { motion } from "framer-motion";
+import ResetPwdLayout from "layouts/resetPwdLayout";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -43,10 +44,9 @@ const [otherValue, setOtherValue] = useState("");
 
 const valueTags = ["Speed with Impact", "Think, Try, Adapt", "Commit & Deliver", "Learn & Grow", "Stay Active and Stay Sharp", "Innovation", "Teamwork", "Growth", "Integrity", "Excellence", "Leadership", "Others"];
 
-
-
   return (
-    <Box
+    <ResetPwdLayout>
+         <Box
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -131,7 +131,7 @@ const valueTags = ["Speed with Impact", "Think, Try, Adapt", "Commit & Deliver",
             {/* Upgrade Suggestion */}
             <Alert severity="info" sx={{ mt: 4 }}>
               Want to add more value tags for your organization?{" "}
-              <strong><Link to="/step2">Upgrade to Poisum Premium</Link></strong> for full customization.
+              <strong><Link to="/onboardingPlan">Upgrade to Poisum Premium</Link></strong> for full customization.
             </Alert>
           </Box>
 
@@ -160,5 +160,7 @@ const valueTags = ["Speed with Impact", "Think, Try, Adapt", "Commit & Deliver",
         </Box>
       </motion.div>
     </Box>
+    </ResetPwdLayout>
+   
   );
 }

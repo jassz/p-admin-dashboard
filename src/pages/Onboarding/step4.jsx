@@ -9,6 +9,7 @@ import {
   TextField,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import ResetPwdLayout from "layouts/resetPwdLayout";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +31,8 @@ export default function OnboardingName() {
 const [poisumName, setPoisumName] = useState("");
 
   return (
-    <Box
+    <ResetPwdLayout>
+      <Box
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -98,5 +100,7 @@ const [poisumName, setPoisumName] = useState("");
         </Box>
       </motion.div>
     </Box>
+    </ResetPwdLayout>
+    
   );
 }

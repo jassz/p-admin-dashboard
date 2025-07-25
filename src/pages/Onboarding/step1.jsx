@@ -2,6 +2,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { motion } from "framer-motion";
 import logo from "./../../assets/images/welcome.jpg";
 import { useNavigate } from "react-router-dom";
+import ResetPwdLayout from "layouts/resetPwdLayout";
 
 // Dummy image – replace with your actual asset
 const onboardingImage = "";
@@ -14,7 +15,8 @@ const handleNext = () => {
 };
 
   return (
-    <Box
+    <ResetPwdLayout>
+         <Box
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -86,5 +88,7 @@ const handleNext = () => {
         </Box>
       </motion.div>
     </Box>
+    </ResetPwdLayout>
+   
   );
 }

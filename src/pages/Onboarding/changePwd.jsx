@@ -34,12 +34,12 @@ export default function ChangePwd() {
 
   const [errors, setErrors] = useState({
     newPassword: "",
-    tempPassword: "",
+    // tempPassword: "",
     confirmPassword: "",
   });
 
   const [inputForm, setInputForm] = useState({
-    tempPassword: "",
+    // tempPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -49,10 +49,10 @@ export default function ChangePwd() {
 
     setInputForm({ ...inputForm, [property]: value });
 
-    if (property === "tempPassword") {
-      const error = validate(property, value);
-      setErrors((inputForm) => ({ ...inputForm, tempPassword: error }));
-    }
+    // if (property === "tempPassword") {
+    //   const error = validate(property, value);
+    //   setErrors((inputForm) => ({ ...inputForm, tempPassword: error }));
+    // }
     if (property === "newPassword") {
       const error = validate(property, value);
       setErrors((inputForm) => ({ ...inputForm, newPassword: error }));
@@ -81,19 +81,19 @@ export default function ChangePwd() {
           return "Confirm password must contain at least one special character";
         return "";
 
-      case "tempPassword":
-        if (!value) return "Temporary password is required";
-        if (value.length < 8)
-          return "Temporary password must be at least 8 characters";
-        if (!/[A-Z]/.test(value))
-          return "Temporary password must contain at least one uppercase letter";
-        if (!/[a-z]/.test(value))
-          return "Temporary password must contain at least one lowercase letter";
-        if (!/[0-9]/.test(value))
-          return "Temporary password must contain at least one number";
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
-          return "Temporary password must contain at least one special character";
-        return "";
+      // case "tempPassword":
+      //   if (!value) return "Temporary password is required";
+      //   if (value.length < 8)
+      //     return "Temporary password must be at least 8 characters";
+      //   if (!/[A-Z]/.test(value))
+      //     return "Temporary password must contain at least one uppercase letter";
+      //   if (!/[a-z]/.test(value))
+      //     return "Temporary password must contain at least one lowercase letter";
+      //   if (!/[0-9]/.test(value))
+      //     return "Temporary password must contain at least one number";
+      //   if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
+      //     return "Temporary password must contain at least one special character";
+      //   return "";
 
       case "newPassword":
         if (!value) return "New password is required";
@@ -165,7 +165,7 @@ export default function ChangePwd() {
       // Instead of window.location.reload(), update state or navigate
       //   setTimeout(() => {
       // window.location.reload();
-      navigate("/step1");
+      navigate("/homepage");
       //   }, 3000);
     } catch (error) {
       // ErrorAlert(error, navigate);
@@ -200,7 +200,7 @@ export default function ChangePwd() {
       </Box>
       <Divider sx={{ my: 1, borderColor: "tertiary.main" }} />
 
-      <Box
+      {/* <Box
         display="flex"
         flexDirection={isMobile ? "column" : "row"}
         alignItems={isMobile ? "flex-start" : "center"}
@@ -251,7 +251,7 @@ export default function ChangePwd() {
             error={errors.tempPassword}
           />
         </Box>
-      </Grid>
+      </Grid> */}
       <Box
         display="flex"
         flexDirection={isMobile ? "column" : "row"}

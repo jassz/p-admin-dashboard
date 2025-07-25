@@ -93,7 +93,7 @@ export default function Signup() {
 
       if (result) {
         // localStorage.setItem("loggedInID", result.data.id);
-        navigate("/signin");
+        navigate("/step1");
       } else {
         setErrors({ form: "Invalid email or password" });
       }
@@ -236,7 +236,6 @@ export default function Signup() {
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
             />
 
             <TextField
@@ -314,7 +313,6 @@ export default function Signup() {
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
             />
             <TextField
               label="Company Name"
@@ -328,7 +326,6 @@ export default function Signup() {
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
             />
             <TextField
               select
@@ -342,7 +339,6 @@ export default function Signup() {
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
             >
               {countries.map((country) => (
                 <MenuItem key={country} value={country}>

@@ -18,6 +18,7 @@ import OnboardingValueTags from "pages/Onboarding/step2";
 import OnboardingPlatform from "pages/Onboarding/step3";
 import OnboardingName from "pages/Onboarding/step4";
 import OnboardingThankyou from "pages/Onboarding/step5";
+import OnboardingPlan from "pages/Onboarding/plan";
 // LicenseInfo.setLicenseKey(process.env.REACT_APP_MUI_LICENSE_KEY);
 import { Toaster } from 'react-hot-toast';
 
@@ -43,6 +44,7 @@ function App() {
         <Route path="/step3" element={<OnboardingPlatform />} />
         <Route path="/step4" element={<OnboardingName />} />
         <Route path="/step5" element={<OnboardingThankyou />} />
+        <Route path="/onboardingPlan" element={<OnboardingPlan />} />
       </Routes>
     </Router>
   );
