@@ -84,7 +84,7 @@ export default function Signin() {
         // localStorage.setItem("loggedInID", result.data.id);
 
         if (!isVerified) {
-          navigate("/onboarding");
+          navigate("/homepage");
         } else {
           navigate("/homepage");
         }
@@ -313,7 +313,7 @@ export default function Signin() {
               </Typography>
             </Box> */}
 
-            <Box mt={2}>
+            {/* <Box mt={2}>
               <Typography variant="caption">
                 By signing in, you agree to Poisum's{" "}
                 <Typography
@@ -343,7 +343,87 @@ export default function Signin() {
                 </Typography>
                 .
               </Typography>
-            </Box>
+            </Box> */}
+
+            <Box mt={2}>
+                          {/* Always visible part */}
+                          <Typography variant="caption">
+                            By signing up to POISUM, I hereby consent to the collection,
+                            processing, and use of my personal data by Gosum Consulting
+                            Group Sdn. Bhd. in accordance with the{" "}
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              onClick={() => handleOpen("tnc")}
+                              sx={{
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                                color: "primary.main",
+                              }}
+                            >
+                              Terms & Conditions
+                            </Typography>{" "}
+                            and{" "}
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              onClick={() => handleOpen("privacy")}
+                              sx={{
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                                color: "primary.main",
+                              }}
+                            >
+                              Privacy Policy
+                            </Typography>
+                            .
+                          </Typography>
+            
+                          {/* Conditionally shown content */}
+                          {(
+                            <>
+                              <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                              <Typography variant="caption">
+                                I understand that my data will be used for platform
+                                functionality, engagement tracking, and performance
+                                analytics within my organization.
+                              </Typography>
+                              <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                              <Typography variant="caption">
+                                I also acknowledge that I may withdraw my consent or request
+                                data access or correction at any time by contacting{" "}
+                                <Typography
+                                  component="span"
+                                  variant="caption"
+                                  onClick={() => handleOpen("privacy")}
+                                  sx={{
+                                    textDecoration: "underline",
+                                    cursor: "pointer",
+                                    color: "primary.main",
+                                  }}
+                                >
+                                  privacy@poisum.com
+                                </Typography>
+                                .
+                              </Typography>
+                            </>
+                          )}
+            
+                          {/* See more / See less button */}
+                          {/* <Box mt={1} display={"flex"} justifyContent={"center"}>
+                            <Typography
+                              variant="caption"
+                              onClick={() => setShowMore(!showMore)}
+                              sx={{
+                                cursor: "pointer",
+                                color: "primary.main",
+                                textDecoration: "underline",
+                              }}
+                            >
+                              {showMore ? "See less" : "See more"}
+                            </Typography>
+                          </Box> */}
+                        </Box>
 
             <Button
               type="submit"
