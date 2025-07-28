@@ -1,25 +1,25 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 
 export default function ButtonComponent({ value, text, callback, color }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box sx={{ display: "flex", alignItems: "end" }}>
+    <Box>
       <Button
         sx={(theme) => ({
-            minWidth: 120,
-              "&:hover": {
-                backgroundColor: theme.palette[color]?.contrastText, // dynamic by color prop
-                color: theme.palette[color]?.main, 
-                // borderColor: theme.palette[color]?.main, 
-                // border:1
-            },
-            borderRadius: 2
-         })}
-        size="normal"
+          minWidth: 120,
+          "&:hover": {
+            backgroundColor: theme.palette[color]?.contrastText,
+            color: theme.palette[color]?.main,
+          },
+          borderRadius: 2,
+        })}
+        size={isMobile ? "small" : "normal"}
         variant={value}
         onClick={callback}
         color={color}
-    
       >
         {text}
       </Button>

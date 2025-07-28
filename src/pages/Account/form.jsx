@@ -5,6 +5,9 @@ import {
   TextField,
   Grid,
   Divider,
+  MenuItem,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { useApiClient } from "context/ApiClientContext";
 import ButtonComponent from "components/button";
@@ -16,6 +19,7 @@ export default function UserForm({
   submit,
 }) {
   const labelWidth = 170;
+  const countries = ["Malaysia", "Singapore"];
 
   const [data, setData] = useState({});
 
@@ -57,11 +61,21 @@ export default function UserForm({
     setErrors({ ...errors, [property]: error });
   };
 
+      const theme = useTheme();
+  
+      const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+      var fieldList =[
+            { label: "Email", key: "email", disabled: true },
+            { label: "Full Name", key: "userName", disabled: true },
+            { label: "Company Name", key: "company", disabled: true },
+          ];
+          
   return (
     <Box padding={3} sx={{ borderRadius: 4 }}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      <Grid container rowSpacing={2} columnSpacing={3}>
         <Grid item size={12}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" >
+          <Box display="flex" justifyContent="space-between" alignItems="center" flexDirection={isMobile ? "row" : "row"} gap={2} >
             <Typography
               variant="body2"
               fontWeight="bold"
@@ -69,103 +83,74 @@ export default function UserForm({
             >
               Personal Details
             </Typography>
-            <ButtonComponent
+            {/* <ButtonComponent
               value="contained"
               text="Save"
               callback={submit}
-              color="primary"
-            />
+              color="secondary"
+            /> */}
           </Box>
         <Divider sx={{ my: 2, borderColor: "tertiary.main" }} />
 
-          <Box display="flex">
-            <Typography
-              display="flex"
-              alignItems="center"
-              sx={{ minWidth: labelWidth }}
-            >
-              Email
-            </Typography>
-            <TextField
-              error={!!errors.email}
-              helperText={errors.email}
-              type="text"
-              onChange={(e) => handleChange("email", e)}
-              value={inputForm.email}
-              required
-              margin="dense"
-              id="email"
-              fullWidth
-              disabled
-              size="small"
-              variant="standard"
-              fontSize="30"
-            />
-          </Box>
-          <Box display="flex">
-            <Typography
-              display="flex"
-              alignItems="center"
-              sx={{ minWidth: labelWidth }}
-            >
-              Full Name
-            </Typography>
-            <TextField
-              error={!!errors.userName}
-              helperText={errors.userName}
-              type="text"
-              onChange={(e) => handleChange("userName", e)}
-              value={inputForm.userName}
-              required
-              margin="dense"
-              id="userName"
-              fullWidth
-              size="small"
-            />
-          </Box>
 
-          <Box display="flex">
-            <Typography
+         {/* Form Fields */}
+          {fieldList.map(({ label, key, disabled = false }) => (
+            <Box
+              key={key}
               display="flex"
-              alignItems="center"
-              sx={{ minWidth: labelWidth }}
+              flexDirection={isMobile ? "column" : "row"}
+              alignItems={isMobile ? "start" : "center"}
+              // gap={1}
+              mb={2}
             >
-              Company Name
-            </Typography>
-            <TextField
-              error={!!errors.company}
-              helperText={errors.company}
-              type="text"
-              onChange={(e) => handleChange("company", e)}
-              value={inputForm.company}
-              required
-              margin="dense"
-              id="company"
-              fullWidth
-              size="small"
-            />
-          </Box>
+              <Typography sx={{ minWidth: isMobile ? 0 : labelWidth }}>{label}</Typography>
+              <TextField
+                error={!!errors[key]}
+                helperText={errors[key]}
+                type="text"
+                onChange={(e) => handleChange(key, e)}
+                value={inputForm[key]}
+                required
+                margin="dense"
+                id={key}
+                fullWidth
+                size="small"
+                disabled={disabled}
+                  slotProps={{
+       input: { readOnly: true,}
+      }}
+              />
+            </Box>
+          ))}
 
-          <Box display="flex">
-            <Typography
-              display="flex"
-              alignItems="center"
-              sx={{ minWidth: labelWidth }}
-            >
-              Country
-            </Typography>
+          {/* Country Select */}
+          <Box
+            display="flex"
+            flexDirection={isMobile ? "column" : "row"}
+            alignItems={isMobile ? "start" : "center"}
+            // gap={1}
+            mb={2}
+          >
+            <Typography sx={{ minWidth: isMobile ? 0 : labelWidth }}>Country</Typography>
             <TextField
+              select
+              id="country"
+              name="country"
+              value={"Malaysia"}
+              onChange={(e) => handleChange("country", e)}
               error={!!errors.country}
               helperText={errors.country}
-              type="text"
-              onChange={(e) => handleChange("country", e)}
-              value={inputForm.country}
-              required
               margin="dense"
-              id="country"
-              fullWidth
               size="small"
-            />
+              fullWidth
+              disabled="true"
+            >
+              {countries.map((country) => (
+                <MenuItem key={country} value={country}>
+                  {country}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
         </Grid>
       </Grid>

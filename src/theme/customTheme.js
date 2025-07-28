@@ -6,13 +6,13 @@ const CustomTheme = () => createTheme({
     // fontSize: 12,
   },
   palette: {
-    secondary: {
-      light: "#edfcf3",
+    primary: {
+      light: "#AABBB1",
       main: "#1c4f4a",
       dark: "#023b17",
       contrastText: "#fff",
     },
-    primary: {
+    secondary: {
       light: "#ff9b7a",
       main: "#fc6719", //#F15B2B
       dark: "#ba3a11",

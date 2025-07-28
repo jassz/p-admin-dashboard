@@ -1,47 +1,77 @@
 import React, { useState } from "react";
 import {
+  Modal,
+  Divider,
   Box,
   Avatar,
   TextField,
   Button,
   InputAdornment,
   IconButton,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
   FormHelperText,
   Typography,
   Paper,
-  Divider,
+  MenuItem,
 } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import {
-  LockOutlined as LockOutlinedIcon,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
+import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, createTheme } from "@mui/system";
+import { Container, Stack, useMediaQuery, useTheme } from "@mui/system";
 import PublicLayout from "../../layouts/signupLayout";
 import logo from "./../../assets/images/logo192.png";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { bannedDomains } from "data/bannedDomains";
+import { passwordRules } from "data/passwordRules";
+import { countries } from "data/countries";
+import Details from "pages/Terms/details";
+import PrivacyPolicyModal from "pages/Policy/details";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const [data, setData] = useState({ email: "", password: "" });
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [openTnc, setOpenTnc] = useState(false);
+  const [openPolicy, setOpenPolicy] = useState(false);
+  const [showMore, setShowMore] = useState(true);
+
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+    fullname: "",
+    company: "",
+    country: "",
+  });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (field, event) => {
-    setData({ ...data, [field]: event.target.value });
-  };
+    const value = event.target.value;
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    setData({ ...data, [field]: value });
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+    if (field === "email") {
+      const error = validateEmail(value);
+      setErrors((data) => ({ ...data, email: error }));
+    }
+
+    if (field === "password") {
+      const error = validatePassword(value);
+      setErrors((data) => ({ ...data, password: error }));
+    }
+    if (field === "fullname") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, fullname: error }));
+    }
+    if (field === "company") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, company: error }));
+    }
+    if (field === "country") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, country: error }));
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -63,7 +93,7 @@ export default function Signup() {
 
       if (result) {
         // localStorage.setItem("loggedInID", result.data.id);
-        navigate("/homepage");
+        navigate("/step1");
       } else {
         setErrors({ form: "Invalid email or password" });
       }
@@ -76,13 +106,66 @@ export default function Signup() {
   const validate = (name, value) => {
     switch (name) {
       case "email":
-        if (!value.trim()) return "Email is required";
-        return "";
+        validateEmail();
       case "password":
-        if (!value) return "Password is required";
+        validatePassword();
+      case "fullname":
+        if (!value) return "Full name is required";
+        return "";
+      case "company":
+        if (!value) return "Company name is required";
+        return "";
+      case "country":
+        if (!value) return "Country is required";
         return "";
       default:
         return "";
+    }
+  };
+
+  const validateEmail = (value) => {
+    if (!value) return "Email is required.";
+
+    const domain = value.split("@")[1];
+
+    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+      return "Email must be a @gosumgroup.com address.";
+    }
+
+    if (bannedDomains.includes(domain)) {
+      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+    }
+
+    return ""; // valid
+  };
+
+  const validatePassword = (password) => {
+    if (!password) return "Password is required.";
+    if (password.length < 8) return "Password must be at least 8 characters";
+    if (!/[A-Z]/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/[0-9]/.test(password))
+      return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+      return "Password must contain at least one special character";
+    return "";
+  };
+
+  const handleClose = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(false);
+    } else if (type === "privacy") {
+      setOpenPolicy(false);
+    }
+  };
+
+  const handleOpen = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(true);
+    } else if (type === "privacy") {
+      setOpenPolicy(true);
     }
   };
 
@@ -122,7 +205,7 @@ export default function Signup() {
             backgroundColor: "rgba(255, 255, 255, 0.85)",
           }}
         >
-          <Avatar sx={{ bgcolor: "primary.main", mb: 2 }}>
+          <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
             {/* <LockOutlinedIcon /> */}
             <Box
               component="img"
@@ -153,44 +236,71 @@ export default function Signup() {
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
             />
 
-            <FormControl
-              variant="outlined"
-              fullWidth
+            <TextField
+              label="Password"
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={data.password}
+              onChange={(e) => handleChange("password", e)}
+              error={!!errors.password}
+              helperText={
+                errors.password == "Password is required." ||
+                data.password == ""
+                  ? errors.password
+                  : ""
+              }
               margin="dense"
               size="small"
-              error={!!errors.password}
-            >
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <OutlinedInput
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={data.password}
-                onChange={(e) => handleChange("password", e)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      aria-label="toggle password visibility"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
-              {errors.password && (
-                <FormHelperText sx={{ color: red[700] }}>
-                  {errors.password}
-                </FormHelperText>
-              )}
-            </FormControl>
+              fullWidth
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        edge="end"
+                      >
+                        {!showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
 
+            {data.password && errors.password && (
+              <Stack spacing={0.5} pl={2}>
+                {passwordRules.map((rule, idx) => {
+                  const passed = rule.test(data.password);
+                  return (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      key={idx}
+                    >
+                      {passed ? (
+                        <CheckCircleIcon
+                          fontSize="small"
+                          sx={{ color: "green" }}
+                        />
+                      ) : (
+                        <CancelIcon fontSize="small" sx={{ color: "red" }} />
+                      )}
+                      <Typography
+                        variant="caption"
+                        sx={{ color: passed ? "green" : "red" }}
+                      >
+                        {rule.label}
+                      </Typography>
+                    </Stack>
+                  );
+                })}
+              </Stack>
+            )}
             <TextField
               label="Full Name"
               id="fullname"
@@ -203,7 +313,6 @@ export default function Signup() {
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
             />
             <TextField
               label="Company Name"
@@ -217,22 +326,26 @@ export default function Signup() {
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
             />
             <TextField
+              select
               label="Country"
               id="country"
               name="country"
-              type="text"
-              value={data.email}
-              onChange={(e) => handleChange("email", e)}
-              error={!!errors.email}
-              helperText={errors.email}
+              value={data.country}
+              onChange={(e) => handleChange("country", e)}
+              error={!!errors.country}
+              helperText={errors.country}
               margin="dense"
               size="small"
               fullWidth
-              autoFocus
-            />
+            >
+              {countries.map((country) => (
+                <MenuItem key={country} value={country}>
+                  {country}
+                </MenuItem>
+              ))}
+            </TextField>
 
             {errors.form && (
               <FormHelperText
@@ -241,7 +354,7 @@ export default function Signup() {
                 {errors.form}
               </FormHelperText>
             )}
-            <Box mt={2}>
+            {/* <Box mt={2}>
               <Typography variant="caption">
                 By signing up, you agree to Poisum's{" "}
                 <Link
@@ -263,20 +376,222 @@ export default function Signup() {
                 </Link>
                 .
               </Typography>
+            </Box> */}
+
+            <Box mt={2}>
+              {/* Always visible part */}
+              <Typography variant="caption">
+                By signing up to POISUM, I hereby consent to the collection,
+                processing, and use of my personal data by Gosum Consulting
+                Group Sdn. Bhd. in accordance with the{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("tnc")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Terms & Conditions
+                </Typography>{" "}
+                and{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("privacy")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Privacy Policy
+                </Typography>
+                .
+              </Typography>
+
+              {/* Conditionally shown content */}
+              {showMore && (
+                <>
+                  <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                  <Typography variant="caption">
+                    I understand that my data will be used for platform
+                    functionality, engagement tracking, and performance
+                    analytics within my organization.
+                  </Typography>
+                  <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                  <Typography variant="caption">
+                    I also acknowledge that I may withdraw my consent or request
+                    data access or correction at any time by contacting{" "}
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      onClick={() => handleOpen("privacy")}
+                      sx={{
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        color: "primary.main",
+                      }}
+                    >
+                      privacy@poisum.com
+                    </Typography>
+                    .
+                  </Typography>
+                </>
+              )}
+
+              {/* See more / See less button */}
+              {/* <Box mt={1} display={"flex"} justifyContent={"center"}>
+                <Typography
+                  variant="caption"
+                  onClick={() => setShowMore(!showMore)}
+                  sx={{
+                    cursor: "pointer",
+                    color: "primary.main",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {showMore ? "See less" : "See more"}
+                </Typography>
+              </Box> */}
             </Box>
 
-            <Button type="submit" variant="contained" fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ backgroundColor: "secondary.main" }}
+            >
               Sign Up
             </Button>
-            <Box display={"flex"} justifyContent={"center"}>
+            {/* <Box display={"flex"} justifyContent={"center"}>
               <Typography variant="overline" fullWidth>
-                V1.0.0
+                V1.0.1
               </Typography>
-            </Box>
+            </Box> */}
             {/* <Divider sx={{ borderColor:'transparent'}} /> */}
           </Box>
         </Container>
       </Container>
+
+      {openTnc && (
+        <Modal open={openTnc} onClose={() => handleClose("tnc")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: "100%",
+                maxWidth: 900,
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Terms & Conditions
+                </Typography>
+                <CloseIcon onClick={() => handleClose("tnc")} />
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <Details />
+            </Box>
+          </Box>
+        </Modal>
+      )}
+
+      {openPolicy && (
+        <Modal open={openPolicy} onClose={() => handleClose("privacy")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: { xs: "100%", sm: 900 },
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Privacy Policy
+                </Typography>
+                <CloseIcon onClick={() => handleClose("privacy")} />
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <PrivacyPolicyModal />
+            </Box>
+          </Box>
+        </Modal>
+      )}
     </PublicLayout>
   );
 }

@@ -1,13 +1,10 @@
-import PrivateLayout from 'layouts/privateLayout'
-import React from 'react'
-import Details from './details'
-import ResetPwdLayout from 'layouts/resetPwdLayout'
-import { Box, useMediaQuery, useTheme } from '@mui/material'
+import { Box, useTheme, useMediaQuery } from "@mui/material";
+import ResetPwdLayout from "layouts/resetPwdLayout";
+import ChangePwd from "./changePwd";
 
 export default function Index() {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <ResetPwdLayout>
@@ -25,12 +22,12 @@ export default function Index() {
         <Box
           sx={{
             width: "100%",
-            maxWidth: 900, // adjust width here
+            maxWidth: 500, // adjust width here
           }}
         >
-          <Details />
+          <ChangePwd />
         </Box>
       </Box>
     </ResetPwdLayout>
-  )
+  );
 }
