@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import PrivateLayout from "../../layouts/privateLayout";
 import UserForm from "./form";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useApiClient } from "context/ApiClientContext";
-import Header from "components/header";
-import DeleteSection from "./deleteSection";
+// import Header from "components/header";
+// import DeleteSection from "./deleteSection";
 import ChangePasswordSection from "./changePasswordSection";
+import axios from "axios";
 
 export default function Account() {
   
@@ -25,13 +26,36 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState();
+  // const [apiResponse, setApiResponse] = useState();
 
   const [inputForm, setInputForm] = useState({
-    userName: "Naja",
-    email: "najanadhirah@gosumgroup.com",
-    company: "Gosum Group Sdn Bhd",
-    country: "Malaysia",
+    fullName: "",
+    email: "",
+    companyName: "",
+    country: "",
+    planName: "",
   });
+
+  useEffect(() => {
+    if (inputForm.fullName === ""){
+      getAccDtl();
+      
+    }
+  }, [inputForm]);
+
+  const getAccDtl = async () => {
+    try{
+      const apiAccDtlResponse = await axios.get("http://192.168.3.209:7373/api/v1/Account/account-details");
+      if (apiAccDtlResponse.data.success){
+        console.log(apiAccDtlResponse.data.data);
+        setInputForm(apiAccDtlResponse.data.data);
+      };
+    }
+    catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
 
   const handleInputChange = (property, value) => {
     setInputForm((prevState) => ({
