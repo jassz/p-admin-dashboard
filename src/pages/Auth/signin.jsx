@@ -32,26 +32,29 @@ import { bannedDomains } from "data/bannedDomains";
 import { passwordRules } from "data/passwordRules";
 import Details from "pages/Terms/details";
 import PrivacyPolicyModal from "pages/Policy/details";
+import { useApiClient } from "context/ApiClientContext";
+import axios from "axios";
 
 export default function Signin() {
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [openTnc, setOpenTnc] = useState(false);
   const [openPolicy, setOpenPolicy] = useState(false);
   const navigate = useNavigate();
-  const [data, setData] = useState({ email: "", password: "" });
+  const [data, setData] = useState({ username: "", password: "", client_id: "poisum-admin-portal" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const isVerified = false;
+  const isVerified = true;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { accountMgtApiUrl } = useApiClient();
 
   const handleChange = (field, event) => {
     const value = event.target.value;
 
     setData({ ...data, [field]: value });
-    if (field === "email") {
+    if (field === "username") {
       const error = validateEmail(value);
-      setErrors((data) => ({ ...data, email: error }));
+      setErrors((data) => ({ ...data, username: error }));
     }
 
     if (field === "password") {
@@ -71,20 +74,36 @@ export default function Signin() {
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
+      console.log('accountMgtApiUrl', accountMgtApiUrl);
+      console.log('data', data);
 
     try {
       setOpenBackdrop(true);
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      const result = true;
-      // const result = await axios.post(`${apiClient}/user/login`, data);
+            // const result = true;
+      const result = await axios.post(`${accountMgtApiUrl}/SourceUser/SourceUserLogin`, data);
+
+      // const result = await axios.post(`http://192.168.3.209:7471/api/v1/SourceUser/SourceUserLogin`, data);
+      console.log('result', result);
+      
+      const resultPath = result?.data?.data;
+      const token = resultPath?.access_token;
+      const refreshtoken = resultPath?.access_token;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("refreshtoken", refreshtoken);
+      localStorage.setItem("loggedInID", resultPath?.user?.linked_user_id);
+      localStorage.setItem("tenantCode", resultPath?.user?.tenant_code);
+      localStorage.setItem("mobileApiUrl", resultPath?.user?.tenant_mobile_api_url || "");
+
+      setOpenBackdrop(false);
       console.log("Login response:", result);
 
       if (result) {
-        // localStorage.setItem("loggedInID", result.data.id);
 
         if (!isVerified) {
-          navigate("/homepage");
+          navigate("/step1");
         } else {
           navigate("/homepage");
         }
@@ -101,7 +120,7 @@ export default function Signin() {
 
   const validate = (name, value) => {
     switch (name) {
-      case "email":
+      case "username":
         validateEmail();
       case "password":
         validatePassword();
@@ -205,13 +224,13 @@ export default function Signin() {
           >
             <TextField
               label="Email"
-              id="email"
+              id="username"
               name="email"
               type="email"
-              value={data.email}
-              onChange={(e) => handleChange("email", e)}
-              error={!!errors.email}
-              helperText={errors.email}
+              value={data.username}
+              onChange={(e) => handleChange("username", e)}
+              error={!!errors.username}
+              helperText={errors.username}
               margin="dense"
               size="small"
               fullWidth

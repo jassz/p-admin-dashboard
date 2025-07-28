@@ -2,8 +2,6 @@
 export const fetchConfig = async () => {
     try {
       const response = await fetch('/config.json');
-
-      console.log('response', response);
       
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -11,8 +9,12 @@ export const fetchConfig = async () => {
   
       const contentType = response.headers.get('Content-Type');
       if (contentType && contentType.includes('application/json')) {
-        const config = await response.json(); // Parse JSON only if it's the correct content type
-        return config.apiBaseUrl;
+        const config = await response.json();
+        console.log('Loaded config:', config);
+        return {
+          dashboardApiUrl: config.apiBaseUrl,
+          accountMgtApiUrl: config.accMgtApiBaseUrl
+        };
       } else {
         throw new Error('Response is not JSON');
       }
@@ -20,5 +22,4 @@ export const fetchConfig = async () => {
       console.error('Failed to fetch configuration:', error);
       throw error;
     }
-  };
-  
+};

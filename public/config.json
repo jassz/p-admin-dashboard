@@ -1,3 +1,4 @@
 {
-    "apiBaseUrl": ""
+    "apiBaseUrl": "http://192.168.3.209:7373/api/v1",
+    "accMgtApiBaseUrl": "http://192.168.3.209:7471/api/v1"
 }
