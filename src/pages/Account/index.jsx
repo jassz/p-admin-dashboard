@@ -48,7 +48,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     setOpenBackdrop(true);
     try{
       const apiAccDtlResponse = await axios.get(`${dashboardApiUrl}/Account/account-details`);
-      console.log(apiAccDtlResponse);
+      // console.log(apiAccDtlResponse);
       if (apiAccDtlResponse.status === 200){
         setInputForm(apiAccDtlResponse.data.data);
       }
