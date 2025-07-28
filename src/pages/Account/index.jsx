@@ -17,6 +17,7 @@ import { useApiClient } from "context/ApiClientContext";
 // import DeleteSection from "./deleteSection";
 import ChangePasswordSection from "./changePasswordSection";
 import axios from "axios";
+import ComponentBackdrop from "components/backdrop";
 
 export default function Account() {
   
@@ -44,15 +45,20 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   }, [inputForm]);
 
   const getAccDtl = async () => {
+    setOpenBackdrop(true);
     try{
-      const apiAccDtlResponse = await axios.get(`${dashboardApiUrl}/Account/account-details`);
-      if (apiAccDtlResponse.data.success){
+      const apiAccDtlResponse = await axios.get(`${dashboardApiUrl}/Account/account-detail`);
+      console.log(apiAccDtlResponse);
+      if (apiAccDtlResponse.status === 200){
         setInputForm(apiAccDtlResponse.data.data);
-      };
+      }
     }
     catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.error(error.message);
+    }
+    finally{
+      setOpenBackdrop(false);
     }
   };
 
@@ -135,12 +141,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
         {/* <Divider sx={{ my: 3, borderColor: "secondary.main" }} />
         <DeleteSection handleSubmit={handleSubmit} /> */}
       </Box>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openBackdrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <ComponentBackdrop openBackdrop={openBackdrop} />
     </PrivateLayout>
   );
 }
