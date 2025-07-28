@@ -1,6 +1,5 @@
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+
 import {
   Box,
   List,
@@ -11,10 +10,20 @@ import {
   styled,
   Toolbar,
   Typography,
+  Button,
+  IconButton,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
-import { AccountTreeSharp, Home, PlayCircleOutlineOutlined } from "@mui/icons-material";
-
+import {
+  AccountBoxOutlined,
+  HomeOutlined,
+  PlayCircleOutlineOutlined,
+} from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
+import AppsIcon from "@mui/icons-material/Apps";
+import UpgradeIcon from "@mui/icons-material/WorkspacePremium"; // or use a crown/star icon
+import Tooltip from "@mui/material/Tooltip";
+import WhatshotIcon from "@mui/icons-material/Whatshot"
 const drawerWidth = 240;
 
 const Drawer = styled(MuiDrawer, {
@@ -22,7 +31,7 @@ const Drawer = styled(MuiDrawer, {
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
     background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.tertiary.main,
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -45,7 +54,35 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const LeftMenuDrawer = ({ open, logoutCallback }) => {
+
+const menuItems = [
+  {
+    label: "Dashboard",
+    to: "/homepage",
+    icon: <HomeOutlined />,
+    hoverBg: "primary.main",
+  },
+  {
+    label: "Account Setting",
+    to: "/accountDetail",
+    icon: <AccountBoxOutlined />,
+    hoverBg: "primary.main",
+  },
+  {
+    label: "Plan & Billing",
+    to: "/subscription",
+    icon: <PlayCircleOutlineOutlined />,
+    hoverBg: "secondary.main",
+  },
+  {
+    label: "Logout",
+    to: "/signin",
+    icon: <ExitToAppIcon />,
+    hoverBg: "secondary.main",
+  },
+];
+
+const LeftMenuDrawer = ({ open, toggleDrawerCallback, logoutCallback }) => {
   return (
     <Drawer
       variant="permanent"
@@ -59,77 +96,129 @@ const LeftMenuDrawer = ({ open, logoutCallback }) => {
       <Box>
         <Toolbar
           sx={{
-            display: "flex",
+           display: "flex",
             alignItems: "center",
-            justifyContent: "flex-end",
+            justifyContent: "flex-start",
             px: [1],
+            paddingTop:'20px'
+            }}
+        >
+          <IconButton onClick={toggleDrawerCallback}  color="inherit">
+            <MenuIcon sx={{ color: "tertiary.main" }} />
+          </IconButton>
+
+          <Typography
+            variant="h4"
+            color="inherit"
+            pl={3}
+            sx={{
+              fontWeight: "bold",
+              textTransform: "uppercase",
+              
+            }}
+          >
+            POISUM
+          </Typography>
+        </Toolbar>
+
+
+       <List component="nav">
+      {menuItems.map((item, index) => (
+        <ListItemButton
+          key={index}
+          component={Link}
+          to={item.to}
+          sx={{
+            py: 2,
+            "&:hover": { backgroundColor: 'secondary.main' },
+            "&:active": { backgroundColor: 'secondary.main' },
+          }}
+        >
+          <ListItemIcon sx={{ color: "inherit" }}>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.label} />
+        </ListItemButton>
+      ))}
+    </List>
+      </Box>
+
+      {/* Bottom Section */}
+      <Box my={7}>
+         {open ? (
+        <Box
+          sx={{
+            backgroundColor: "tertiary.light",
+            borderRadius: 3,
+            p: 2,
+            textAlign: "center",
+            boxShadow: 1,
+            mx: 2,
+            border: "1px solid",
+            borderColor: "secondary.main"
           }}
         >
           <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
+            variant="subtitle1"
+            color="secondary.main"
+            fontWeight="bold"
+          >
+            Get Premium Version!
+          </Typography>
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            mb={2}
+            sx={{}}
+            noWrap="false"
+          >
+            You're currently using <br />
+            the free version
+          </Typography>
+
+          <Button
+            variant="contained"
             sx={{
-              flexGrow: 1,
-              ml: 1,
-              mt: 2,
-              fontWeight: 700,
-              textTransform: "uppercase",
+              borderRadius: "999px",
+              textTransform: "none",
+              px: 3,
+
+              boxShadow: 5,
+              backgroundColor: "secondary.main", // blue button
+              "&:hover": {
+                backgroundColor: "secondary.dark",
+                // color: "secondary.main"
+              },
             }}
           >
-            Admin Dashboard
-          </Typography>
-        </Toolbar>
-        <List component="nav">
-
-          {/* Homepage */}
-          <ListItemButton component={Link} to="/homepage">
-            <ListItemIcon
-              sx={{ color: (theme) => theme.palette.primary.contrastText }}
-            >
-              <Home />
-            </ListItemIcon>
-            <ListItemText primary="Homepage" />
-          </ListItemButton>
-
-          {/* Account Detail */}
-          <ListItemButton component={Link} to="/accountDetail">
-            <ListItemIcon
-              sx={{ color: (theme) => theme.palette.primary.contrastText }}
-            >
-              <AccountTreeSharp />
-            </ListItemIcon>
-            <ListItemText primary="Account Detail" />
-          </ListItemButton>
-
-          {/* Plan and Billing */}
-          <ListItemButton component={Link} to="/plan">
-            <ListItemIcon
-              sx={{ color: (theme) => theme.palette.primary.contrastText }}
-            >
-              <PlayCircleOutlineOutlined />
-            </ListItemIcon>
-            <ListItemText primary="Plan & Billing" />
-          </ListItemButton>
-
-          {/* <Divider /> */}
-
-          <ListItemButton component={Link} to="/signin">
-            <ListItemIcon
-              sx={{
-                color: (theme) => theme.palette.primary.contrastText,
-              }}
-            >
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItemButton>
-        </List>
+            Upgrade Now
+          </Button>
+          {/* <ButtonEncrypt /> */}
+        </Box>
+         ): (
+    <Box display="flex" justifyContent="start" alignItems="end" ml={1}>
+        <Tooltip title="Upgrade to Premium" placement="right">
+          <Box
+            sx={{
+              // p: 1.5,
+              borderRadius: 5,
+              border: "1px solid",
+              borderColor: "secondary.main",
+              backgroundColor: "tertiary.main",
+              boxShadow: 5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <IconButton>
+              <WhatshotIcon sx={{ color: "secondary.main" }} />
+            </IconButton>
+          </Box>
+        </Tooltip>
       </Box>
-      {/* <Box style={{ flex: 1 }}>
-      <Typography variant="small">v1.1.3</Typography>
-      </Box> */}
+  )}
+      
+       </Box>
     </Drawer>
   );
 };

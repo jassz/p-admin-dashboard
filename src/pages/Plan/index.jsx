@@ -1,34 +1,32 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Divider, Typography, useTheme, useMediaQuery } from "@mui/material";
+import PrivateLayout from "layouts/privateLayout";
+import React from "react";
+import Listing from "./listing";
+import Listing2 from "./listing2";
+import Listing3 from "./listing3";
+import Listing4 from "./listing4";
 
-import PrivateLayout from "../../layouts/privateLayout";
-import myImage from './../../assets/images/coming-soon.jpg'; // adjust the path
-
-export default function Plan() {
-
+export default function Index() {
+  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-  <PrivateLayout>
-  <Box
-    display="flex"
-    flexDirection="column"
-    alignItems="end"
-    justifyContent="center"
-    height="90vh"
-    gap={2}
-     sx={{
-    // backgroundColor: 'tertiary.main', 
-    backgroundImage: `url(${myImage})`,
-    backgroundSize: 'cover',        // Optional: covers entire box
-    backgroundRepeat: 'no-repeat',  // Optional: prevents tiling
-    backgroundPosition: 'center',   // Optional: centers image
-  }}
-  >
-    <Typography variant="h2" textTransform={"uppercase"} fontWeight={700}  >
-      Plan and Billing
-    </Typography>
-    <Typography variant="body1" fontWeight='light'  >
-      Stay tuned for more updates and details.
-    </Typography>
-  </Box>
-</PrivateLayout>
+    <PrivateLayout>
+      <Box sx={{ paddingX: isMobile ? 2 : 5, py: isMobile ? 4 : 5, width: "100%", borderRadius: '30' }}>
+        {/* <Typography variant="h5" fontWeight={"bold"} textTransform={'uppercase'}>
+          Plan and Pricing
+        </Typography> */}
+        {/* <Divider sx={{ my: 1, borderColor: "transparent" }} /> */}
+        {/* <Listing />
+        <Divider sx={{ my: 10, borderColor: "secondary.main" }} /> */}
+
+        <Listing2 />
+        {/* <Divider sx={{ my: 10, borderColor: "secondary.main" }} />
+
+        <Listing3 />
+        <Divider sx={{ my: 10, borderColor: "secondary.main" }} />
+        <Listing4 /> */}
+      </Box>
+    </PrivateLayout>
   );
 }

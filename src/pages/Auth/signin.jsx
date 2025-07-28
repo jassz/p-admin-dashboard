@@ -6,40 +6,58 @@ import {
   Button,
   InputAdornment,
   IconButton,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
   FormHelperText,
   Typography,
   Paper,
+  Stack,
+  Modal,
+  Divider,
 } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, createTheme } from "@mui/system";
+import { Container, createTheme, useMediaQuery, useTheme } from "@mui/system";
 import PublicLayout from "../../layouts/loginLayout";
+import logo from "./../../assets/images/logo192.png";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import ComponentBackdrop from "components/backdrop";
+import { bannedDomains } from "data/bannedDomains";
+import { passwordRules } from "data/passwordRules";
+import Details from "pages/Terms/details";
+import PrivacyPolicyModal from "pages/Policy/details";
 
 export default function Signin() {
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [openTnc, setOpenTnc] = useState(false);
+  const [openPolicy, setOpenPolicy] = useState(false);
   const navigate = useNavigate();
   const [data, setData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const isVerified = false;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleChange = (field, event) => {
-    setData({ ...data, [field]: event.target.value });
-  };
+    const value = event.target.value;
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    setData({ ...data, [field]: value });
+    if (field === "email") {
+      const error = validateEmail(value);
+      setErrors((data) => ({ ...data, email: error }));
+    }
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+    if (field === "password") {
+      const error = validatePassword(value);
+      setErrors((data) => ({ ...data, password: error }));
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -55,32 +73,86 @@ export default function Signin() {
     if (Object.keys(newErrors).length > 0) return;
 
     try {
+      setOpenBackdrop(true);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       const result = true;
       // const result = await axios.post(`${apiClient}/user/login`, data);
       console.log("Login response:", result);
 
       if (result) {
         // localStorage.setItem("loggedInID", result.data.id);
-        navigate("/homepage");
+
+        if (!isVerified) {
+          navigate("/homepage");
+        } else {
+          navigate("/homepage");
+        }
       } else {
         setErrors({ form: "Invalid email or password" });
       }
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({ form: "Unexpected error occurred. Please try again." });
+    } finally {
+      setOpenBackdrop(false);
     }
   };
 
   const validate = (name, value) => {
     switch (name) {
       case "email":
-        if (!value.trim()) return "Email is required";
-        return "";
+        validateEmail();
       case "password":
-        if (!value) return "Password is required";
-        return "";
+        validatePassword();
       default:
         return "";
+    }
+  };
+
+  const validateEmail = (value) => {
+    if (!value) return "Email is required.";
+
+    const domain = value.split("@")[1];
+
+    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+      return "Email must be a @gosumgroup.com address.";
+    }
+
+    if (bannedDomains.includes(domain)) {
+      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+    }
+
+    return ""; // valid
+  };
+
+  const validatePassword = (password) => {
+    if (!password) return "Password is required.";
+    if (password.length < 8) return "Password must be at least 8 characters";
+    if (!/[A-Z]/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/[0-9]/.test(password))
+      return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+      return "Password must contain at least one special character";
+    return "";
+  };
+
+  const handleClose = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(false);
+    } else if (type === "privacy") {
+      setOpenPolicy(false);
+    }
+  };
+
+  const handleOpen = (type) => {
+    if (type === "tnc") {
+      setOpenTnc(true);
+    } else if (type === "privacy") {
+      setOpenPolicy(true);
     }
   };
 
@@ -95,9 +167,13 @@ export default function Signin() {
           mx: "auto",
         }}
       >
-        {/* <Typography variant="body1" color="textSecondary" mb={2}>
-          Please enter your details
-        </Typography> */}
+        <Typography variant="h5">Sign In Now</Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {" Don't have an account? "}
+          <Link color="inherit" to="/signup">
+            Sign up here
+          </Link>
+        </Typography>
         <Container
           component={Paper}
           elevation={6}
@@ -112,11 +188,14 @@ export default function Signin() {
           }}
         >
           <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
-            <LockOutlinedIcon />
+            {/* <LockOutlinedIcon /> */}
+            <Box
+              component="img"
+              src={logo} // replace with your image path
+              alt="Logo"
+              sx={{ width: 50, height: 50 }}
+            />
           </Avatar>
-          <Typography component="h1" variant="h5" mb={2}>
-            Sign In Now
-          </Typography>
 
           <Box
             component="form"
@@ -139,40 +218,69 @@ export default function Signin() {
               autoFocus
             />
 
-            <FormControl
-              variant="outlined"
-              fullWidth
+            <TextField
+              label="Password"
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={data.password}
+              onChange={(e) => handleChange("password", e)}
+              error={errors.password}
+              helperText={
+                errors.password == "Password is required." ||
+                data.password == ""
+                  ? errors.password
+                  : ""
+              }
               margin="dense"
               size="small"
-              error={!!errors.password}
-            >
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <OutlinedInput
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={data.password}
-                onChange={(e) => handleChange("password", e)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      aria-label="toggle password visibility"
+              fullWidth
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        edge="end"
+                      >
+                        {!showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+
+            {data.password && errors.password && (
+              <Stack spacing={0.5} pl={2}>
+                {passwordRules.map((rule, idx) => {
+                  const passed = rule.test(data.password);
+                  return (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      key={idx}
                     >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
-              {errors.password && (
-                <FormHelperText sx={{ color: red[700] }}>
-                  {errors.password}
-                </FormHelperText>
-              )}
-            </FormControl>
+                      {passed ? (
+                        <CheckCircleIcon
+                          fontSize="small"
+                          sx={{ color: "green" }}
+                        />
+                      ) : (
+                        <CancelIcon fontSize="small" sx={{ color: "red" }} />
+                      )}
+                      <Typography
+                        variant="caption"
+                        sx={{ color: passed ? "green" : "red" }}
+                      >
+                        {rule.label}
+                      </Typography>
+                    </Stack>
+                  );
+                })}
+              </Stack>
+            )}
 
             {errors.form && (
               <FormHelperText
@@ -181,25 +289,276 @@ export default function Signin() {
                 {errors.form}
               </FormHelperText>
             )}
+            {/* <Box mt={2}>
+              <Typography variant="caption">
+                By signing in, you agree to Poisum's{" "}
+                <Link
+                  to="/tnc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="hover"
+                >
+                  Terms & Conditions
+                </Link>{" "}
+                and{" "}
+                <Link
+                  to="/privacyPolicy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="hover"
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </Typography>
+            </Box> */}
 
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+            {/* <Box mt={2}>
+              <Typography variant="caption">
+                By signing in, you agree to Poisum's{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("tnc")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Terms & Conditions
+                </Typography>{" "}
+                and{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("privacy")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Privacy Policy
+                </Typography>
+                .
+              </Typography>
+            </Box> */}
+
+            <Box mt={2}>
+                          {/* Always visible part */}
+                          <Typography variant="caption">
+                            By signing up to POISUM, I hereby consent to the collection,
+                            processing, and use of my personal data by Gosum Consulting
+                            Group Sdn. Bhd. in accordance with the{" "}
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              onClick={() => handleOpen("tnc")}
+                              sx={{
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                                color: "primary.main",
+                              }}
+                            >
+                              Terms & Conditions
+                            </Typography>{" "}
+                            and{" "}
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              onClick={() => handleOpen("privacy")}
+                              sx={{
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                                color: "primary.main",
+                              }}
+                            >
+                              Privacy Policy
+                            </Typography>
+                            .
+                          </Typography>
+            
+                          {/* Conditionally shown content */}
+                          {(
+                            <>
+                              <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                              <Typography variant="caption">
+                                I understand that my data will be used for platform
+                                functionality, engagement tracking, and performance
+                                analytics within my organization.
+                              </Typography>
+                              <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                              <Typography variant="caption">
+                                I also acknowledge that I may withdraw my consent or request
+                                data access or correction at any time by contacting{" "}
+                                <Typography
+                                  component="span"
+                                  variant="caption"
+                                  onClick={() => handleOpen("privacy")}
+                                  sx={{
+                                    textDecoration: "underline",
+                                    cursor: "pointer",
+                                    color: "primary.main",
+                                  }}
+                                >
+                                  privacy@poisum.com
+                                </Typography>
+                                .
+                              </Typography>
+                            </>
+                          )}
+            
+                          {/* See more / See less button */}
+                          {/* <Box mt={1} display={"flex"} justifyContent={"center"}>
+                            <Typography
+                              variant="caption"
+                              onClick={() => setShowMore(!showMore)}
+                              sx={{
+                                cursor: "pointer",
+                                color: "primary.main",
+                                textDecoration: "underline",
+                              }}
+                            >
+                              {showMore ? "See less" : "See more"}
+                            </Typography>
+                          </Box> */}
+                        </Box>
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ backgroundColor: "secondary.main" }}
+            >
               Sign In
             </Button>
-             <Typography
-                variant="body2"
-                color="text.secondary"
-                display="flex"
-                justifyContent="center"
-                sx={{ mt: 2 }}
-              >
-                {" Don't have an account? "}
-                <Link color="inherit" to="/signup">
-                  Sign up here
-                </Link>
+            {/* <Box display={"flex"} justifyContent={"center"}>
+              <Typography variant="overline" fullWidth>
+                V1.0.1
               </Typography>
+            </Box> */}
           </Box>
         </Container>
       </Container>
+      <ComponentBackdrop openBackdrop={openBackdrop} />
+      {openTnc && (
+        <Modal open={openTnc} onClose={() => handleClose("tnc")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: "100%",
+                maxWidth: 900,
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Terms & Conditions
+                </Typography>
+                <CloseIcon onClick={() => handleClose("tnc")} />
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <Details />
+            </Box>
+          </Box>
+        </Modal>
+      )}
+
+      {openPolicy && (
+        <Modal open={openPolicy} onClose={()=> handleClose("privacy")}>
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2, // space outside modal (padding)
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // optional: dimmed background
+            }}
+          >
+            <Box
+              sx={{
+                maxHeight: "90vh",
+                width: { xs: "100%", sm: 900 },
+                overflowY: "auto",
+                bgcolor: "background.paper",
+                border: "1px solid",
+                borderColor: "tertiary.dark",
+                boxShadow: 10,
+                p: 3,
+                borderRadius: 4,
+                scrollbarWidth: "none", // Firefox
+                msOverflowStyle: "none", // IE 10+
+                "&::-webkit-scrollbar": {
+                  display: "none", // Chrome, Safari
+                },
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                flexDirection="row"
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h4"}
+                  fontWeight="bold"
+                  textTransform={"uppercase"}
+                >
+                  POISUM’s Privacy Policy
+                </Typography>
+                <CloseIcon onClick={() => handleClose("privacy")} />
+
+              </Box>
+
+              <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
+
+              <PrivacyPolicyModal />
+            </Box>
+          </Box>
+        </Modal>
+      )}
     </PublicLayout>
   );
 }
