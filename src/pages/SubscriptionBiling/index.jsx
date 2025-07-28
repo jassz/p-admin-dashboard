@@ -28,11 +28,17 @@ export default function Plan() {
     planName: "",
     planDescription: "",
     price: 0.0,
-    planExpiryDate: "1970-01-01",
+    planExpiryDate: "",
     planFunction: [{featureName: ""}],
     totalUsage: 0,
     totalStorage: 0
   });
+  const [cardInfo, setCardInfo] = useState({
+    cardName: "",
+    cardNumber: "",
+    cardType: "",
+    cardExpiryDate: ""
+  })
 
   useEffect(() => {
     setOpenBackdrop(true);
@@ -40,23 +46,40 @@ export default function Plan() {
       apiGetUserPlan();
     }
     setOpenBackdrop(false);
-  }, [subscriptionPlan]);
+  }, []);
+
+  useEffect(() => {
+    setOpenBackdrop(true)
+    if (cardInfo.cardName === ""){
+      apiGetCardInfo();
+    }
+    setOpenBackdrop(false);
+  }, [cardInfo]);
 
   const apiGetUserPlan = async () => {
-      try{
-        const apiResponse = await axios.get(`${dashboardApiUrl}/Plan/user-plan-details`);
-        // console.log(apiResponse);
-        if (apiResponse.status === 200){
-          setSubscriptionPlan(apiResponse.data.data);
-          
-        }
-        // console.log(subscriptionPlan);
+    try{
+      const apiResponse = await axios.get(`${dashboardApiUrl}/Plan/user-plan-details`);
+      if (apiResponse.status === 200){
+        setSubscriptionPlan(apiResponse.data.data);
+        
       }
-      catch (error) {
-        console.log(error);
-        toast.error(error.message);
+    }
+    catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const apiGetCardInfo = async () => {
+    try{
+      const apiResponse = await axios.get(`${dashboardApiUrl}/Billing/card-info`);
+      if (apiResponse.status === 200){
+        setCardInfo(apiResponse.data.data);
       }
-    };
+    }
+    catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <PrivateLayout>
@@ -77,7 +100,8 @@ export default function Plan() {
         {/* <Divider sx={{ my: 1, borderColor: "transparent" }} />
         <FreeVersion /> */}
         <Divider sx={{ my: 1, borderColor: "transparent" }} />
-        <BillingOverview />
+        <BillingOverview
+          cardInfo={cardInfo} />
       </Box>
       <ComponentBackdrop openBackdrop={openBackdrop} />
     </PrivateLayout>

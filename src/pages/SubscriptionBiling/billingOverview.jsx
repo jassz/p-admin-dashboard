@@ -18,7 +18,7 @@ import ComponentBackdrop from "components/backdrop";
 import BillingHistory from "./billingHistory";
 import BillingHistoryDataGridPro from "./billingHistoryDataGridPro";
 
-export default function BillingOverview() {
+export default function BillingOverview({cardInfo}) {
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -115,7 +115,7 @@ export default function BillingOverview() {
           await new Promise((resolve) => setTimeout(resolve, 3000));
           
           setOpenBackdrop(false);
-          toast.success('Update successfull.');          
+          toast.success('Update successful.');
         
         } catch (error) {
             toast.error('Something went wrong.');          
@@ -153,7 +153,8 @@ export default function BillingOverview() {
       <ComponentBackdrop openBackdrop={openBackdrop} />
 
       <Divider sx={{ my: 2, borderColor: "primary.main" }} />
-      <ContactDetails />
+      <ContactDetails
+        cardInfo={cardInfo} />
       <Divider sx={{ my: 2, borderColor: "primary.main" }} />
       <BillingHistory />
 
