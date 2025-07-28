@@ -398,7 +398,6 @@ export default function Signin() {
                             .
                           </Typography>
             
-                          {/* Conditionally shown content */}
                           {(
                             <>
                               <Divider sx={{ my: 1, borderColor: "transparent" }} />
@@ -509,7 +508,7 @@ export default function Signin() {
                 >
                   POISUM’s Terms & Conditions
                 </Typography>
-                <CloseIcon onClick={() => handleClose("tnc")} />
+                <CloseIcon onClick={() => handleClose("tnc")} sx={{cursor: "pointer"}}/>
               </Box>
 
               <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
@@ -567,7 +566,7 @@ export default function Signin() {
                 >
                   POISUM’s Privacy Policy
                 </Typography>
-                <CloseIcon onClick={() => handleClose("privacy")} />
+                <CloseIcon onClick={() => handleClose("privacy")} sx={{cursor: "pointer"}}/>
 
               </Box>
 

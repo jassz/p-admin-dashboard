@@ -8,14 +8,21 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
+import axios from "axios";
+import { useApiClient } from "context/ApiClientContext";
 import { motion } from "framer-motion";
 import ResetPwdLayout from "layouts/resetPwdLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function OnboardingValueTags() {
   const navigate = useNavigate();
+  const [valueTags, setValueTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const [otherValue, setOtherValue] = useState("");
+  const { dashboardApiUrl, accountMgtApiUrl } = useApiClient();
 
   const handleBack = () => {
     navigate("/step1");
@@ -25,9 +32,6 @@ export default function OnboardingValueTags() {
     navigate("/step3");
   };
 
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [showOtherInput, setShowOtherInput] = useState(false);
-  const [otherValue, setOtherValue] = useState("");
 
   const toggleTag = (tag) => {
     if (tag === "Others") {
@@ -48,20 +52,29 @@ export default function OnboardingValueTags() {
     }
   };
 
-  const valueTags = [
-    "Speed with Impact",
-    "Think, Try, Adapt",
-    "Commit & Deliver",
-    "Learn & Grow",
-    "Stay Active and Stay Sharp",
-    "Innovation",
-    "Teamwork",
-    "Growth",
-    "Integrity",
-    "Excellence",
-    "Leadership",
-    "Others",
-  ];
+ const getValueTags = async () => {
+  try {
+    const response = await axios.get(
+      `${dashboardApiUrl}/ValueTag/value-tag-option`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+        },
+      }
+    );
+    // console.log('response', response);
+    
+    setValueTags(response?.data?.data || []); // Ensure we always set an array
+  } catch (error) {
+    console.error("Error fetching value tags:", error);
+  }
+};
+
+  
+  useEffect(() => {
+    getValueTags();
+  }, []);
 
   return (
     <ResetPwdLayout>
@@ -106,7 +119,7 @@ export default function OnboardingValueTags() {
                   const isOthers = tag === "Others";
 
                   return (
-                    <Grid item key={tag}>
+                    <Grid item key={tag.valueTagId}>
                       <Box
                         onClick={() => toggleTag(tag)}
                         sx={{
@@ -126,7 +139,7 @@ export default function OnboardingValueTags() {
                           },
                         }}
                       >
-                        <Typography variant="body2">{tag}</Typography>
+                        <Typography variant="body2">{tag.name}</Typography>
                       </Box>
                     </Grid>
                   );

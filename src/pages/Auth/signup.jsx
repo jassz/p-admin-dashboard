@@ -202,7 +202,13 @@ export default function Signup() {
             alignItems: "center",
             borderRadius: 2,
             backdropFilter: "blur(10px)", // optional for frosted glass look
-            backgroundColor: "rgba(255, 255, 255, 0.85)",
+            backgroundColor: "rgba(255, 255, 255, 0.85)", maxHeight: '80vh', // or your desired height
+            overflow: 'auto', // enables scrolling
+            // '&::-webkit-scrollbar': {
+            //   display: 'none' // Hide scrollbar for Chrome, Safari and Opera
+            // },
+            // scrollbarWidth: 'none', // Hide scrollbar for Firefox
+            // msOverflowStyle: 'none' // Hide scrollbar for IE and Edge
           }}
         >
           <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
