@@ -26,7 +26,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState();
-  // const [apiResponse, setApiResponse] = useState();
+  const { dashboardApiUrl } = useApiClient();
 
   const [inputForm, setInputForm] = useState({
     fullName: "",
@@ -45,9 +45,8 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const getAccDtl = async () => {
     try{
-      const apiAccDtlResponse = await axios.get("http://192.168.3.209:7373/api/v1/Account/account-details");
+      const apiAccDtlResponse = await axios.get(`${dashboardApiUrl}/Account/account-details`);
       if (apiAccDtlResponse.data.success){
-        console.log(apiAccDtlResponse.data.data);
         setInputForm(apiAccDtlResponse.data.data);
       };
     }
