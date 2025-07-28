@@ -19,11 +19,10 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, createTheme, useMediaQuery, useTheme } from "@mui/system";
-import PublicLayout from "../../layouts/loginLayout";
+import PublicLayout from "../../layouts/signupLayout";
 import logo from "./../../assets/images/logo192.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -36,6 +35,7 @@ import { useApiClient } from "context/ApiClientContext";
 import axios from "axios";
 
 export default function Signin() {
+    const theme = useTheme();
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [openTnc, setOpenTnc] = useState(false);
   const [openPolicy, setOpenPolicy] = useState(false);
@@ -44,7 +44,6 @@ export default function Signin() {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const isVerified = true;
-  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { accountMgtApiUrl } = useApiClient();
 
@@ -204,6 +203,8 @@ export default function Signin() {
             borderRadius: 2,
             backdropFilter: "blur(10px)", // optional for frosted glass look
             backgroundColor: "rgba(255, 255, 255, 0.85)",
+            maxHeight: '80vh', // or your desired height
+            overflow: 'auto', // enables scrolling
           }}
         >
           <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
@@ -459,7 +460,7 @@ export default function Signin() {
           </Box>
         </Container>
       </Container>
-      <ComponentBackdrop openBackdrop={openBackdrop} />
+      {/* <ComponentBackdrop openBackdrop={openBackdrop} /> */}
       {openTnc && (
         <Modal open={openTnc} onClose={() => handleClose("tnc")}>
           <Box

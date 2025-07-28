@@ -1,18 +1,24 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 // import logo from "../assets/images/Logo-250/3.png";
-import { CssBaseline, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  CssBaseline,
+  ThemeProvider,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 // import bg from "../assets/images/bg4.png";
 import { Box, textAlign } from "@mui/system";
 import logo from "../assets/images/full_logo-transparent.png";
 
 const PublicLayout = ({ children }) => {
-    const theme = useTheme();
+  const theme = useTheme();
 
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
- <Grid
+    <Grid
       container
       component="main"
       sx={{
@@ -25,28 +31,28 @@ const PublicLayout = ({ children }) => {
     >
       <CssBaseline />
 
-            {!isMobile && (
- <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          width: { xs: "0%", md: "51%" }, // Responsive
-          backgroundColor: "secondary.main", // Or your theme color
-          borderTopRightRadius: 50,
-          borderBottomRightRadius: 50,
-          zIndex: 0,
-          boxShadow: 12,  
-        }}
-      />
-            )}
+      {!isMobile && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: { xs: "0%", md: "51%" }, // Responsive
+            backgroundColor: "secondary.main", // Or your theme color
+            borderTopRightRadius: 50,
+            borderBottomRightRadius: 50,
+            zIndex: 0,
+            boxShadow: 12,
+          }}
+        />
+      )}
 
       <Grid
         size={6}
-        sx={(theme) =>({
+        sx={(theme) => ({
           position: "relative",
-          // backgroundColor: "primary.main",
+          backgroundColor: "primary.main",
           backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
           color: "#fff",
           display: { xs: "none", md: "flex" },
@@ -55,12 +61,12 @@ const PublicLayout = ({ children }) => {
           alignItems: "center",
           borderTopRightRadius: 50,
           borderBottomRightRadius: 50,
-          boxShadow: 12,   
+          boxShadow: 12,
           zIndex: 1,
         })}
       >
         <Box px={3} textAlign="center">
-        {/* <Box
+          {/* <Box
             component="img"
             src={logo} // replace with your image path
             alt="Logo"
@@ -72,7 +78,7 @@ const PublicLayout = ({ children }) => {
         </Box>
       </Grid>
 
-      <Grid
+       <Grid
         xs={12}
         md={6}
         sx={{
@@ -87,14 +93,15 @@ const PublicLayout = ({ children }) => {
             backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
-          }),        
+          }),
         }}
       >
         {children}
       </Grid>
-    </Grid>   
+    </Grid>
+
+    
   );
 };
-
 
 export default PublicLayout;
