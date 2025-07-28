@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Divider,
@@ -23,10 +23,12 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { bannedDomains } from "data/bannedDomains";
 import { passwordRules } from "data/passwordRules";
-import { countries } from "data/countries";
 import Details from "pages/Terms/details";
 import PrivacyPolicyModal from "pages/Policy/details";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { useApiClient } from "context/ApiClientContext";
+import { toast } from "react-hot-toast";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ export default function Signup() {
   const [openTnc, setOpenTnc] = useState(false);
   const [openPolicy, setOpenPolicy] = useState(false);
   const [showMore, setShowMore] = useState(true);
+  const { dashboardApiUrl } = useApiClient();
 
   const [data, setData] = useState({
     email: "",
@@ -45,6 +48,27 @@ export default function Signup() {
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [countries, setCountries] = useState([{
+    id: 0,
+    name: "",
+    code: ""
+  }])
+
+  useEffect(() => {
+    apiGetCountries();
+  }, []);
+
+  const apiGetCountries = async () => {
+    try{
+      const apiResponse = await axios.get(`${dashboardApiUrl}/Country/country-list`);
+      if (apiResponse.status === 200){
+        setCountries(apiResponse.data.data);
+      }
+    }
+    catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const handleChange = (field, event) => {
     const value = event.target.value;
@@ -347,8 +371,8 @@ export default function Signup() {
               fullWidth
             >
               {countries.map((country) => (
-                <MenuItem key={country} value={country}>
-                  {country}
+                <MenuItem key={country.name} value={country.name}>
+                  {country.name}
                 </MenuItem>
               ))}
             </TextField>
