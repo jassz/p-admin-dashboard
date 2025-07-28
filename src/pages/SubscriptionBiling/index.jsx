@@ -58,7 +58,14 @@ export default function Plan() {
 
   const apiGetUserPlan = async () => {
     try{
-      const apiResponse = await axios.get(`${dashboardApiUrl}/Plan/user-plan-details`);
+      const apiResponse = await axios.get(`${dashboardApiUrl}/Plan/user-plan-details`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json",
+          },
+        }
+      );
       if (apiResponse.status === 200){
         setSubscriptionPlan(apiResponse.data.data);
         
@@ -71,7 +78,14 @@ export default function Plan() {
 
   const apiGetCardInfo = async () => {
     try{
-      const apiResponse = await axios.get(`${dashboardApiUrl}/Billing/card-info`);
+      const apiResponse = await axios.get(`${dashboardApiUrl}/Billing/card-info`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json",
+          },
+        }
+      );
       if (apiResponse.status === 200){
         setCardInfo(apiResponse.data.data);
       }

@@ -60,7 +60,14 @@ export default function Signup() {
 
   const apiGetCountries = async () => {
     try{
-      const apiResponse = await axios.get(`${dashboardApiUrl}/Country/country-list`);
+      const apiResponse = await axios.get(`${dashboardApiUrl}/Country/country-list`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json",
+          },
+        }
+      );
       if (apiResponse.status === 200){
         setCountries(apiResponse.data.data);
       }

@@ -47,7 +47,14 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const getAccDtl = async () => {
     setOpenBackdrop(true);
     try{
-      const apiAccDtlResponse = await axios.get(`${dashboardApiUrl}/Account/account-details`);
+      const apiAccDtlResponse = await axios.get(`${dashboardApiUrl}/Account/account-details`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json",
+          },
+        }
+      );
       // console.log(apiAccDtlResponse);
       if (apiAccDtlResponse.status === 200){
         setInputForm(apiAccDtlResponse.data.data);
