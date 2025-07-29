@@ -25,8 +25,7 @@ const PublicLayout = ({ children }) => {
       <CssBaseline />
 
       <Grid
-        item
-        size={6}
+        size={{xs:12, md:6}}
         sx={{
           height: "100vh",
           display: "flex",
@@ -35,6 +34,11 @@ const PublicLayout = ({ children }) => {
           alignItems: "center",
           p: 4,
           backgroundColor: "tertiary.main",
+            ...(isMobile && {
+            backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+          }),
         }}
       >
         {children}
@@ -52,6 +56,7 @@ const PublicLayout = ({ children }) => {
           borderTopLeftRadius: 50,
           borderBottomLeftRadius: 50,
           zIndex: 0,
+          boxShadow: 12,
         }}
       />
   )}
@@ -59,18 +64,18 @@ const PublicLayout = ({ children }) => {
       <Grid
         item
         size={6}
-       sx={(theme) =>({
-          position: "relative",
-    backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
-          color: "#fff",
-          display: { xs: "none", md: "flex" },
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          borderTopLeftRadius: 50,
-          borderBottomLeftRadius: 50,
-          // p: 4,
-          zIndex: 1,
+        sx={(theme) =>({
+        position: "relative",
+        backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+        color: "#fff",
+        display: { xs: "none", md: "flex" },
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        borderTopLeftRadius: 50,
+        borderBottomLeftRadius: 50,
+        // p: 4,
+        zIndex: 1,
         })}
       >
         <Box px={3} textAlign="center">

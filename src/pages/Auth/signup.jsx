@@ -174,9 +174,9 @@ export default function Signup() {
 
     const domain = value.split("@")[1];
 
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-      return "Email must be a @gosumgroup.com address.";
-    }
+    // if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+    //   return "Email must be a @gosumgroup.com address.";
+    // }
 
     if (bannedDomains.includes(domain)) {
       return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
@@ -226,7 +226,7 @@ export default function Signup() {
           mx: "auto",
         }}
       >
-        <Typography variant="h4" fontWeight="bold">
+        <Typography variant="h5" >
           Welcome to Poisum
         </Typography>
         <Typography variant="body2" color="textSecondary" mb={3}>
@@ -248,7 +248,8 @@ export default function Signup() {
             alignItems: "center",
             borderRadius: 2,
             backdropFilter: "blur(10px)", // optional for frosted glass look
-            backgroundColor: "rgba(255, 255, 255, 0.85)", maxHeight: '80vh', // or your desired height
+            backgroundColor: "rgba(255, 255, 255, 0.85)", 
+            maxHeight: '80vh', // or your desired height
             overflow: 'auto', // enables scrolling
             // '&::-webkit-scrollbar': {
             //   display: 'none' // Hide scrollbar for Chrome, Safari and Opera
