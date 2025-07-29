@@ -29,6 +29,10 @@ export default function OnboardingValueTags() {
   };
 
   const handleNext = () => {
+    // selectedTags.forEach((tag) => {
+    //   console.log(tag);
+    // });
+    sessionStorage.setItem("valuetags", JSON.stringify(selectedTags));
     navigate("/step3");
   };
 

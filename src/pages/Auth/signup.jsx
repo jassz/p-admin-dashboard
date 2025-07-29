@@ -42,7 +42,8 @@ export default function Signup() {
   const [data, setData] = useState({
     email: "",
     password: "",
-    fullname: "",
+    firstname: "",
+    lastname: "",
     company: "",
     country: "",
   });
@@ -91,9 +92,13 @@ export default function Signup() {
       const error = validatePassword(value);
       setErrors((data) => ({ ...data, password: error }));
     }
-    if (field === "fullname") {
+    if (field === "firstname") {
       const error = validate(field, value);
-      setErrors((data) => ({ ...data, fullname: error }));
+      setErrors((data) => ({ ...data, firstname: error }));
+    }
+    if (field === "lastname") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, lastname: error }));
     }
     if (field === "company") {
       const error = validate(field, value);
@@ -117,21 +122,28 @@ export default function Signup() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    try {
-      const result = true;
-      // const result = await axios.post(`${apiClient}/user/login`, data);
-      console.log("Login response:", result);
+    Object.entries(data).forEach(([key, value]) => {
+      console.log(`${key}: ${value}`);
+      sessionStorage.setItem(key, value);
+    });
 
-      if (result) {
-        // localStorage.setItem("loggedInID", result.data.id);
-        navigate("/step1");
-      } else {
-        setErrors({ form: "Invalid email or password" });
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setErrors({ form: "Unexpected error occurred. Please try again." });
-    }
+    navigate("/step1");
+
+    // try {
+    //   const result = true;
+    //   // const result = await axios.post(`${apiClient}/user/login`, data);
+    //   console.log("Login response:", result);
+
+    //   if (result) {
+    //     // localStorage.setItem("loggedInID", result.data.id);
+    //     navigate("/step1");
+    //   } else {
+    //     setErrors({ form: "Invalid email or password" });
+    //   }
+    // } catch (error) {
+    //   console.error("Login failed:", error);
+    //   setErrors({ form: "Unexpected error occurred. Please try again." });
+    // }
   };
 
   const validate = (name, value) => {
@@ -140,8 +152,11 @@ export default function Signup() {
         validateEmail();
       case "password":
         validatePassword();
-      case "fullname":
-        if (!value) return "Full name is required";
+      case "firstname":
+        if (!value) return "First name is required";
+        return "";
+      case "lastname":
+        if (!value) return "Last name is required";
         return "";
       case "company":
         if (!value) return "Company name is required";
@@ -339,14 +354,27 @@ export default function Signup() {
               </Stack>
             )}
             <TextField
-              label="Full Name"
-              id="fullname"
-              name="fullname"
+              label="First Name"
+              id="firstname"
+              name="firstname"
               type="text"
-              value={data.fullname}
-              onChange={(e) => handleChange("fullname", e)}
-              error={!!errors.fullname}
-              helperText={errors.fullname}
+              value={data.firstname}
+              onChange={(e) => handleChange("firstname", e)}
+              error={!!errors.firstname}
+              helperText={errors.firstname}
+              margin="dense"
+              size="small"
+              fullWidth
+            />
+            <TextField
+              label="Last Name"
+              id="lastname"
+              name="lastname"
+              type="text"
+              value={data.lastname}
+              onChange={(e) => handleChange("lastname", e)}
+              error={!!errors.lastname}
+              helperText={errors.lastname}
               margin="dense"
               size="small"
               fullWidth
@@ -378,7 +406,7 @@ export default function Signup() {
               fullWidth
             >
               {countries.map((country) => (
-                <MenuItem key={country.name} value={country.name}>
+                <MenuItem key={country.name} value={country.id}>
                   {country.name}
                 </MenuItem>
               ))}

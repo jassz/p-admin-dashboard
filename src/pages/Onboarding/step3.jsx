@@ -26,6 +26,13 @@ export default function OnboardingPlatform() {
   };
 
   const handleNext = () => {
+    if (selectedSource === "Others"){
+      sessionStorage.setItem("source", otherSourceText);
+    }
+    else{
+      sessionStorage.setItem("source", selectedSource);
+    }
+    
     navigate("/step4");
   };
 
