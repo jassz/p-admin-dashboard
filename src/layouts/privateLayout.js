@@ -18,6 +18,8 @@ import { yellow } from "@mui/material/colors";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../assets/images/logo192.png";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import LogoutCallback from "helper/logout";
+import ComponentBackdrop from "components/backdrop";
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -41,31 +43,27 @@ const AppBar = styled(MuiAppBar, {
 const PrivateLayout = ({ children }) => {
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const [open, setOpen] = useState(!isMobile);
-  const [openNoti, setOpenNoti] = useState(false);
-  const [badgeCount, setBadgeCount] = useState();
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const toggleDrawer = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
   }, []);
 
-  const toggleDrawerNoti = useCallback(() => {
-    setOpenNoti((prevOpenNoti) => {
-      if (!prevOpenNoti) {
-        setBadgeCount(0); // Reset badge count to 0 when opening notification drawer
-      }
-      return !prevOpenNoti;
-    });
-  }, []);
+  
 
   const navigation = useNavigate();
 
   const logout = async () => {
-    try {
-      navigation("/signin");
-    } catch (error) {
-      console.error("An error occurred:", error.response);
-    }
-  };
+  setOpenBackdrop(true);
+console.log(2);
+
+  // Wait 2 minutes (120,000 milliseconds)
+  await new Promise((resolve) => setTimeout(resolve, 30000));
+
+  LogoutCallback();
+
+  setOpenBackdrop(false);
+};
 
   return (
     <ThemeProvider theme={CustomTheme}>
@@ -112,18 +110,24 @@ const PrivateLayout = ({ children }) => {
           logoutCallback={logout}
         />
         <Box
-          // component="main"
+          component="main"
           sx={{
             backgroundColor: (theme) => theme.palette.tertiary.main,
             flexGrow: 1,
             height: "100vh",
             overflowY: "scroll",
+            scrollbarWidth: "none", // Firefox
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari, Edge
+            },
           }}
         >
           <Toolbar />
           <Box sx={{ height: "80vh" }}>{children}</Box>
         </Box>
       </Box>
+            <ComponentBackdrop openBackdrop={openBackdrop} />
+      
     </ThemeProvider>
   );
 };

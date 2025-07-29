@@ -25,7 +25,7 @@ const PublicLayout = ({ children }) => {
       <CssBaseline />
 
       <Grid
-        size={6}
+        size={{xs:12, md:6}}
         sx={{
           height: "100vh",
           display: "flex",
@@ -34,6 +34,11 @@ const PublicLayout = ({ children }) => {
           alignItems: "center",
           p: 4,
           backgroundColor: "tertiary.main",
+            ...(isMobile && {
+            backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+          }),
         }}
       >
         {children}

@@ -22,7 +22,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, createTheme, useMediaQuery, useTheme } from "@mui/system";
-import PublicLayout from "../../layouts/signupLayout";
+import PublicLayout from "../../layouts/loginLayout";
 import logo from "./../../assets/images/logo192.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -33,6 +33,7 @@ import Details from "pages/Terms/details";
 import PrivacyPolicyModal from "pages/Policy/details";
 import { useApiClient } from "context/ApiClientContext";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Signin() {
     const theme = useTheme();
@@ -52,7 +53,7 @@ export default function Signin() {
 
     setData({ ...data, [field]: value });
     if (field === "username") {
-      const error = validateEmail(value);
+      const error = validateEmail(value);      
       setErrors((data) => ({ ...data, username: error }));
     }
 
@@ -64,7 +65,22 @@ export default function Signin() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+     try {
+      setOpenBackdrop(true);
 
+      if ((errors && Object.keys(errors).length > 0) && (errors.username !== '' || errors.password !== '' )) {
+      const errorMessage = Object.entries(errors)
+        .map(([key, value]) => `${value}`)
+        .join("\n");
+
+      toast.error(
+        <div style={{ whiteSpace: "pre-line" }}>
+          {errorMessage}
+        </div>
+      );
+      return;
+    }
+    
     const newErrors = {};
     Object.entries(data).forEach(([key, value]) => {
       const error = validate(key, value);
@@ -72,20 +88,11 @@ export default function Signin() {
     });
 
     setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-      console.log('accountMgtApiUrl', accountMgtApiUrl);
-      console.log('data', data);
-
-    try {
-      setOpenBackdrop(true);
+    if (Object.keys(newErrors).length > 0 || errors.length > 0) return;
+  
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-            // const result = true;
-      const result = await axios.post(`${accountMgtApiUrl}/SourceUser/SourceUserLogin`, data);
-
-      // const result = await axios.post(`http://192.168.3.209:7471/api/v1/SourceUser/SourceUserLogin`, data);
-      console.log('result', result);
-      
+      const result = await axios.post(`${accountMgtApiUrl}/SourceUser/SourceUserLogin`, data);      
       const resultPath = result?.data?.data;
       const token = resultPath?.access_token;
       const refreshtoken = resultPath?.access_token;
@@ -97,7 +104,6 @@ export default function Signin() {
       localStorage.setItem("mobileApiUrl", resultPath?.user?.tenant_mobile_api_url || "");
 
       setOpenBackdrop(false);
-      console.log("Login response:", result);
 
       if (result) {
 
@@ -110,8 +116,18 @@ export default function Signin() {
         setErrors({ form: "Invalid email or password" });
       }
     } catch (error) {
-      console.error("Login failed:", error);
-      setErrors({ form: "Unexpected error occurred. Please try again." });
+      if(error.status == 404) {
+      if(error.response.data.errorMesage) {
+        toast.error(error.response.data.errorMesage);
+      } else if  (error.response.data.message.error){
+        toast.error(error.response.data.message.error.message);
+
+      } else {
+        toast.error('Oops! Page or data not found.');
+      }
+    } else if(error.status == 400) {
+        toast.error('Oops! Looks like your form contains errors. Please review and try again.');
+    }
     } finally {
       setOpenBackdrop(false);
     }
@@ -120,9 +136,9 @@ export default function Signin() {
   const validate = (name, value) => {
     switch (name) {
       case "username":
-        validateEmail();
+        validateEmail(value);
       case "password":
-        validatePassword();
+        validatePassword(value);
       default:
         return "";
     }
@@ -131,11 +147,11 @@ export default function Signin() {
   const validateEmail = (value) => {
     if (!value) return "Email is required.";
 
-    const domain = value.split("@")[1];
+    const domain = value.split("@")[1];    
 
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-      return "Email must be a @gosumgroup.com address.";
-    }
+    // if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+    //   return "Email must be a @gosumgroup.com address.";
+    // }
 
     if (bannedDomains.includes(domain)) {
       return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
@@ -144,16 +160,16 @@ export default function Signin() {
     return ""; // valid
   };
 
-  const validatePassword = (password) => {
-    if (!password) return "Password is required.";
-    if (password.length < 8) return "Password must be at least 8 characters";
-    if (!/[A-Z]/.test(password))
+  const validatePassword = (value) => {
+    if (!value) return "Password is required.";
+    if (value.length < 8) return "Password must be at least 8 characters";
+    if (!/[A-Z]/.test(value))
       return "Password must contain at least one uppercase letter";
-    if (!/[a-z]/.test(password))
+    if (!/[a-z]/.test(value))
       return "Password must contain at least one lowercase letter";
-    if (!/[0-9]/.test(password))
+    if (!/[0-9]/.test(value))
       return "Password must contain at least one number";
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
       return "Password must contain at least one special character";
     return "";
   };
@@ -460,7 +476,7 @@ export default function Signin() {
           </Box>
         </Container>
       </Container>
-      {/* <ComponentBackdrop openBackdrop={openBackdrop} /> */}
+      <ComponentBackdrop openBackdrop={openBackdrop} />
       {openTnc && (
         <Modal open={openTnc} onClose={() => handleClose("tnc")}>
           <Box

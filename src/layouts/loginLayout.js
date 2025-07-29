@@ -31,7 +31,33 @@ const PublicLayout = ({ children }) => {
     >
       <CssBaseline />
 
-      {!isMobile && (
+    
+      <Grid
+       item
+          size={6}
+          sx={(theme) =>({
+          position: "relative",
+          backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+          color: "#fff",
+          display: { xs: "none", md: "flex" },
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          borderTopRightRadius: 50,
+          borderBottomRightRadius: 50,
+          boxShadow: 12,
+          zIndex: 1,
+        })}
+      >
+        <Box px={3} textAlign="center">
+          <Typography variant="h1" fontWeight="bold" color="tertiary.main">
+            POI'SUM
+          </Typography>
+        </Box>
+      </Grid>
+
+  {!isMobile && (
+        // orange background
         <Box
           sx={{
             position: "absolute",
@@ -48,39 +74,8 @@ const PublicLayout = ({ children }) => {
         />
       )}
 
-      <Grid
-        size={6}
-        sx={(theme) => ({
-          position: "relative",
-          backgroundColor: "primary.main",
-          backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
-          color: "#fff",
-          display: { xs: "none", md: "flex" },
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          borderTopRightRadius: 50,
-          borderBottomRightRadius: 50,
-          boxShadow: 12,
-          zIndex: 1,
-        })}
-      >
-        <Box px={3} textAlign="center">
-          {/* <Box
-            component="img"
-            src={logo} // replace with your image path
-            alt="Logo"
-            // sx={{ width: 50, height: 50 }}
-          /> */}
-          <Typography variant="h1" fontWeight="bold" color="tertiary.main">
-            POI'SUM
-          </Typography>
-        </Box>
-      </Grid>
-
        <Grid
-        xs={12}
-        md={6}
+        size={{xs:12, md:6}}
         sx={{
           height: "100vh",
           display: "flex",
