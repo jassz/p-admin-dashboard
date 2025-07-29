@@ -26,6 +26,7 @@ export default function OnboardingName() {
   };
 
   const handleNext = () => {
+    sessionStorage.setItem("poisumName", poisumName);
     navigate("/step5");
   };
 const [poisumName, setPoisumName] = useState("");

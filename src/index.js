@@ -11,10 +11,10 @@ import { Toaster } from 'react-hot-toast';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ThemeProvider theme={CustomTheme}>
-    {/* <ApiClientProvider> */}
+    <ApiClientProvider>
       <CssBaseline />
       <App />
       <Toaster />
-    {/* </ApiClientProvider> */}
+    </ApiClientProvider>
   </ThemeProvider>
 );

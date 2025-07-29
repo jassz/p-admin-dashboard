@@ -5,21 +5,24 @@ import createApiClient from '../api/ApiClient';
 const ApiClientContext = createContext(null);
 
 export const ApiClientProvider = ({ children }) => {
-  const [apiClient, setApiClient] = useState(null);
+  const [apiUrls, setApiUrls] = useState({
+    dashboardApiUrl: null,
+    accountMgtApiUrl: null
+  });
 
   useEffect(() => {
     const initApiClient = async () => {
-      const client = await createApiClient();
-      setApiClient(client);
+      const urls = await createApiClient();
+      setApiUrls(urls);
     };
 
     initApiClient();
   }, []);
 
-  if (!apiClient) return 
+  if (!apiUrls.dashboardApiUrl || !apiUrls.accountMgtApiUrl) return null;
 
   return (
-    <ApiClientContext.Provider value={apiClient}>
+    <ApiClientContext.Provider value={apiUrls}>
       {children}
     </ApiClientContext.Provider>
   );

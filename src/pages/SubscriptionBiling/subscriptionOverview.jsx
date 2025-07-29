@@ -13,7 +13,7 @@ import CurrentVersion from "./currentVersion";
 import PaymentDetails from "./paymentDetails";
 import ButtonComponent from "components/button";
 
-export default function SubscriptionOverview() {
+export default function SubscriptionOverview({subscriptionPlan}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate(); // initialize navigate
@@ -47,7 +47,15 @@ export default function SubscriptionOverview() {
       </Box>
 
       <Divider sx={{ my: 2, borderColor: "primary.main" }} />
-      <CurrentVersion />
+      <CurrentVersion
+        planId={subscriptionPlan.planId}
+        planName={subscriptionPlan.planName}
+        planDescription={subscriptionPlan.planDescription}
+        planExpiryDate={subscriptionPlan.planExpiryDate}
+        price={subscriptionPlan.price}
+        planFunction={subscriptionPlan.planFunction}
+        totalUsage={subscriptionPlan.totalUsage}
+        totalStorage={subscriptionPlan.totalStorage} />
       <Divider sx={{ my: 2, borderColor: "primary.main" }} />
     </Paper>
   );

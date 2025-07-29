@@ -13,9 +13,11 @@ import {
   Chip,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import { plans } from "data/planData";
+// import { plans } from "data/planData";
 
-const Listing2 = () => {
+const Listing2 = ({plans}) => {
+
+
   return (
      <Paper
       sx={{
@@ -84,11 +86,11 @@ const Listing2 = () => {
                     </Box>
                     <Box display="flex" alignItems="flex-end" mb={2}>
                       <Typography variant="h4" fontWeight="bold">
-                        {plan.price.split("/")[0]}
+                        RM{plan.price}
                       </Typography>
-                      <Typography color="text.secondary" ml={1}>
-                        /{plan.price.split("/")[1]}
-                      </Typography>
+                      {/* <Typography color="text.secondary" ml={1}>
+                        /{plan.price}
+                      </Typography> */}
                     </Box>
                     <Divider sx={{ my: 2 }} />
                     <Typography
@@ -99,10 +101,10 @@ const Listing2 = () => {
                       Plan Includes:
                     </Typography>
                     <Stack spacing={1}>
-                      {plan.features.map((feature, idx) => (
+                      {plan.planFunction.map((feature, idx) => (
                         <Box key={idx} display="flex" alignItems="center">
                           <CheckIcon color="success" sx={{ mr: 1 }} />
-                          <Typography variant="body2">{feature}</Typography>
+                          <Typography variant="body2">{feature.featureName}</Typography>
                         </Box>
                       ))}
                     </Stack>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,11 +11,13 @@ import {
 } from "@mui/material";
 import PrivateLayout from "../../layouts/privateLayout";
 import UserForm from "./form";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { useApiClient } from "context/ApiClientContext";
-import Header from "components/header";
-import DeleteSection from "./deleteSection";
+// import Header from "components/header";
+// import DeleteSection from "./deleteSection";
 import ChangePasswordSection from "./changePasswordSection";
+import axios from "axios";
+import ComponentBackdrop from "components/backdrop";
 
 export default function Account() {
   
@@ -25,13 +27,47 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState();
+  const { dashboardApiUrl } = useApiClient();
 
   const [inputForm, setInputForm] = useState({
-    userName: "Naja",
-    email: "najanadhirah@gosumgroup.com",
-    company: "Gosum Group Sdn Bhd",
-    country: "Malaysia",
+    fullName: "",
+    email: "",
+    companyName: "",
+    country: "",
+    planName: "",
   });
+
+  useEffect(() => {
+    if (inputForm.fullName === ""){
+      getAccDtl();
+      
+    }
+  }, [inputForm]);
+
+  const getAccDtl = async () => {
+    setOpenBackdrop(true);
+    try{
+      const apiAccDtlResponse = await axios.get(`${dashboardApiUrl}/Account/account-details`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      // console.log(apiAccDtlResponse);
+      if (apiAccDtlResponse.status === 200){
+        setInputForm(apiAccDtlResponse.data.data);
+      }
+    }
+    catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+    finally{
+      setOpenBackdrop(false);
+    }
+  };
 
   const handleInputChange = (property, value) => {
     setInputForm((prevState) => ({
@@ -112,12 +148,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
         {/* <Divider sx={{ my: 3, borderColor: "secondary.main" }} />
         <DeleteSection handleSubmit={handleSubmit} /> */}
       </Box>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openBackdrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <ComponentBackdrop openBackdrop={openBackdrop} />
     </PrivateLayout>
   );
 }

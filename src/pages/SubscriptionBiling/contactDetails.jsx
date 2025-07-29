@@ -12,18 +12,13 @@ import { useNavigate } from "react-router-dom";
 import logoVisa from "./../../assets/images/visa.png";
 import logoMaster from "./../../assets/images/mastercard.png";
 
-export default function ContactDetails() {
+export default function ContactDetails({cardInfo}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
 
   const data = {
-    card: {
-      cardName: "Alice Johnson",
-      cardNumber: "4111 1111 1111 1111",
-      cardType: "Visa",
-      cardExpiryDate: "12/2026",
-    },
+    card: cardInfo,
     planExpiryDate: "2025-12-31",
     address: "123 Main Street, New York, NY",
     email: "alice@example.com",

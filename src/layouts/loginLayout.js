@@ -43,7 +43,6 @@ const PublicLayout = ({ children }) => {
             )}
 
       <Grid
-        item
         size={6}
         sx={(theme) =>({
           position: "relative",
@@ -74,7 +73,6 @@ const PublicLayout = ({ children }) => {
       </Grid>
 
       <Grid
-        item
         xs={12}
         md={6}
         sx={{

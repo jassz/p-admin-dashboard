@@ -67,8 +67,8 @@ export default function UserForm({
 
       var fieldList =[
             { label: "Email", key: "email", disabled: true },
-            { label: "Full Name", key: "userName", disabled: true },
-            { label: "Company Name", key: "company", disabled: true },
+            { label: "Full Name", key: "fullName", disabled: true },
+            { label: "Company Name", key: "companyName", disabled: true },
           ];
           
   return (
@@ -143,7 +143,7 @@ export default function UserForm({
               margin="dense"
               size="small"
               fullWidth
-              disabled="true"
+              disabled={true}
             >
               {countries.map((country) => (
                 <MenuItem key={country} value={country}>
