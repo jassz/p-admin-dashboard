@@ -5,7 +5,7 @@ import PrivateLayout from "../../layouts/privateLayout";
 export default function Homepage() {
   return (
     <PrivateLayout>
-  <Container>
+  <Container  sx={{mt:10}}>
     <Box
       display="flex"
       flexDirection="column"

@@ -174,9 +174,9 @@ export default function Signup() {
 
     const domain = value.split("@")[1];
 
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-      return "Email must be a @gosumgroup.com address.";
-    }
+    // if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+    //   return "Email must be a @gosumgroup.com address.";
+    // }
 
     if (bannedDomains.includes(domain)) {
       return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
