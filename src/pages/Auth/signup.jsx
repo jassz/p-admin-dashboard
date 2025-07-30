@@ -155,8 +155,7 @@ export default function Signup() {
     Object.entries(data).forEach(([key, value]) => {
       sessionStorage.setItem(key, value);
     });
-    console.log("navigate");
-    // navigate("/step1");
+    navigate("/step1");
 
     // try {
     //   const result = true;
