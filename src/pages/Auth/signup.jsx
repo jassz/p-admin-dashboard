@@ -87,7 +87,6 @@ export default function Signup() {
       const error = validateEmail(value);
       setErrors((data) => ({ ...data, email: error }));
     }
-
     if (field === "password") {
       const error = validatePassword(value);
       setErrors((data) => ({ ...data, password: error }));
@@ -123,7 +122,6 @@ export default function Signup() {
     if (Object.keys(newErrors).length > 0) return;
 
     Object.entries(data).forEach(([key, value]) => {
-      console.log(`${key}: ${value}`);
       sessionStorage.setItem(key, value);
     });
 
@@ -179,7 +177,7 @@ export default function Signup() {
     // }
 
     if (bannedDomains.includes(domain)) {
-      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+      return `Emails from ${domain} are not allowed. Use your work email address.`;
     }
 
     return ""; // valid
