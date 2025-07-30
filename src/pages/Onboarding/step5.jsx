@@ -48,7 +48,10 @@ export default function OnboardingThankyou() {
           lastname: sessionStorage.getItem("lastname"),
           countryId: parseInt(sessionStorage.getItem("country"), 10),
           companyName: sessionStorage.getItem("company"),
-          valueTagId: selectedTagIds
+          valueTagId: selectedTags,
+          password: sessionStorage.getItem("password"),
+          whereKnowPoisum: heardFrom,
+          poisumName: poisumName
         }
       );
 
