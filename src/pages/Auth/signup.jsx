@@ -29,6 +29,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { useApiClient } from "context/ApiClientContext";
 import { toast } from "react-hot-toast";
+import ComponentBackdrop from "components/backdrop";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export default function Signup() {
   const [openPolicy, setOpenPolicy] = useState(false);
   const [showMore, setShowMore] = useState(true);
   const { dashboardApiUrl } = useApiClient();
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const [data, setData] = useState({
     email: "",
@@ -58,6 +60,30 @@ export default function Signup() {
   useEffect(() => {
     apiGetCountries();
   }, []);
+
+  const checkEmail = async (value) => {
+    var emailError = "";
+    setOpenBackdrop(true);
+    try{
+      const checkEmailResponse = await axios.post(`${dashboardApiUrl}/User/check-email`, 
+        {
+          email: value
+        });
+      if (checkEmailResponse.status === 200){
+        if (checkEmailResponse.data.data.exists){
+          // console.log(checkEmailResponse.data.data);
+          emailError = "Email already exists, please proceed to the sign in page";
+        }
+      }
+    }
+    catch(error){
+      toast.error(error.response.data.message);
+    }
+    finally{
+      setOpenBackdrop(false);
+      return emailError;
+    }
+  }
 
   const apiGetCountries = async () => {
     try{
@@ -117,15 +143,20 @@ export default function Signup() {
       const error = validate(key, value);
       if (error) newErrors[key] = error;
     });
-
+    if(!newErrors["email"]){
+      const apiEmailCheck = await checkEmail(data.email);
+      if (apiEmailCheck != ""){
+        newErrors["email"] = apiEmailCheck;
+      }
+    }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
     Object.entries(data).forEach(([key, value]) => {
       sessionStorage.setItem(key, value);
     });
-
-    navigate("/step1");
+    console.log("navigate");
+    // navigate("/step1");
 
     // try {
     //   const result = true;
@@ -656,6 +687,7 @@ export default function Signup() {
           </Box>
         </Modal>
       )}
+      <ComponentBackdrop openBackdrop={openBackdrop} />
     </PublicLayout>
   );
 }
