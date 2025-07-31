@@ -18,7 +18,7 @@ import OnboardingValueTags from "pages/Onboarding/step2";
 import OnboardingPlatform from "pages/Onboarding/step3";
 import OnboardingName from "pages/Onboarding/step4";
 import OnboardingThankyou from "pages/Onboarding/step5";
-import OnboardingPlan from "pages/Onboarding/plan";
+import Verification from "pages/Onboarding/verification";
 // LicenseInfo.setLicenseKey(process.env.REACT_APP_MUI_LICENSE_KEY);
 import { Toaster } from 'react-hot-toast';
 import PrivateRoutes from "utils/privateRoutes";
@@ -61,15 +61,17 @@ const AppRoutes = () => {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/privacyPolicy" element={<Privacy />} />
         <Route path="/tnc" element={<Terms />} />
+        <Route path="/verify" element={<Verification />} />       
+
 
         {/* Private Routes */}
-        <Route element={<ProtectedRoute><PrivateRoutes /></ProtectedRoute>}>
+        {/* <Route element={<ProtectedRoute><PrivateRoutes /></ProtectedRoute>}> */}
           <Route path="/" element={<Signin />} />
           <Route path="/homepage" element={<Homepage1 />} />
           <Route path="/accountDetail" element={<Account />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/plan" element={<Plan />} />       
-        </Route>
+        {/* </Route> */}
       </Routes>
   );
 }

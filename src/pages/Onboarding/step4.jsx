@@ -7,6 +7,8 @@ import {
   Alert,
   Grid,
   TextField,
+  Container,
+  Paper,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import ResetPwdLayout from "layouts/resetPwdLayout";
@@ -49,56 +51,55 @@ const [poisumName, setPoisumName] = useState("");
         transition={{ duration: 0.6 }}
         style={{ width: "100%", maxWidth: 600 }}
       >
-        <Box
-          sx={{
-            bgcolor: "background.paper",
-            border: "1px solid tertiary.dark",
-            boxShadow: 10,
-            // p: 3,
-            borderRadius: 4,
-            textAlign: "center",
-          }}
-        >
-          <Box p={4} textAlign={"center"}>
-            <Typography variant="h6" mb={1}>
-    What would you like to name your Poisum user?
-  </Typography>
-  <Typography variant="body2" color="text.secondary" mb={3}>
-    This name will represent you in the system when you complete missions or receive recognition.
-  </Typography>
-
-  <TextField
-    fullWidth
-    label="Your Poisum Name"
-    variant="outlined"
-    size="medium"
-    value={poisumName}
-    onChange={(e) => setPoisumName(e.target.value)}
-  />
-          </Box>
-          {/* Navigation */}
-          <Box
-            sx={{
-              px: 3,
-              pb: 3,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Button onClick={handleBack} variant="text">
-              Back
-            </Button>
-            <Box display="flex" gap={1}>
-              {/* <Button onClick={handleSkip} variant="text">
-                          Skip
-                        </Button> */}
-              <Button onClick={handleNext} variant="contained">
-                Next
-              </Button>
-            </Box>
-          </Box>
-        </Box>
+        {/* <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', alignItems: 'center' }}> */}
+              <Paper elevation={3} sx={{ p: 4, width: '100%', borderRadius: 2 }}>
+                <Stack spacing={3}>
+                  <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
+                    Let's get you up and running.
+                  </Typography>
+                  
+                  <Typography variant="h5" component="h2" sx={{ fontWeight: 'medium' }}>
+                  Your Poi'sum identity
+                  </Typography>
+                  
+                  <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  What you want to be called in Poi'sum?
+                  </Typography>
+                  
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+                  This name will represent you across the Poi'sum platform.
+                  </Typography>
+                  
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Enter the name of your site."
+                    value={poisumName}
+                    onChange={(e) => setPoisumName(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+                  
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    You can always edit or add details in your Dashboard.
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'end', pt: 2 }}>
+                    {/* <Button variant="text" color="inherit">
+                      Skip
+                    </Button> */}
+                    <Button 
+                      variant="contained" 
+                      color="primary"
+                      onClick={handleNext}
+                      disabled={!poisumName.trim()}
+                    >
+                      Continue
+                    </Button>
+                  </Box>
+                </Stack>
+              </Paper>
+            {/* </Container> */}
+ 
       </motion.div>
     </Box>
     </ResetPwdLayout>
