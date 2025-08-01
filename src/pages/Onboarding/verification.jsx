@@ -7,7 +7,8 @@ import ComponentBackdrop from "components/backdrop";
 import axios from "axios";
 import { useApiClient } from "context/ApiClientContext";
 import toast from "react-hot-toast";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser"
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import getErrorMessage from "helper/getErrorMessage";
 
 export default function Verification() {
   const [code, setCode] = useState(["", "", "", ""]);
@@ -32,73 +33,62 @@ export default function Verification() {
   const handleSubmit = async () => {
     const verificationCode = code.join("");
     console.log("Verification code:", verificationCode);
-  
+
     setOpenBackdrop(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000));
-      
-      const apiResponse = await axios.post(`${dashboardApiUrl}/User/verify-email`,
+
+      const apiResponse = await axios.post(
+        `${dashboardApiUrl}/User/verify-email`,
         {
-          email: '123@gosumgroup.com', //sessionStorage.getItem("email"),
-          code: verificationCode
+          email: "123@gosumgroup.com", //sessionStorage.getItem("email"),
+          code: verificationCode,
         }
       );
 
       if (apiResponse.status === 200) {
         navigate("/homepage");
       }
-    }
-    catch (error) {
-       console.log('1', error);
-     if (error.response.data.success == false) {
-        if (error.response.data.errorMesage) {
-          toast.error(error.response.data.errorMesage);
-        } else if (error.response.data.message.error) {
-          toast.error(error.response.data.message.error.message);
-        }else if(error.response.data.message) {
-            toast.error(error.response.data.message)
-        } else {
-          toast.error('Oops! Page or data not found.');
-        }
-      }
-    }
-    finally {
-      setOpenBackdrop(false);
-    };
-  };
-
-  const handleSendAgain = async () => {
-    console.log("Resend verification code");
- setOpenBackdrop(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      
-      const apiResponse = await axios.post(`${dashboardApiUrl}/User/send-verification`,
-        {
-          email: sessionStorage.getItem("email"),        }
-      );
-
-      if (apiResponse.status === 200) {
-        console.log('response', apiResponse.data);
-        toast.success(apiResponse.data.message)
-    }
-    }
-    catch (error) {
+    } catch (error) {
+      console.log("1", error);
       if (error.response.data.success == false) {
         if (error.response.data.errorMesage) {
           toast.error(error.response.data.errorMesage);
         } else if (error.response.data.message.error) {
           toast.error(error.response.data.message.error.message);
-        }else if(error.response.data.message) {
-            toast.error(error.response.data.message)
+        } else if (error.response.data.message) {
+          toast.error(error.response.data.message);
         } else {
-          toast.error('Oops! Page or data not found.');
+          toast.error("Oops! Page or data not found.");
         }
       }
-    }
-    finally {
+    } finally {
       setOpenBackdrop(false);
-    };
+    }
+  };
+
+  const handleSendAgain = async () => {
+    console.log("Resend verification code");
+    setOpenBackdrop(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      const apiResponse = await axios.post(
+        `${dashboardApiUrl}/User/send-verification`,
+        {
+          email: sessionStorage.getItem("email"),
+        }
+      );
+
+      if (apiResponse.status === 200) {
+        console.log("response", apiResponse.data);
+        toast.success(apiResponse.data.message);
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setOpenBackdrop(false);
+    }
   };
 
   return (
@@ -130,17 +120,19 @@ export default function Verification() {
               p: 4,
             }}
           >
-             <Box
-                sx={{
-                width: '100%',
-                overflow: 'hidden',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                mb:5
-                }}
+            <Box
+              sx={{
+                width: "100%",
+                overflow: "hidden",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mb: 5,
+              }}
             >
-                <VerifiedUserIcon sx={{ fontSize: 80, color: 'secondary.main' }} />
+              <VerifiedUserIcon
+                sx={{ fontSize: 80, color: "secondary.main" }}
+              />
             </Box>
             {/* Content Section */}
             <Box sx={{ textAlign: "center" }}>
@@ -208,7 +200,10 @@ export default function Verification() {
               >
                 Verify
               </Button>
-              <Typography variant="caption"> Don't receive any code?</Typography>
+              <Typography variant="caption">
+                {" "}
+                Don't receive any code?
+              </Typography>
               <Button
                 variant="text"
                 color="primary"
@@ -223,8 +218,7 @@ export default function Verification() {
           </Box>
         </motion.div>
       </Box>
-    <ComponentBackdrop openBackdrop={openBackdrop} />
-      
+      <ComponentBackdrop openBackdrop={openBackdrop} />
     </ResetPwdLayout>
   );
 }

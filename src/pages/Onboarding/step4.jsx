@@ -31,78 +31,176 @@ export default function OnboardingName() {
     sessionStorage.setItem("poisumName", poisumName);
     navigate("/step5");
   };
-const [poisumName, setPoisumName] = useState("");
+  const [poisumName, setPoisumName] = useState(() => {
+    const storedName = sessionStorage.getItem("poisumName");
+    return storedName || "";
+  });
 
   return (
-    <ResetPwdLayout>
-      <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        px: 2,
-        bgcolor: "#f9f9f9",
-      }}
+   <ResetPwdLayout>
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      px: 2,
+      background: "linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)",
+    }}
+  >
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      style={{ width: "100%", maxWidth: 800 }}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        style={{ width: "100%", maxWidth: 600 }}
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          border: "1px solid",
+          borderColor: "divider",
+          boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)",
+          borderRadius: 3,
+          overflow: "hidden",
+        }}
       >
-        {/* <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', alignItems: 'center' }}> */}
-              <Paper elevation={3} sx={{ p: 4, width: '100%', borderRadius: 2 }}>
-                <Stack spacing={3}>
-                  <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
-                    Let's get you up and running.
-                  </Typography>
-                  
-                  <Typography variant="h5" component="h2" sx={{ fontWeight: 'medium' }}>
-                  Your Poi'sum identity
-                  </Typography>
-                  
-                  <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                  What you want to be called in Poi'sum?
-                  </Typography>
-                  
-                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-                  This name will represent you across the Poi'sum platform.
-                  </Typography>
-                  
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    placeholder="Enter the name of your site."
-                    value={poisumName}
-                    onChange={(e) => setPoisumName(e.target.value)}
-                    sx={{ mb: 2 }}
-                  />
-                  
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    You can always edit or add details in your Dashboard.
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', justifyContent: 'end', pt: 2 }}>
-                    {/* <Button variant="text" color="inherit">
-                      Skip
-                    </Button> */}
-                    <Button 
-                      variant="contained" 
-                      color="primary"
-                      onClick={handleNext}
-                      disabled={!poisumName.trim()}
-                    >
-                      Continue
-                    </Button>
-                  </Box>
-                </Stack>
-              </Paper>
-            {/* </Container> */}
- 
-      </motion.div>
-    </Box>
-    </ResetPwdLayout>
+        {/* Header Section */}
+        <Box 
+          sx={{ 
+            bgcolor: "primary.main", 
+            py: 2, 
+            textAlign: "center",
+            color: "white"
+          }}
+        >
+          <Typography 
+            sx={{
+              typography: {
+                xs: 'h6',
+                md: 'h5'
+              },
+              fontWeight: "bold"
+            }}
+          >
+            What should your hero name be?
+          </Typography>
+          <Typography 
+                variant="body1" 
+                sx={{
+                  typography: {
+                    xs: 'body2',
+                    md: 'body1'
+                  }
+                }}
+              >
+            Create your Poisum identity
+          </Typography>
+        </Box>
+
+        {/* Content Section */}
+        <Box p={4}>
+          <Stack spacing={2}>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 'medium',
+                color: 'text.primary'
+              }}
+            >
+              What should we call you?
+            </Typography>
+            
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'text.secondary',
+                lineHeight: 1.6
+              }}
+            >
+              This name will represent you across the Poisum platform and be visible to your team members.
+            </Typography>
+            
+            <TextField
+              fullWidth
+              size="medium"
+              variant="outlined"
+              placeholder="Enter your display name"
+              value={poisumName}
+              onChange={(e) => setPoisumName(e.target.value)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                },
+                mt: 2
+              }}
+              inputProps={{
+                maxLength: 50
+              }}
+            />
+            
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: 'text.secondary',
+                display: 'block',
+                textAlign: 'right'
+              }}
+            >
+              {poisumName.length}/50 characters
+            </Typography>
+          </Stack>
+        </Box>
+
+        {/* Navigation Footer */}
+        <Box
+          sx={{
+            px: 4,
+            py: 3,
+            bgcolor: "grey.50",
+            borderTop: "1px solid",
+            borderColor: "divider",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Button 
+            onClick={handleBack} 
+            variant="outlined"
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              py: 1,
+            }}
+          >
+            Back
+          </Button>
+          <Button 
+            variant="contained"
+            onClick={handleNext}
+            disabled={!poisumName.trim()}
+            sx={{
+              borderRadius: 2,
+              px: 4,
+              py: 1,
+              boxShadow: "none",
+              "&:hover": {
+                boxShadow: "none",
+                bgcolor: "primary.dark"
+              },
+              "&:disabled": {
+                bgcolor: "action.disabledBackground",
+                color: "action.disabled"
+              }
+            }}
+          >
+            Continue
+          </Button>
+        </Box>
+      </Box>
+    </motion.div>
+  </Box>
+</ResetPwdLayout>
     
   );
 }
