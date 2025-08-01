@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Divider,
@@ -23,10 +23,13 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { bannedDomains } from "data/bannedDomains";
 import { passwordRules } from "data/passwordRules";
-import { countries } from "data/countries";
 import Details from "pages/Terms/details";
 import PrivacyPolicyModal from "pages/Policy/details";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { useApiClient } from "context/ApiClientContext";
+import { toast } from "react-hot-toast";
+import ComponentBackdrop from "components/backdrop";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -35,16 +38,71 @@ export default function Signup() {
   const [openTnc, setOpenTnc] = useState(false);
   const [openPolicy, setOpenPolicy] = useState(false);
   const [showMore, setShowMore] = useState(true);
+  const { dashboardApiUrl } = useApiClient();
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const [data, setData] = useState({
     email: "",
     password: "",
-    fullname: "",
+    firstname: "",
+    lastname: "",
     company: "",
     country: "",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [countries, setCountries] = useState([{
+    id: 0,
+    name: "",
+    code: ""
+  }])
+
+  useEffect(() => {
+    apiGetCountries();
+  }, []);
+
+  const checkEmail = async (value) => {
+    var emailError = "";
+    setOpenBackdrop(true);
+    try{
+      const checkEmailResponse = await axios.post(`${dashboardApiUrl}/User/check-email`, 
+        {
+          email: value
+        });
+      if (checkEmailResponse.status === 200){
+        if (checkEmailResponse.data.data.exists){
+          // console.log(checkEmailResponse.data.data);
+          emailError = "Email already exists, please proceed to the sign in page";
+        }
+      }
+    }
+    catch(error){
+      toast.error(error.response.data.message);
+    }
+    finally{
+      setOpenBackdrop(false);
+      return emailError;
+    }
+  }
+
+  const apiGetCountries = async () => {
+    try{
+      const apiResponse = await axios.get(`${dashboardApiUrl}/Country/country-list`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      if (apiResponse.status === 200){
+        setCountries(apiResponse.data.data);
+      }
+    }
+    catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const handleChange = (field, event) => {
     const value = event.target.value;
@@ -55,14 +113,17 @@ export default function Signup() {
       const error = validateEmail(value);
       setErrors((data) => ({ ...data, email: error }));
     }
-
     if (field === "password") {
       const error = validatePassword(value);
       setErrors((data) => ({ ...data, password: error }));
     }
-    if (field === "fullname") {
+    if (field === "firstname") {
       const error = validate(field, value);
-      setErrors((data) => ({ ...data, fullname: error }));
+      setErrors((data) => ({ ...data, firstname: error }));
+    }
+    if (field === "lastname") {
+      const error = validate(field, value);
+      setErrors((data) => ({ ...data, lastname: error }));
     }
     if (field === "company") {
       const error = validate(field, value);
@@ -82,25 +143,35 @@ export default function Signup() {
       const error = validate(key, value);
       if (error) newErrors[key] = error;
     });
-
+    if(!newErrors["email"]){
+      const apiEmailCheck = await checkEmail(data.email);
+      if (apiEmailCheck != ""){
+        newErrors["email"] = apiEmailCheck;
+      }
+    }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    try {
-      const result = true;
-      // const result = await axios.post(`${apiClient}/user/login`, data);
-      console.log("Login response:", result);
+    Object.entries(data).forEach(([key, value]) => {
+      sessionStorage.setItem(key, value);
+    });
+    navigate("/step1");
 
-      if (result) {
-        // localStorage.setItem("loggedInID", result.data.id);
-        navigate("/step1");
-      } else {
-        setErrors({ form: "Invalid email or password" });
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setErrors({ form: "Unexpected error occurred. Please try again." });
-    }
+    // try {
+    //   const result = true;
+    //   // const result = await axios.post(`${apiClient}/user/login`, data);
+    //   console.log("Login response:", result);
+
+    //   if (result) {
+    //     // localStorage.setItem("loggedInID", result.data.id);
+    //     navigate("/step1");
+    //   } else {
+    //     setErrors({ form: "Invalid email or password" });
+    //   }
+    // } catch (error) {
+    //   console.error("Login failed:", error);
+    //   setErrors({ form: "Unexpected error occurred. Please try again." });
+    // }
   };
 
   const validate = (name, value) => {
@@ -109,8 +180,11 @@ export default function Signup() {
         validateEmail();
       case "password":
         validatePassword();
-      case "fullname":
-        if (!value) return "Full name is required";
+      case "firstname":
+        if (!value) return "First name is required";
+        return "";
+      case "lastname":
+        if (!value) return "Last name is required";
         return "";
       case "company":
         if (!value) return "Company name is required";
@@ -128,12 +202,12 @@ export default function Signup() {
 
     const domain = value.split("@")[1];
 
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-      return "Email must be a @gosumgroup.com address.";
-    }
+    // if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+    //   return "Email must be a @gosumgroup.com address.";
+    // }
 
     if (bannedDomains.includes(domain)) {
-      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+      return `Emails from ${domain} are not allowed. Use your work email address.`;
     }
 
     return ""; // valid
@@ -180,7 +254,7 @@ export default function Signup() {
           mx: "auto",
         }}
       >
-        <Typography variant="h4" fontWeight="bold">
+        <Typography variant="h5" >
           Welcome to Poisum
         </Typography>
         <Typography variant="body2" color="textSecondary" mb={3}>
@@ -202,7 +276,14 @@ export default function Signup() {
             alignItems: "center",
             borderRadius: 2,
             backdropFilter: "blur(10px)", // optional for frosted glass look
-            backgroundColor: "rgba(255, 255, 255, 0.85)",
+            backgroundColor: "rgba(255, 255, 255, 0.85)", 
+            maxHeight: '80vh', // or your desired height
+            overflow: 'auto', // enables scrolling
+            // '&::-webkit-scrollbar': {
+            //   display: 'none' // Hide scrollbar for Chrome, Safari and Opera
+            // },
+            // scrollbarWidth: 'none', // Hide scrollbar for Firefox
+            // msOverflowStyle: 'none' // Hide scrollbar for IE and Edge
           }}
         >
           <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
@@ -302,14 +383,27 @@ export default function Signup() {
               </Stack>
             )}
             <TextField
-              label="Full Name"
-              id="fullname"
-              name="fullname"
+              label="First Name"
+              id="firstname"
+              name="firstname"
               type="text"
-              value={data.fullname}
-              onChange={(e) => handleChange("fullname", e)}
-              error={!!errors.fullname}
-              helperText={errors.fullname}
+              value={data.firstname}
+              onChange={(e) => handleChange("firstname", e)}
+              error={!!errors.firstname}
+              helperText={errors.firstname}
+              margin="dense"
+              size="small"
+              fullWidth
+            />
+            <TextField
+              label="Last Name"
+              id="lastname"
+              name="lastname"
+              type="text"
+              value={data.lastname}
+              onChange={(e) => handleChange("lastname", e)}
+              error={!!errors.lastname}
+              helperText={errors.lastname}
               margin="dense"
               size="small"
               fullWidth
@@ -341,8 +435,8 @@ export default function Signup() {
               fullWidth
             >
               {countries.map((country) => (
-                <MenuItem key={country} value={country}>
-                  {country}
+                <MenuItem key={country.name} value={country.id}>
+                  {country.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -592,6 +686,7 @@ export default function Signup() {
           </Box>
         </Modal>
       )}
+      <ComponentBackdrop openBackdrop={openBackdrop} />
     </PublicLayout>
   );
 }

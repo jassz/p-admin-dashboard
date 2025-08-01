@@ -19,7 +19,6 @@ import {
   VisibilityOff,
 } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-
 import { red } from "@mui/material/colors";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, createTheme, useMediaQuery, useTheme } from "@mui/system";
@@ -32,26 +31,30 @@ import { bannedDomains } from "data/bannedDomains";
 import { passwordRules } from "data/passwordRules";
 import Details from "pages/Terms/details";
 import PrivacyPolicyModal from "pages/Policy/details";
+import { useApiClient } from "context/ApiClientContext";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Signin() {
+  const theme = useTheme();
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [openTnc, setOpenTnc] = useState(false);
   const [openPolicy, setOpenPolicy] = useState(false);
   const navigate = useNavigate();
-  const [data, setData] = useState({ email: "", password: "" });
+  const [data, setData] = useState({ username: "", password: "", client_id: "poisum-admin-portal" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const isVerified = false;
-  const theme = useTheme();
+  // const isVerified = true;
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { dashboardApiUrl, accountMgtApiUrl } = useApiClient();
 
   const handleChange = (field, event) => {
     const value = event.target.value;
 
     setData({ ...data, [field]: value });
-    if (field === "email") {
+    if (field === "username") {
       const error = validateEmail(value);
-      setErrors((data) => ({ ...data, email: error }));
+      setErrors((data) => ({ ...data, username: error }));
     }
 
     if (field === "password") {
@@ -60,40 +63,95 @@ export default function Signin() {
     }
   };
 
+  const checkEmailVerified = async (email) => {
+    var verified = false;
+    try {
+      const apiResponse = await axios.post(`${dashboardApiUrl}/User/check-email-verified`,
+        {
+          email
+        }
+      );
+      if (apiResponse.status === 200) {
+        if (apiResponse.data.success) {
+          if (apiResponse.data.message === "Email has verified.") {
+            verified = true;
+          }
+        }
+      }
+    }
+    catch (error) {
+      toast.error(error.response.data.message);
+    }
+    return verified;
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const newErrors = {};
-    Object.entries(data).forEach(([key, value]) => {
-      const error = validate(key, value);
-      if (error) newErrors[key] = error;
-    });
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-
     try {
       setOpenBackdrop(true);
+
+      if ((errors && Object.keys(errors).length > 0) && (errors.username !== '' || errors.password !== '')) {
+        const errorMessage = Object.entries(errors)
+          .map(([key, value]) => `${value}`)
+          .join("\n");
+
+        toast.error(
+          <div style={{ whiteSpace: "pre-line" }}>
+            {errorMessage}
+          </div>
+        );
+        return;
+      }
+
+      const newErrors = {};
+      Object.entries(data).forEach(([key, value]) => {
+        const error = validate(key, value);
+        if (error) newErrors[key] = error;
+      });
+
+      setErrors(newErrors);
+      if (Object.keys(newErrors).length > 0 || errors.length > 0) return;
+
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      const result = true;
-      // const result = await axios.post(`${apiClient}/user/login`, data);
-      console.log("Login response:", result);
+      const verified = await checkEmailVerified(data.username);
+      console.log(`Verified: ${verified}`);
+      if (verified){
+        const result = await axios.post(`${accountMgtApiUrl}/SourceUser/SourceUserLogin`, data);
+        const resultPath = result?.data?.data;
+        const token = resultPath?.access_token;
+        const refreshtoken = resultPath?.access_token;
 
-      if (result) {
-        // localStorage.setItem("loggedInID", result.data.id);
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshtoken", refreshtoken);
+        localStorage.setItem("loggedInID", resultPath?.user?.linked_user_id);
+        localStorage.setItem("tenantCode", resultPath?.user?.tenant_code);
+        localStorage.setItem("mobileApiUrl", resultPath?.user?.tenant_mobile_api_url || "");
 
-        if (!isVerified) {
+        if (result) {
           navigate("/homepage");
         } else {
-          navigate("/homepage");
+          setErrors({ form: "Invalid email or password" });
         }
-      } else {
-        setErrors({ form: "Invalid email or password" });
       }
+      else{
+        navigate("/step1");
+      }
+      setOpenBackdrop(false);
+
     } catch (error) {
-      console.error("Login failed:", error);
-      setErrors({ form: "Unexpected error occurred. Please try again." });
+      if (error.status == 404) {
+        if (error.response.data.errorMesage) {
+          toast.error(error.response.data.errorMesage);
+        } else if (error.response.data.message.error) {
+          toast.error(error.response.data.message.error.message);
+
+        } else {
+          toast.error('Oops! Page or data not found.');
+        }
+      } else if (error.status == 400) {
+        toast.error('Oops! Looks like your form contains errors. Please review and try again.');
+      }
     } finally {
       setOpenBackdrop(false);
     }
@@ -101,10 +159,10 @@ export default function Signin() {
 
   const validate = (name, value) => {
     switch (name) {
-      case "email":
-        validateEmail();
+      case "username":
+        validateEmail(value);
       case "password":
-        validatePassword();
+        validatePassword(value);
       default:
         return "";
     }
@@ -115,27 +173,27 @@ export default function Signin() {
 
     const domain = value.split("@")[1];
 
-    if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
-      return "Email must be a @gosumgroup.com address.";
-    }
+    // if (!/^[\w-.]+@gosumgroup\.com$/.test(value)) {
+    //   return "Email must be a @gosumgroup.com address.";
+    // }
 
     if (bannedDomains.includes(domain)) {
-      return `Emails from ${domain} are not allowed. Use your @gosumgroup.com address.`;
+      return `Emails from ${domain} are not allowed. Use your work email address.`;
     }
 
     return ""; // valid
   };
 
-  const validatePassword = (password) => {
-    if (!password) return "Password is required.";
-    if (password.length < 8) return "Password must be at least 8 characters";
-    if (!/[A-Z]/.test(password))
+  const validatePassword = (value) => {
+    if (!value) return "Password is required.";
+    if (value.length < 8) return "Password must be at least 8 characters";
+    if (!/[A-Z]/.test(value))
       return "Password must contain at least one uppercase letter";
-    if (!/[a-z]/.test(password))
+    if (!/[a-z]/.test(value))
       return "Password must contain at least one lowercase letter";
-    if (!/[0-9]/.test(password))
+    if (!/[0-9]/.test(value))
       return "Password must contain at least one number";
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value))
       return "Password must contain at least one special character";
     return "";
   };
@@ -185,6 +243,8 @@ export default function Signin() {
             borderRadius: 2,
             backdropFilter: "blur(10px)", // optional for frosted glass look
             backgroundColor: "rgba(255, 255, 255, 0.85)",
+            maxHeight: '80vh', // or your desired height
+            overflow: 'auto', // enables scrolling
           }}
         >
           <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
@@ -205,13 +265,13 @@ export default function Signin() {
           >
             <TextField
               label="Email"
-              id="email"
+              id="username"
               name="email"
               type="email"
-              value={data.email}
-              onChange={(e) => handleChange("email", e)}
-              error={!!errors.email}
-              helperText={errors.email}
+              value={data.username}
+              onChange={(e) => handleChange("username", e)}
+              error={!!errors.username}
+              helperText={errors.username}
               margin="dense"
               size="small"
               fullWidth
@@ -228,7 +288,7 @@ export default function Signin() {
               error={errors.password}
               helperText={
                 errors.password == "Password is required." ||
-                data.password == ""
+                  data.password == ""
                   ? errors.password
                   : ""
               }
@@ -346,71 +406,70 @@ export default function Signin() {
             </Box> */}
 
             <Box mt={2}>
-                          {/* Always visible part */}
-                          <Typography variant="caption">
-                            By signing up to POISUM, I hereby consent to the collection,
-                            processing, and use of my personal data by Gosum Consulting
-                            Group Sdn. Bhd. in accordance with the{" "}
-                            <Typography
-                              component="span"
-                              variant="caption"
-                              onClick={() => handleOpen("tnc")}
-                              sx={{
-                                textDecoration: "underline",
-                                cursor: "pointer",
-                                color: "primary.main",
-                              }}
-                            >
-                              Terms & Conditions
-                            </Typography>{" "}
-                            and{" "}
-                            <Typography
-                              component="span"
-                              variant="caption"
-                              onClick={() => handleOpen("privacy")}
-                              sx={{
-                                textDecoration: "underline",
-                                cursor: "pointer",
-                                color: "primary.main",
-                              }}
-                            >
-                              Privacy Policy
-                            </Typography>
-                            .
-                          </Typography>
-            
-                          {/* Conditionally shown content */}
-                          {(
-                            <>
-                              <Divider sx={{ my: 1, borderColor: "transparent" }} />
-                              <Typography variant="caption">
-                                I understand that my data will be used for platform
-                                functionality, engagement tracking, and performance
-                                analytics within my organization.
-                              </Typography>
-                              <Divider sx={{ my: 1, borderColor: "transparent" }} />
-                              <Typography variant="caption">
-                                I also acknowledge that I may withdraw my consent or request
-                                data access or correction at any time by contacting{" "}
-                                <Typography
-                                  component="span"
-                                  variant="caption"
-                                  onClick={() => handleOpen("privacy")}
-                                  sx={{
-                                    textDecoration: "underline",
-                                    cursor: "pointer",
-                                    color: "primary.main",
-                                  }}
-                                >
-                                  privacy@poisum.com
-                                </Typography>
-                                .
-                              </Typography>
-                            </>
-                          )}
-            
-                          {/* See more / See less button */}
-                          {/* <Box mt={1} display={"flex"} justifyContent={"center"}>
+              {/* Always visible part */}
+              <Typography variant="caption">
+                By signing up to POISUM, I hereby consent to the collection,
+                processing, and use of my personal data by Gosum Consulting
+                Group Sdn. Bhd. in accordance with the{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("tnc")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Terms & Conditions
+                </Typography>{" "}
+                and{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  onClick={() => handleOpen("privacy")}
+                  sx={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "primary.main",
+                  }}
+                >
+                  Privacy Policy
+                </Typography>
+                .
+              </Typography>
+
+              {(
+                <>
+                  <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                  <Typography variant="caption">
+                    I understand that my data will be used for platform
+                    functionality, engagement tracking, and performance
+                    analytics within my organization.
+                  </Typography>
+                  <Divider sx={{ my: 1, borderColor: "transparent" }} />
+                  <Typography variant="caption">
+                    I also acknowledge that I may withdraw my consent or request
+                    data access or correction at any time by contacting{" "}
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      onClick={() => handleOpen("privacy")}
+                      sx={{
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        color: "primary.main",
+                      }}
+                    >
+                      privacy@poisum.com
+                    </Typography>
+                    .
+                  </Typography>
+                </>
+              )}
+
+              {/* See more / See less button */}
+              {/* <Box mt={1} display={"flex"} justifyContent={"center"}>
                             <Typography
                               variant="caption"
                               onClick={() => setShowMore(!showMore)}
@@ -423,7 +482,7 @@ export default function Signin() {
                               {showMore ? "See less" : "See more"}
                             </Typography>
                           </Box> */}
-                        </Box>
+            </Box>
 
             <Button
               type="submit"
@@ -490,7 +549,7 @@ export default function Signin() {
                 >
                   POISUM’s Terms & Conditions
                 </Typography>
-                <CloseIcon onClick={() => handleClose("tnc")} />
+                <CloseIcon onClick={() => handleClose("tnc")} sx={{ cursor: "pointer" }} />
               </Box>
 
               <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
@@ -502,7 +561,7 @@ export default function Signin() {
       )}
 
       {openPolicy && (
-        <Modal open={openPolicy} onClose={()=> handleClose("privacy")}>
+        <Modal open={openPolicy} onClose={() => handleClose("privacy")}>
           <Box
             sx={{
               position: "fixed",
@@ -548,7 +607,7 @@ export default function Signin() {
                 >
                   POISUM’s Privacy Policy
                 </Typography>
-                <CloseIcon onClick={() => handleClose("privacy")} />
+                <CloseIcon onClick={() => handleClose("privacy")} sx={{ cursor: "pointer" }} />
 
               </Box>
 

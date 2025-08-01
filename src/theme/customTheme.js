@@ -13,7 +13,7 @@ const CustomTheme = () => createTheme({
       contrastText: "#fff",
     },
     secondary: {
-      light: "#ff9b7a",
+      light: "#FD8549",
       main: "#fc6719", //#F15B2B
       dark: "#ba3a11",
       contrastText: "#fff",
@@ -24,12 +24,7 @@ const CustomTheme = () => createTheme({
       dark: "#46472c",
       contrastText: "#1A1A1A",
     },
-    grey: {
-      light: "#e6e3e3",
-      main: "#bfbfbf",
-      dark: "#8c8b8b",
-      contrastText: "#1A1A1A",
-    },
+    
   },
 });
 
