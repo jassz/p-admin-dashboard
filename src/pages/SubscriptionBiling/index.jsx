@@ -17,6 +17,7 @@ import axios from "axios";
 import ComponentBackdrop from "components/backdrop";
 import { useApiClient } from "context/ApiClientContext";
 import { toast } from "react-hot-toast";
+import getErrorMessage from "helper/getErrorMessage";
 
 export default function Plan() {
   const theme = useTheme();
@@ -91,7 +92,7 @@ export default function Plan() {
       }
     }
     catch (error) {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   };
 
