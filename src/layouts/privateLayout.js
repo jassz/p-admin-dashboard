@@ -66,7 +66,7 @@ console.log(2);
 };
 
   return (
-    <ThemeProvider theme={CustomTheme}>
+    <>
       <Box sx={{ display: "flex", overflow: "hidden" }}>
         <CssBaseline />
         <AppBar position="absolute" open={open} sx={{ boxShadow: "none" }}>
@@ -127,8 +127,7 @@ console.log(2);
         </Box>
       </Box>
             <ComponentBackdrop openBackdrop={openBackdrop} />
-      
-    </ThemeProvider>
+            </> 
   );
 };
 
