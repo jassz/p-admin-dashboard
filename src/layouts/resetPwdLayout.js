@@ -1,15 +1,13 @@
-import Grid from "@mui/material/Grid";
+import CustomTheme from "theme/customTheme";
 import logo from "../assets/images/full_logo-transparent.png";
 import { AppBar, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import { Box, useTheme } from "@mui/system";
-import CustomTheme from "theme/customTheme";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport"
 
 const ResetPwdLayout = ({ children }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <ThemeProvider theme={CustomTheme}>
           <Box sx={{ display: "flex", overflow: "hidden" }}>
             <CssBaseline />
             <AppBar position="absolute" sx={{ boxShadow: "none" }}>
@@ -63,7 +61,6 @@ const ResetPwdLayout = ({ children }) => {
                       <Box sx={{ height: "80vh", justifyContent:"center" }}>{children}</Box>
                     </Box>
             </Box>
-            </ThemeProvider>
     // <Grid
     //   container
     //   component="main"
