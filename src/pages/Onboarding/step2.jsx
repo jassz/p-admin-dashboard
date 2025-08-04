@@ -32,6 +32,8 @@ export default function OnboardingValueTags() {
 
   const handleNext = () => {
     const allSelectedTags = [...selectedTags];
+    console.log('allSelectedTags', allSelectedTags);
+    
     sessionStorage.setItem("valuetags", JSON.stringify(allSelectedTags));
     navigate("/step3");
   };

@@ -65,13 +65,13 @@ const AppRoutes = () => {
 
 
         {/* Private Routes */}
-        {/* <Route element={<ProtectedRoute><PrivateRoutes /></ProtectedRoute>}> */}
+        <Route element={<ProtectedRoute><PrivateRoutes /></ProtectedRoute>}>
           <Route path="/" element={<Signin />} />
           <Route path="/homepage" element={<Homepage1 />} />
           <Route path="/accountDetail" element={<Account />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/plan" element={<Plan />} />       
-        {/* </Route> */}
+        </Route>
       </Routes>
   );
 }
