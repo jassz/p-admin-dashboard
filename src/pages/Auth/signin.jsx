@@ -34,6 +34,7 @@ import PrivacyPolicyModal from "pages/Policy/details";
 import { useApiClient } from "context/ApiClientContext";
 import axios from "axios";
 import toast from "react-hot-toast";
+import getErrorMessage from "helper/getErrorMessage";
 
 export default function Signin() {
   const theme = useTheme();
@@ -64,25 +65,32 @@ export default function Signin() {
   };
 
   const checkEmailVerified = async (email) => {
-    var verified = false;
+    // var verified = false;
     try {
       const apiResponse = await axios.post(`${dashboardApiUrl}/User/check-email-verified`,
         {
           email
         }
       );
+      return apiResponse;
       if (apiResponse.status === 200) {
-        if (apiResponse.data.success) {
-          if (apiResponse.data.message === "Email has verified.") {
-            verified = true;
+        const { success, message, data } = apiResponse.data;
+
+        if (success) {
+          if (data.isVerify) {
+            toast.success(message);
+            return true;
+          } else {
+            toast.error(message);
+            return false;
           }
-        }
+        } 
       }
     }
     catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(getErrorMessage('12'+error));
+      return apiResponse;
     }
-    return verified;
   }
 
   const handleSubmit = async (event) => {
@@ -135,7 +143,7 @@ export default function Signin() {
         }
       }
       else{
-        navigate("/step1");
+        navigate("/verify");
       }
       setOpenBackdrop(false);
 
