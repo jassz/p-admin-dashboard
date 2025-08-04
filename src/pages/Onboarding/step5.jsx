@@ -30,11 +30,9 @@ export default function OnboardingThankyou() {
    const handleSubmitFinal = async () => {
     setOpenBackdrop(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      
-      const apiResponse = await axios.post(`${dashboardApiUrl}/User/register`,
-        {
-          email: sessionStorage.getItem("email"),
+
+      const payload = {
+         email: sessionStorage.getItem("email"),
           firstname: sessionStorage.getItem("firstname"),
           lastname: sessionStorage.getItem("lastname"),
           countryId: parseInt(sessionStorage.getItem("country"), 10),
@@ -43,14 +41,24 @@ export default function OnboardingThankyou() {
           password: sessionStorage.getItem("password"),
           whereKnowPoisum: heardFrom,
           poisumName: poisumName
-        }
+      }
+
+      console.log('payload', payload);
+      
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
+      
+      const apiResponse = await axios.post(`${dashboardApiUrl}/User/register`,
+      payload
       );
 
+      console.log('api response',apiResponse);
+      
+
       if (apiResponse.status === 200) {
-        sessionStorage.removeItem("valuetags");
-        sessionStorage.removeItem("source");
-        sessionStorage.removeItem("poisumName");
-        navigate("/homepage");
+        // sessionStorage.removeItem("valuetags");
+        // sessionStorage.removeItem("source");
+        // sessionStorage.removeItem("poisumName");
+        navigate("/verify");
       }
     }
     catch (error) {

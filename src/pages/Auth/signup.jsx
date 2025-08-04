@@ -59,6 +59,9 @@ export default function Signup() {
 
   useEffect(() => {
     apiGetCountries();
+     sessionStorage.removeItem("valuetags");
+        sessionStorage.removeItem("source");
+        sessionStorage.removeItem("poisumName");
   }, []);
 
   const checkEmail = async (value) => {
