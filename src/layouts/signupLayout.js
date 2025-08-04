@@ -35,7 +35,7 @@ const PublicLayout = ({ children }) => {
           p: 4,
           backgroundColor: "tertiary.main",
             ...(isMobile && {
-            backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+            backgroundImage: `linear-gradient(132deg, ${theme.palette.primary.dark}, ${theme.palette.primary.light})`,
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
           }),

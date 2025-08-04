@@ -34,7 +34,6 @@ import PrivacyPolicyModal from "pages/Policy/details";
 import { useApiClient } from "context/ApiClientContext";
 import axios from "axios";
 import toast from "react-hot-toast";
-import getErrorMessage from "helper/getErrorMessage";
 
 export default function Signin() {
   const theme = useTheme();
@@ -42,7 +41,11 @@ export default function Signin() {
   const [openTnc, setOpenTnc] = useState(false);
   const [openPolicy, setOpenPolicy] = useState(false);
   const navigate = useNavigate();
-  const [data, setData] = useState({ username: "", password: "", client_id: "poisum-admin-portal" });
+  const [data, setData] = useState({
+    username: "",
+    password: "",
+    client_id: "poisum-admin-portal",
+  });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   // const isVerified = true;
@@ -64,49 +67,96 @@ export default function Signin() {
     }
   };
 
-  const checkEmailVerified = async (email) => {
-    // var verified = false;
+  const checkEmailStatusAndRedirect = async (email) => {
     try {
-      const apiResponse = await axios.post(`${dashboardApiUrl}/User/check-email-verified`,
+      const checkEmailResponse = await axios.post(
+        `${dashboardApiUrl}/User/check-email`,
         {
-          email
+          email: email,
         }
       );
-      return apiResponse;
-      if (apiResponse.status === 200) {
-        const { success, message, data } = apiResponse.data;
+      console.log("checkEmailResponse", checkEmailResponse);
 
-        if (success) {
-          if (data.isVerify) {
-            toast.success(message);
-            return true;
-          } else {
-            toast.error(message);
-            return false;
-          }
-        } 
+      const exists = checkEmailResponse?.data?.data?.exists;
+
+      if (!exists) {
+        toast.error("Email is not registered.");
+        return;
       }
+
+      const checkVerifyResponse = await axios.post(
+        `${dashboardApiUrl}/User/check-email-verified`,
+        {
+          email: email,
+        }
+      );
+      console.log("checkVerifyResponse", checkVerifyResponse);
+
+      const isVerified = checkVerifyResponse?.data?.data?.isVerify;
+
+      console.log('isVerified', isVerified);
+      
+      if (isVerified) {
+        const result = await axios.post(
+          `${accountMgtApiUrl}/SourceUser/SourceUserLogin`,
+          data
+        );
+        const resultPath = result?.data?.data;
+        const token = resultPath?.access_token;
+        const refreshtoken = resultPath?.access_token;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshtoken", refreshtoken);
+        localStorage.setItem("loggedInID", resultPath?.user?.linked_user_id);
+        localStorage.setItem("tenantCode", resultPath?.user?.tenant_code);
+        localStorage.setItem(
+          "mobileApiUrl",
+          resultPath?.user?.tenant_mobile_api_url || ""
+        );
+
+        if(result.status == 200){
+            const resultPath = result?.data?.data;
+            const token = resultPath?.access_token;
+            const refreshtoken = resultPath?.access_token;
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("refreshtoken", refreshtoken);
+            localStorage.setItem("loggedInID", resultPath?.user?.linked_user_id);
+            localStorage.setItem("tenantCode", resultPath?.user?.tenant_code);
+            localStorage.setItem("mobileApiUrl", resultPath?.user?.tenant_mobile_api_url || "");
+            navigate("/homepage");
+          } else {
+            toast.error('Failed to login')
+          }
+      } else {
+        navigate("/verify");
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message?.error?.message);
+
+      const errorMsg =
+        error?.response?.data?.message?.error?.message ||
+        "An unexpected error occurred.";
+      toast.error("Error: " + errorMsg);
     }
-    catch (error) {
-      toast.error(getErrorMessage('12'+error));
-      return apiResponse;
-    }
-  }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       setOpenBackdrop(true);
 
-      if ((errors && Object.keys(errors).length > 0) && (errors.username !== '' || errors.password !== '')) {
+      if (
+        errors &&
+        Object.keys(errors).length > 0 &&
+        (errors.username !== "" || errors.password !== "")
+      ) {
         const errorMessage = Object.entries(errors)
           .map(([key, value]) => `${value}`)
           .join("\n");
 
         toast.error(
-          <div style={{ whiteSpace: "pre-line" }}>
-            {errorMessage}
-          </div>
+          <div style={{ whiteSpace: "pre-line" }}>{errorMessage}</div>
         );
         return;
       }
@@ -120,45 +170,21 @@ export default function Signin() {
       setErrors(newErrors);
       if (Object.keys(newErrors).length > 0 || errors.length > 0) return;
 
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      const verified = await checkEmailVerified(data.username);
-      console.log(`Verified: ${verified}`);
-      if (verified){
-        const result = await axios.post(`${accountMgtApiUrl}/SourceUser/SourceUserLogin`, data);
-        const resultPath = result?.data?.data;
-        const token = resultPath?.access_token;
-        const refreshtoken = resultPath?.access_token;
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("refreshtoken", refreshtoken);
-        localStorage.setItem("loggedInID", resultPath?.user?.linked_user_id);
-        localStorage.setItem("tenantCode", resultPath?.user?.tenant_code);
-        localStorage.setItem("mobileApiUrl", resultPath?.user?.tenant_mobile_api_url || "");
-
-        if (result) {
-          navigate("/homepage");
-        } else {
-          setErrors({ form: "Invalid email or password" });
-        }
-      }
-      else{
-        navigate("/verify");
-      }
+      checkEmailStatusAndRedirect(data.username); // email is from input
       setOpenBackdrop(false);
-
     } catch (error) {
       if (error.status == 404) {
         if (error.response.data.errorMesage) {
           toast.error(error.response.data.errorMesage);
         } else if (error.response.data.message.error) {
           toast.error(error.response.data.message.error.message);
-
         } else {
-          toast.error('Oops! Page or data not found.');
+          toast.error("Oops! Page or data not found.");
         }
       } else if (error.status == 400) {
-        toast.error('Oops! Looks like your form contains errors. Please review and try again.');
+        toast.error(
+          "Oops! Looks like yoemur form contains errors. Please review and try again."
+        );
       }
     } finally {
       setOpenBackdrop(false);
@@ -251,8 +277,8 @@ export default function Signin() {
             borderRadius: 2,
             backdropFilter: "blur(10px)", // optional for frosted glass look
             backgroundColor: "rgba(255, 255, 255, 0.85)",
-            maxHeight: '80vh', // or your desired height
-            overflow: 'auto', // enables scrolling
+            maxHeight: "80vh", // or your desired height
+            overflow: "auto", // enables scrolling
           }}
         >
           <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
@@ -296,7 +322,7 @@ export default function Signin() {
               error={errors.password}
               helperText={
                 errors.password == "Password is required." ||
-                  data.password == ""
+                data.password == ""
                   ? errors.password
                   : ""
               }
@@ -447,7 +473,7 @@ export default function Signin() {
                 .
               </Typography>
 
-              {(
+              {
                 <>
                   <Divider sx={{ my: 1, borderColor: "transparent" }} />
                   <Typography variant="caption">
@@ -474,7 +500,7 @@ export default function Signin() {
                     .
                   </Typography>
                 </>
-              )}
+              }
 
               {/* See more / See less button */}
               {/* <Box mt={1} display={"flex"} justifyContent={"center"}>
@@ -557,7 +583,10 @@ export default function Signin() {
                 >
                   POISUM’s Terms & Conditions
                 </Typography>
-                <CloseIcon onClick={() => handleClose("tnc")} sx={{ cursor: "pointer" }} />
+                <CloseIcon
+                  onClick={() => handleClose("tnc")}
+                  sx={{ cursor: "pointer" }}
+                />
               </Box>
 
               <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />
@@ -615,8 +644,10 @@ export default function Signin() {
                 >
                   POISUM’s Privacy Policy
                 </Typography>
-                <CloseIcon onClick={() => handleClose("privacy")} sx={{ cursor: "pointer" }} />
-
+                <CloseIcon
+                  onClick={() => handleClose("privacy")}
+                  sx={{ cursor: "pointer" }}
+                />
               </Box>
 
               <Divider sx={{ my: 3, borderColor: "tertiary.main" }} />

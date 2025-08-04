@@ -37,7 +37,7 @@ const PublicLayout = ({ children }) => {
           size={6}
           sx={(theme) =>({
           position: "relative",
-          backgroundImage: `linear-gradient(142deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+          backgroundImage: `linear-gradient(132deg, ${theme.palette.primary.dark}, ${theme.palette.primary.light})`,
           color: "#fff",
           display: { xs: "none", md: "flex" },
           flexDirection: "column",

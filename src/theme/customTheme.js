@@ -7,20 +7,20 @@ const CustomTheme = () => createTheme({
   },
   palette: {
     primary: {
-      light: "#AABBB1",
-      main: "#1c4f4a",
-      dark: "#023b17",
+      light: "#98BBEC",
+      main: "#1C519B",
+      dark: "#001F54",
       contrastText: "#fff",
     },
     secondary: {
-      light: "#FD8549",
-      main: "#fc6719", //#F15B2B
+      light: "#4CA6FA",
+      main: "#034078", //#F15B2B
       dark: "#ba3a11",
       contrastText: "#fff",
     },
     tertiary: {
       light: "#EAEBDC",
-      main: "#f5f3ee", //#CBCEA7
+      main: "#FFFFF2", //#CBCEA7
       dark: "#46472c",
       contrastText: "#1A1A1A",
     },
